@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.onionuml.visplugin.ui.PerspectiveFactory"
+            id="com.onionuml.visplugin.ui.PerspectiveFactory"
+            name="Onion UML Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="com.onionuml.visplugin.ui.PerspectiveFactory">
+         <view
+               id="org.eclipse.ui.console.ConsoleView"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ui.views.ProblemView"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+         <menu
+               label="Onion UML">
+            <command
+                  commandId="com.onionuml.visplugin.ui.command.OpenClassModelCommand"
+                  label="Open Class Model..."
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="com.onionuml.visplugin.ui.command.OpenClassModelCommand"
+            name="Open Class Model...">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.onionuml.visplugin.ui.handler.OpenClassModelCommandHandler"
+            commandId="com.onionuml.visplugin.ui.command.OpenClassModelCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.onionuml.visplugin.ui.ModelViewer"
+            default="false"
+            id="com.onionuml.visplugin.ui.modelviewer"
+            name="Model Viewer">
+      </editor>
+   </extension>
+
+</plugin>

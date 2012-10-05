@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           xmlns="xmlns://classml" targetNamespace="xmlns://classml"
+           xmlns:cmlns="xmlns://classml">
+  
+  <xs:annotation>
+    <xs:appinfo>ClassML UML Class Model</xs:appinfo>
+    <xs:documentation xml:lang="en">
+      This schema defines a UML class model in the ClassML language.
+    </xs:documentation>
+  </xs:annotation>
+  
+  <xs:attributeGroup name="elementAttrs">
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="label" type="xs:string" default=""/>
+  </xs:attributeGroup>
+  
+  <xs:simpleType name="visibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="private"/>
+      <xs:enumeration value="protected"/>
+      <xs:enumeration value="public"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="relationship">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="aggregation"/>
+      <xs:enumeration value="association"/>
+      <xs:enumeration value="directedAssociation"/>
+      <xs:enumeration value="composition"/>
+      <xs:enumeration value="dependency"/>
+      <xs:enumeration value="generalization"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="multiplicity">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="classml">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="package" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="classes">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="class" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element name="attributes" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="dataType" type="xs:string" use="required"/>
+                                    <xs:attribute name="label" type="xs:string" use="required"/>
+                                    <xs:attribute name="visibility" type="visibility" default="private"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="operations" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="operation" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:attribute name="dataType" type="xs:string" use="required"/>
+                                          <xs:attribute name="label" type="xs:string" use="required"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="returnType" type="xs:string" use="required"/>
+                                    <xs:attribute name="label" type="xs:string" use="required"/>
+                                    <xs:attribute name="visibility" type="visibility" default="public"/>
+                                    <xs:attribute name="isStatic" type="xs:boolean" default="false"/>
+                                    <xs:attribute name="isAbstract" type="xs:boolean" default="false"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:all>
+                        <xs:attributeGroup ref="elementAttrs"/>
+                        <xs:attribute name="isAbstract" type="xs:boolean" default="false"/>
+                        <xs:attribute name="stereotype" type="xs:string" default=""/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="relationships" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="relationship" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attributeGroup ref="elementAttrs"/>
+                        <xs:attribute name="head" type="xs:string" use="required"/>
+                        <xs:attribute name="tail" type="xs:string" use="required"/>
+                        <xs:attribute name="type" type="relationship" use="required"/>
+                        <xs:attribute name="headMultiplicityMin" type="multiplicity" default="none"/>
+                        <xs:attribute name="headMultiplicityMax" type="multiplicity" default="none"/>
+                        <xs:attribute name="tailMultiplicityMin" type="multiplicity" default="none"/>
+                        <xs:attribute name="tailMultiplicityMax" type="multiplicity" default="none"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:all>
+            <xs:attributeGroup ref="elementAttrs"/>
+            <xs:attribute name="isDefault" type="xs:boolean" default="false"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="title" type="xs:string" default="Untitled Model"/>
+    </xs:complexType>
+    <xs:key name="keyElementId">
+      <xs:selector xpath=".//cmlns:package/cmlns:classes/cmlns:class | .//cmlns:package/cmlns:relationships/cmlns:relationship"/>
+      <xs:field xpath="@id"/>
+    </xs:key>
+    <xs:keyref name="refHeadId" refer="keyElementId">
+      <xs:selector xpath=".//cmlns:package/cmlns:relationships/cmlns:relationship"/>
+      <xs:field xpath="@head"/>
+    </xs:keyref>
+    <xs:keyref name="refTailId" refer="keyElementId">
+      <xs:selector xpath=".//cmlns:package/cmlns:relationships/cmlns:relationship"/>
+      <xs:field xpath="@tail"/>
+    </xs:keyref>
+  </xs:element>
+  
+</xs:schema>
