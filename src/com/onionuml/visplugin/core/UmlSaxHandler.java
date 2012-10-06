@@ -24,7 +24,7 @@ public class UmlSaxHandler extends DefaultHandler {
 			new HashMap<String,UmlRelationshipElement>();
 	
 	private Stack<String> mElementNames = new Stack<String>();
-    private Stack<Object> mObjects  = new Stack<Object>();
+	private Stack<Object> mObjects  = new Stack<Object>();
 	
 	
 	// OVERRIDE METHODS -----------------------------------
@@ -93,7 +93,7 @@ public class UmlSaxHandler extends DefaultHandler {
 			Multiplicity tailMultMax = Multiplicity
 					.parseMultiplicity(attributes.getValue("tailMultiplicityMax"));
 			
-			// disable invalide multiplicity configurations
+			// disable invalid multiplicity configurations
 			if((headMultMin == Multiplicity.ZERO && headMultMax == Multiplicity.ZERO)
 					|| (headMultMin == Multiplicity.ONE && headMultMax == Multiplicity.ZERO)
 					|| (headMultMin == Multiplicity.MANY && headMultMax == Multiplicity.ZERO)
