@@ -133,4 +133,52 @@ public class UmlClassElement {
 	public void setVisibility(Visibility v){
 		mVisibility = v;
 	}
+	
+	@Override
+	public String toString(){
+		String eol = System.getProperty("line.separator");
+		String str = mName + " : ";
+		
+		switch(mVisibility){
+			case PRIVATE:
+				str += "private";
+				break;
+			case PROTECTED:
+				str += "protected";
+				break;
+			case PUBLIC:
+				str += "public";
+				break;
+		}
+		
+		if(mIsAbstract){
+			str += ", abstract";
+		}
+		
+		if(mStereotype != null && mStereotype.length() > 0){
+			str += ", <<" + mStereotype + ">>";
+		}
+		
+		str += eol + "Attributes:" + eol;
+		if(mAttributes.size() == 0){
+			str += "  (none)" + eol;
+		}
+		else{
+			for(UmlAttribute a : mAttributes){
+				str += a.toString() + eol;
+			}
+		}
+		
+		str += "Operations:";
+		if(mOperations.size() == 0){
+			str += eol + "  (none)";
+		}
+		else{
+			for(UmlOperation o : mOperations){
+				str += eol + o.toString();
+			}
+		}
+		
+		return str;
+	}
 }

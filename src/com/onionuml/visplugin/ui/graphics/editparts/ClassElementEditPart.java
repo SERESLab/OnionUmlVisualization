@@ -14,7 +14,6 @@ import org.eclipse.swt.graphics.Font;
 import com.onionuml.visplugin.core.UmlAttribute;
 import com.onionuml.visplugin.core.UmlClassElement;
 import com.onionuml.visplugin.core.UmlOperation;
-import com.onionuml.visplugin.core.UmlOperationParameter;
 import com.onionuml.visplugin.ui.graphics.figures.ClassFigure;
 import com.onionuml.visplugin.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
@@ -71,25 +70,7 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart{
 		}
 		else{
 			for(UmlAttribute a : classElement.getAttributes()){
-				
-				String visStr = "";
-				switch(a.visibility){
-					case PRIVATE:
-						visStr = "- ";
-						break;
-					case PROTECTED:
-						visStr = "# ";
-						break;
-					case PUBLIC:
-						visStr = "+ ";
-						break;
-				}
-				String str = visStr + a.name;
-				if(a.dataType != null && !a.dataType.equals("")){
-					str += " : " + a.dataType;
-				}
-				
-				figure.addProperty(str, null, null);
+				figure.addProperty(a.toString(), null, null);
 			}
 		}
 		
@@ -101,47 +82,14 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart{
 		else{
 			for(UmlOperation o : classElement.getOperations()){
 				
-				String visStr = "";
-				switch(o.visibility){
-					case PRIVATE:
-						visStr = "- ";
-						break;
-					case PROTECTED:
-						visStr = "# ";
-						break;
-					case PUBLIC:
-						visStr = "+ ";
-						break;
-				}
-				
-				String paramStr = "(";
-				for(int i=0; i < o.parameters.size(); ++i){
-					UmlOperationParameter op = o.parameters.get(i);
-					if(i == 0){
-						paramStr += op.name;
-					}
-					else{
-						paramStr += ", " + op.name;
-					}
-					if(op.dataType != null && !op.dataType.equals("")){
-						paramStr += " : " + op.dataType;
-					}
-				}
-				paramStr += ")";
-				
-				String str = visStr + o.name + paramStr;
-				if(o.returnType != null && !o.returnType.equals("")){
-					str += " : " + o.returnType;
-				}
-				
 				if(o.isAbstract){
-					figure.addOperation(str, null, ABSTRACT_FONT);
+					figure.addOperation(o.toString(), null, ABSTRACT_FONT);
 				}
 				else if(o.isStatic){
-					figure.addOperation(str, null, STATIC_FONT);
+					figure.addOperation(o.toString(), null, STATIC_FONT);
 				}
 				else{
-					figure.addOperation(str, null, null);
+					figure.addOperation(o.toString(), null, null);
 				}
 			}
 		}

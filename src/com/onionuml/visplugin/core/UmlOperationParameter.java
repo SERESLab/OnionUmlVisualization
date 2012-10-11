@@ -11,4 +11,13 @@ public class UmlOperationParameter {
 		this.name = name;
 		this.dataType = dataType;
 	}
+	
+	@Override
+	public String toString(){
+		if(dataType != null && !dataType.equals("")){
+			return name + " : " + dataType;
+		}
+		
+		return name;
+	}
 }

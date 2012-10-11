@@ -13,4 +13,27 @@ public class UmlAttribute {
 		this.name = name;
 		this.dataType = dataType;
 	}
+	
+	@Override
+	public String toString(){
+		
+		String visStr = "";
+		switch(visibility){
+			case PRIVATE:
+				visStr = "- ";
+				break;
+			case PROTECTED:
+				visStr = "# ";
+				break;
+			case PUBLIC:
+				visStr = "+ ";
+				break;
+		}
+		String str = visStr + name;
+		if(dataType != null && !dataType.equals("")){
+			str += " : " + dataType;
+		}
+		
+		return str;
+	}
 }

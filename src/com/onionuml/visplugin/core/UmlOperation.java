@@ -23,4 +23,40 @@ public class UmlOperation {
 		this.isAbstract = isAbstract;
 		parameters = new ArrayList<UmlOperationParameter>();
 	}
+	
+	@Override
+	public String toString(){
+		
+		String visStr = "";
+		switch(visibility){
+			case PRIVATE:
+				visStr = "- ";
+				break;
+			case PROTECTED:
+				visStr = "# ";
+				break;
+			case PUBLIC:
+				visStr = "+ ";
+				break;
+		}
+		
+		String paramStr = "(";
+		for(int i=0; i < parameters.size(); ++i){
+			UmlOperationParameter op = parameters.get(i);
+			if(i == 0){
+				paramStr += op.toString();
+			}
+			else{
+				paramStr += ", " + op.toString();
+			}
+		}
+		paramStr += ")";
+		
+		String str = visStr + name + paramStr;
+		if(returnType != null && !returnType.equals("")){
+			str += " : " + returnType;
+		}
+		
+		return str;
+	}
 }
