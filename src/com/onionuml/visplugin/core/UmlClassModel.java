@@ -27,7 +27,7 @@ public class UmlClassModel{
 	
 	private String mName;
 	private String mDescription;
-	private Map<String,UmlNodeElement> mNodes;
+	private Map<String,UmlClassElement> mClasses;
 	private Map<String,UmlRelationshipElement> mRelationships;
 	
 	
@@ -69,10 +69,10 @@ public class UmlClassModel{
 	}
 	
 	/**
-	 * Gets a reference to the map of nodes in this model.
+	 * Gets a reference to the map of classes in this model.
 	 */
-	public Map<String,UmlNodeElement> getNodes(){
-		return mNodes;
+	public Map<String,UmlClassElement> getClasses(){
+		return mClasses;
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class UmlClassModel{
 		}
 	    
 	    mName = saxHandler.getTitle();
-	    mNodes = saxHandler.getNodes();
+	    mClasses = saxHandler.getClasses();
 	    mRelationships = saxHandler.getRelationships();
 	}
 }

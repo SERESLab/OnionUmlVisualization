@@ -97,6 +97,7 @@
                         <xs:attributeGroup ref="elementAttrs"/>
                         <xs:attribute name="isAbstract" type="xs:boolean" default="false"/>
                         <xs:attribute name="stereotype" type="xs:string" default=""/>
+                        <xs:attribute name="visibility" type="visibility" default="public"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>

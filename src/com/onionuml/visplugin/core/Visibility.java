@@ -1,7 +1,7 @@
 package com.onionuml.visplugin.core;
 
 /**
- * Represents the visibility of a node attribute or operation.
+ * Represents the visibility of an element in a UML class diagram.
  */
 public enum Visibility {
 	PUBLIC,

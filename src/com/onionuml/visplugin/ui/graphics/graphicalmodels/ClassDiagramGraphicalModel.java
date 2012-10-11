@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import org.eclipse.draw2d.geometry.Point;
 
 import com.onionuml.visplugin.core.UmlClassModel;
-import com.onionuml.visplugin.core.UmlNodeElement;
+import com.onionuml.visplugin.core.UmlClassElement;
 import com.onionuml.visplugin.core.UmlRelationshipElement;
 import com.onionuml.visplugin.ui.graphics.IEventListener;
 import com.onionuml.visplugin.ui.graphics.IEventRegistrar;
@@ -27,13 +27,13 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	
 	private IEventListener mListener = null;
 	private List<IElementGraphicalModel> mElements;
-	private Map<String,NodeElementGraphicalModel> mNodeIdMap =
-			new HashMap<String,NodeElementGraphicalModel>();
+	private Map<String,ClassElementGraphicalModel> mClassIdMap =
+			new HashMap<String,ClassElementGraphicalModel>();
 	private Map<String,RelationshipElementGraphicalModel> mRelationshipIdMap =
 			new HashMap<String,RelationshipElementGraphicalModel>();
 	private UmlClassModel mClassModel;
 	
-	private boolean mNodeSizeChanged = false;
+	private boolean mClassSizeChanged = false;
 	
 	
 	
@@ -47,13 +47,13 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		mElements = new ArrayList<IElementGraphicalModel>();
 		mClassModel = classModel;
 		
-		Iterator<Entry<String,UmlNodeElement>> itNodes = classModel.getNodes().entrySet().iterator();
-		while (itNodes.hasNext()) {
-			Entry<String,UmlNodeElement> pairs = (Entry<String,UmlNodeElement>)itNodes.next();
-			NodeElementGraphicalModel n = new NodeElementGraphicalModel(pairs.getValue());
+		Iterator<Entry<String,UmlClassElement>> itClasses = classModel.getClasses().entrySet().iterator();
+		while (itClasses.hasNext()) {
+			Entry<String,UmlClassElement> pairs = (Entry<String,UmlClassElement>)itClasses.next();
+			ClassElementGraphicalModel n = new ClassElementGraphicalModel(pairs.getValue());
 			n.registerEventListener(this);
 			mElements.add(n);
-			mNodeIdMap.put(pairs.getKey(), n);
+			mClassIdMap.put(pairs.getKey(), n);
 		}
 		
 		Iterator<Entry<String,UmlRelationshipElement>> itRel =
@@ -79,13 +79,13 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	@Override
 	public void eventOccured(String evt) {
 		
-		if(evt.equals(NodeElementGraphicalModel.EVENT_SIZE_CHANGED)){
-			mNodeSizeChanged = true;
+		if(evt.equals(ClassElementGraphicalModel.EVENT_SIZE_CHANGED)){
+			mClassSizeChanged = true;
 		}
 		else if(evt.equals(ClassDiagramEditPart.EVENT_ACTIVATED)
-				&& mNodeSizeChanged && mListener != null){
+				&& mClassSizeChanged && mListener != null){
 			layoutElements();
-			mNodeSizeChanged = false;
+			mClassSizeChanged = false;
 			mListener.eventOccured(ClassDiagramEditPart.EVENT_REFRESH_REQUIRED);
 		}
 	}
@@ -110,18 +110,18 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	 */
 	public String lookupIdByGraphicalModel(IElementGraphicalModel element){
 		
-		Iterator<Entry<String,NodeElementGraphicalModel>> itNodes =
-				mNodeIdMap.entrySet().iterator();
-		while (itNodes.hasNext()) {
-			Entry<String,NodeElementGraphicalModel> pairs =
-					(Entry<String,NodeElementGraphicalModel>)itNodes.next();
+		Iterator<Entry<String,ClassElementGraphicalModel>> itClasses =
+				mClassIdMap.entrySet().iterator();
+		while (itClasses.hasNext()) {
+			Entry<String,ClassElementGraphicalModel> pairs =
+					(Entry<String,ClassElementGraphicalModel>)itClasses.next();
 			if(pairs.getValue().equals(element)){
 				return pairs.getKey();
 			}
 		}
 		Iterator<Entry<String,RelationshipElementGraphicalModel>> itRelationships =
 				mRelationshipIdMap.entrySet().iterator();
-		while (itNodes.hasNext()) {
+		while (itClasses.hasNext()) {
 			Entry<String,RelationshipElementGraphicalModel> pairs =
 					(Entry<String,RelationshipElementGraphicalModel>)itRelationships.next();
 			if(pairs.getValue().equals(element)){
@@ -138,8 +138,8 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	 */
 	public IElementGraphicalModel lookupGraphicalModelById(String id){
 		
-		IElementGraphicalModel node = mNodeIdMap.get(id);
-		return (node != null ? node : mRelationshipIdMap.get(id));
+		IElementGraphicalModel c = mClassIdMap.get(id);
+		return (c != null ? c : mRelationshipIdMap.get(id));
 	}
 	
 	

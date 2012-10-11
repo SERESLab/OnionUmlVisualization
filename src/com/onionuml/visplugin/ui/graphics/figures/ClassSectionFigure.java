@@ -8,17 +8,17 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Insets;
 
 /**
- * Represents a section of a uml node to be displayed with the Eclipse
+ * Represents a section of a uml class to be displayed with the Eclipse
  * Graphical Editing Framework (GEF).
  */
-public class NodeSectionFigure extends Figure {
+public class ClassSectionFigure extends Figure {
 	
 	private static final int SPACING = 3;
 	
 	/**
-	 * Constructs a new NodeSectionFigure with a top border.
+	 * Constructs a new ClassSectionFigure with a top border.
 	 */
-	public NodeSectionFigure() {
+	public ClassSectionFigure() {
 		ToolbarLayout layout = new ToolbarLayout();
 		layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
 		layout.setStretchMinorAxis(false);

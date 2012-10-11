@@ -11,20 +11,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 
-import com.onionuml.visplugin.core.UmlNodeAttribute;
-import com.onionuml.visplugin.core.UmlNodeElement;
-import com.onionuml.visplugin.core.UmlNodeOperation;
-import com.onionuml.visplugin.core.UmlNodeOperationParameter;
-import com.onionuml.visplugin.ui.graphics.figures.NodeFigure;
-import com.onionuml.visplugin.ui.graphics.graphicalmodels.NodeElementGraphicalModel;
+import com.onionuml.visplugin.core.UmlAttribute;
+import com.onionuml.visplugin.core.UmlClassElement;
+import com.onionuml.visplugin.core.UmlOperation;
+import com.onionuml.visplugin.core.UmlOperationParameter;
+import com.onionuml.visplugin.ui.graphics.figures.ClassFigure;
+import com.onionuml.visplugin.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
 /**
- * Represents the view/controller of a uml diagram node to be rendered with the Eclipse
+ * Represents the view/controller of a uml class to be rendered with the Eclipse
  * Graphical Editing Framework (GEF).
  */
-public class NodeElementEditPart extends AbstractGraphicalEditPart{
+public class ClassElementEditPart extends AbstractGraphicalEditPart{
 	
-	private static final Color NODE_COLOR = new Color(null, 255, 255, 206);
+	private static final Color CLASS_COLOR = new Color(null, 255, 255, 206);
 	private static final Font NAME_FONT = new Font(null, "Arial", 12, SWT.BOLD);
 	private static final Font STEREOTYPE_FONT = new Font(null, "Arial", 10, SWT.NORMAL);
 	private static final Font NAME_ABSTRACT_FONT = new Font(null, "Arial", 12, SWT.BOLD | SWT.ITALIC);
@@ -34,7 +34,7 @@ public class NodeElementEditPart extends AbstractGraphicalEditPart{
 	
 	@Override
 	protected IFigure createFigure() {
-		return new NodeFigure(NODE_COLOR, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
+		return new ClassFigure(CLASS_COLOR, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
 	}
 	
 	@Override
@@ -48,29 +48,29 @@ public class NodeElementEditPart extends AbstractGraphicalEditPart{
 	
 	@Override
 	protected void refreshVisuals() {
-		NodeElementGraphicalModel model = (NodeElementGraphicalModel) getModel();
-		NodeFigure figure = (NodeFigure) getFigure();
-		UmlNodeElement nodeElement = model.getNodeElement();
+		ClassElementGraphicalModel model = (ClassElementGraphicalModel) getModel();
+		ClassFigure figure = (ClassFigure) getFigure();
+		UmlClassElement classElement = model.getClassElement();
 		
 		figure.clear();
 		
-		if(nodeElement.getIsAbstract()){
+		if(classElement.getIsAbstract()){
 			figure.setNameFont(NAME_ABSTRACT_FONT);
 		}
 		
-		figure.setNameString(nodeElement.getName());
+		figure.setNameString(classElement.getName());
 		
-		String stereotype = nodeElement.getStereotype();
+		String stereotype = classElement.getStereotype();
 		if(stereotype != null && stereotype.length() > 0){
 			figure.setStereotypeString("Ç" + stereotype + "È");
 		}
 		
 		// setup properties
-		if(nodeElement.getAttributes().size() == 0){
+		if(classElement.getAttributes().size() == 0){
 			figure.addProperty("", null, null);
 		}
 		else{
-			for(UmlNodeAttribute a : nodeElement.getAttributes()){
+			for(UmlAttribute a : classElement.getAttributes()){
 				
 				String visStr = "";
 				switch(a.visibility){
@@ -95,11 +95,11 @@ public class NodeElementEditPart extends AbstractGraphicalEditPart{
 		
 		
 		// setup operations
-		if(nodeElement.getOperations().size() == 0){
+		if(classElement.getOperations().size() == 0){
 			figure.addOperation("", null, null);
 		}
 		else{
-			for(UmlNodeOperation o : nodeElement.getOperations()){
+			for(UmlOperation o : classElement.getOperations()){
 				
 				String visStr = "";
 				switch(o.visibility){
@@ -116,7 +116,7 @@ public class NodeElementEditPart extends AbstractGraphicalEditPart{
 				
 				String paramStr = "(";
 				for(int i=0; i < o.parameters.size(); ++i){
-					UmlNodeOperationParameter op = o.parameters.get(i);
+					UmlOperationParameter op = o.parameters.get(i);
 					if(i == 0){
 						paramStr += op.name;
 					}

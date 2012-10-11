@@ -3,10 +3,10 @@ package com.onionuml.visplugin.ui.graphics;
 import org.eclipse.gef.EditPart;
 
 import com.onionuml.visplugin.ui.graphics.editparts.ClassDiagramEditPart;
-import com.onionuml.visplugin.ui.graphics.editparts.NodeElementEditPart;
+import com.onionuml.visplugin.ui.graphics.editparts.ClassElementEditPart;
 import com.onionuml.visplugin.ui.graphics.editparts.RelationshipElementEditPart;
 import com.onionuml.visplugin.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
-import com.onionuml.visplugin.ui.graphics.graphicalmodels.NodeElementGraphicalModel;
+import com.onionuml.visplugin.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 import com.onionuml.visplugin.ui.graphics.graphicalmodels.RelationshipElementGraphicalModel;
 
 
@@ -24,8 +24,8 @@ public class EditPartFactory implements org.eclipse.gef.EditPartFactory {
 			return e;
 		}
 		
-		if(model instanceof NodeElementGraphicalModel){
-			EditPart e = new NodeElementEditPart();
+		if(model instanceof ClassElementGraphicalModel){
+			EditPart e = new ClassElementEditPart();
 			e.setModel(model);
 			return e;
 		}

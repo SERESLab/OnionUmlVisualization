@@ -3,27 +3,27 @@ package com.onionuml.visplugin.ui.graphics.graphicalmodels;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
-import com.onionuml.visplugin.core.UmlNodeElement;
+import com.onionuml.visplugin.core.UmlClassElement;
 import com.onionuml.visplugin.ui.graphics.IEventListener;
 import com.onionuml.visplugin.ui.graphics.IEventRegistrar;
 
 /**
- * Represents the model of a uml diagram node to be rendered with the Eclipse
+ * Represents the model of a uml class to be rendered with the Eclipse
  * Graphical Editing Framework (GEF).
  */
-public class NodeElementGraphicalModel implements IElementGraphicalModel, IEventRegistrar {
+public class ClassElementGraphicalModel implements IElementGraphicalModel, IEventRegistrar {
 	
 	// PUBLIC MEMBER CONSTANTS ------------------------
 	
 	/**
-	 * Event string specifying that the node's size has changed.
+	 * Event string specifying that the class's size has changed.
 	 */
 	public static final String EVENT_SIZE_CHANGED = "EVENT_SIZE_CHANGED";
 	
 	
 	// PRIVATE MEMBER VARIABLES ---------------------------
 	
-	private UmlNodeElement mNodeElement;
+	private UmlClassElement mClassElement;
 	private Point mPosition;
 	private Dimension mSize;
 	
@@ -33,10 +33,10 @@ public class NodeElementGraphicalModel implements IElementGraphicalModel, IEvent
 	// PUBLIC METHODS --------------------------------------
 	
 	/**
-	 * Contructs a new NodeGraphicalModel from the given node.
+	 * Contructs a new ClassGraphicalModel from the given class.
 	 */
-	public NodeElementGraphicalModel(UmlNodeElement node){
-		mNodeElement = node;
+	public ClassElementGraphicalModel(UmlClassElement c){
+		mClassElement = c;
 		mPosition = new Point();
 		mSize = new Dimension();
 	}
@@ -52,10 +52,10 @@ public class NodeElementGraphicalModel implements IElementGraphicalModel, IEvent
 	}
 	
 	/**
-	 * Gets a reference to the underlying UmlNodeElement object.
+	 * Gets a reference to the underlying UmlClassElement object.
 	 */
-	public UmlNodeElement getNodeElement(){
-		return mNodeElement;
+	public UmlClassElement getClassElement(){
+		return mClassElement;
 	}
 	
 	@Override

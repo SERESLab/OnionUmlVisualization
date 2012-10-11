@@ -19,7 +19,7 @@ public class UmlSaxHandler extends DefaultHandler {
 	// PRIVATE MEMBER VARIABLES --------------------------------
 	
 	private String mTitle;
-	private Map<String,UmlNodeElement> mNodes = new HashMap<String,UmlNodeElement>();
+	private Map<String,UmlClassElement> mClasses = new HashMap<String,UmlClassElement>();
 	private Map<String,UmlRelationshipElement> mRelationships =
 			new HashMap<String,UmlRelationshipElement>();
 	
@@ -43,19 +43,19 @@ public class UmlSaxHandler extends DefaultHandler {
 			String label = attributes.getValue("label");
 			String stereotype = attributes.getValue("stereotype");
 			String isAbstract = attributes.getValue("isAbstract");
-			UmlNodeElement node = new UmlNodeElement((label.length() > 0 ? label : "     "),
+			UmlClassElement c = new UmlClassElement((label.length() > 0 ? label : "     "),
 					(stereotype != null) ? stereotype : "");
-			node.setIsAbstract(isAbstract != null && (isAbstract.equals("true") || isAbstract.equals("1")));
-			mObjects.push(node);
-			mNodes.put(id, node);
+			c.setIsAbstract(isAbstract != null && (isAbstract.equals("true") || isAbstract.equals("1")));
+			mObjects.push(c);
+			mClasses.put(id, c);
 		}
 		else if(qName.equals("attribute")){
 			Visibility vis = Visibility.parseVisibility(attributes.getValue("visibility"));
 			String label = attributes.getValue("label");
 			String dataType = attributes.getValue("dataType");
-			UmlNodeAttribute a = new UmlNodeAttribute(vis, label, dataType);
-			UmlNodeElement node = (UmlNodeElement)mObjects.peek();
-			node.addAttribute(a);
+			UmlAttribute a = new UmlAttribute(vis, label, dataType);
+			UmlClassElement c = (UmlClassElement)mObjects.peek();
+			c.addAttribute(a);
 		}
 		else if(qName.equals("operation")){
 			Visibility vis = Visibility.parseVisibility(attributes.getValue("visibility"));
@@ -63,18 +63,18 @@ public class UmlSaxHandler extends DefaultHandler {
 			String returnType = attributes.getValue("returnType");
 			String isStatic = attributes.getValue("isStatic");
 			String isAbstract = attributes.getValue("isAbstract");
-			UmlNodeOperation o = new UmlNodeOperation(vis, label, returnType,
+			UmlOperation o = new UmlOperation(vis, label, returnType,
 					isStatic != null && (isStatic.equals("true") || isStatic.equals("1")),
 					isAbstract !=  null && (isAbstract.equals("true") || isAbstract.equals("1")));
-			UmlNodeElement node = (UmlNodeElement)mObjects.peek();
-			node.addOperation(o);
+			UmlClassElement c = (UmlClassElement)mObjects.peek();
+			c.addOperation(o);
 			mObjects.push(o);
 		}
 		else if(qName.equals("parameter")){
 			String label = attributes.getValue("label");
 			String dataType = attributes.getValue("dataType");
-			UmlNodeOperationParameter op = new UmlNodeOperationParameter(label, dataType);
-			UmlNodeOperation o = (UmlNodeOperation)mObjects.peek();
+			UmlOperationParameter op = new UmlOperationParameter(label, dataType);
+			UmlOperation o = (UmlOperation)mObjects.peek();
 			o.parameters.add(op);
 		}
 		else if(qName.equals("relationship")){
@@ -138,10 +138,10 @@ public class UmlSaxHandler extends DefaultHandler {
 	}
 	
 	/**
-	 * Gets a map of each model node id string to its corresponding node.
+	 * Gets a map of each model class id string to its corresponding class.
 	 */
-	public Map<String,UmlNodeElement> getNodes(){
-		return mNodes;
+	public Map<String,UmlClassElement> getClasses(){
+		return mClasses;
 	}
 	
 	/**

@@ -10,27 +10,27 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Represents a node of a uml class diagram to be displayed with the Eclipse
+ * Represents a class in a uml class diagram to be displayed with the Eclipse
  * Graphical Editing Framework (GEF).
  */
-public class NodeFigure extends Figure {
+public class ClassFigure extends Figure {
 	
-	private NodeSectionFigure mPropertiesFigure;
-	private NodeSectionFigure mOperationsFigure;
+	private ClassSectionFigure mPropertiesFigure;
+	private ClassSectionFigure mOperationsFigure;
 	private Font mContentFont;
 	private Label mNameLabel;
 	private Label mStereotypeLabel;
 	
 	
 	/**
-	 * Constructs a new NodeFigure with the specified background color
+	 * Constructs a new ClassFigure with the specified background color
 	 * and fonts.
-	 * @param bgColor the background color of the node
-	 * @param nameFont the font to use for the name label of the node
+	 * @param bgColor the background color of the class
+	 * @param nameFont the font to use for the name label of the class
 	 * @param contentFont the font to use for properties and operations
 	 * @param stereotypeFont the font to use for the stereotype label
 	 */
-	public NodeFigure(Color bgColor, Font nameFont, Font contentFont,
+	public ClassFigure(Color bgColor, Font nameFont, Font contentFont,
 			Font stereotypeFont) {
 		
 		ToolbarLayout layout = new ToolbarLayout();
@@ -46,8 +46,8 @@ public class NodeFigure extends Figure {
 		
 		mContentFont = contentFont;
 		
-		mPropertiesFigure = new NodeSectionFigure();
-		mOperationsFigure = new NodeSectionFigure();
+		mPropertiesFigure = new ClassSectionFigure();
+		mOperationsFigure = new ClassSectionFigure();
 		
 		reconstruct();
 	}
@@ -82,7 +82,7 @@ public class NodeFigure extends Figure {
 	}
 	
 	/**
-	 * Adds the specified string and icon to the properties section of the node.
+	 * Adds the specified string and icon to the properties section of the class.
 	 * If a font is specified, it will be used instead of the default.
 	 */
 	public void addProperty(String str, Image icon, Font font) {
@@ -97,7 +97,7 @@ public class NodeFigure extends Figure {
 	}
 	
 	/**
-	 * Adds the specified string and icon to the operations section of the node.
+	 * Adds the specified string and icon to the operations section of the class.
 	 * If a font is specified, it will be used instead of the default.
 	 */
 	public void addOperation(String str, Image icon, Font font) {
@@ -112,7 +112,7 @@ public class NodeFigure extends Figure {
 	}
 	
 	/**
-	 * Clears all properties and operations from the node and resets the name
+	 * Clears all properties and operations from the class and resets the name
 	 * and stereotype.
 	 */
 	public void clear(){

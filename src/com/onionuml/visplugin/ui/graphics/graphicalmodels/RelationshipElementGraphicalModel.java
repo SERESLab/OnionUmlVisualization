@@ -6,7 +6,7 @@ import org.eclipse.draw2d.geometry.Point;
 import com.onionuml.visplugin.core.UmlRelationshipElement;
 
 /**
- * Represents the model of a uml diagram relationship between two nodes to
+ * Represents the model of a uml diagram relationship between two elements to
  * be rendered with the Eclipse Graphical Editing Framework (GEF).
  */
 public class RelationshipElementGraphicalModel implements

@@ -19,12 +19,12 @@ public interface IElementGraphicalModel {
 	public Dimension getSize();
 	
 	/**
-	 * Sets the position of the node to the specified point.
+	 * Sets the position of the element to the specified point.
 	 */
 	public void setPosition(Point position);
 	
 	/**
-	 * Sets the size of the node to the specified size.
+	 * Sets the size of the element to the specified size.
 	 */
 	public void setSize(Dimension size);
 }
