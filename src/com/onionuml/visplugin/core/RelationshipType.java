@@ -10,6 +10,7 @@ public enum RelationshipType {
 	DIRECTEDASSOCIATION,
 	COMPOSITION,
 	DEPENDENCY,
+	REALIZATION,
 	GENERALIZATION;
 	
 	/**
@@ -30,6 +31,9 @@ public enum RelationshipType {
         }
         else if(s.equalsIgnoreCase("dependency")){
         	return DEPENDENCY;
+        }
+        else if(s.equalsIgnoreCase("realization")){
+        	return REALIZATION;
         }
         else if(s.equalsIgnoreCase("generalization")){
         	return GENERALIZATION;

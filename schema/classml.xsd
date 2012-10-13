@@ -32,6 +32,7 @@
       <xs:enumeration value="directedAssociation"/>
       <xs:enumeration value="composition"/>
       <xs:enumeration value="dependency"/>
+      <xs:enumeration value="realization"/>
       <xs:enumeration value="generalization"/>
     </xs:restriction>
   </xs:simpleType>

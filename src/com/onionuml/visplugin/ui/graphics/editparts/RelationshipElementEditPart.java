@@ -67,7 +67,7 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 		
 		connection.setTargetDecoration(makeHeadDecoration(rel.getType()));
 		
-		if(rel.getType() == RelationshipType.DEPENDENCY){
+		if(rel.getType() == RelationshipType.DEPENDENCY || rel.getType() == RelationshipType.REALIZATION){
 			connection.setLineStyle(SWT.LINE_CUSTOM);
 			connection.setLineDash(LINE_DASH_STYLE);
 		}
@@ -131,6 +131,7 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 				points.addPoint(0,0);
 				points.addPoint(-2,-4);
 				break;
+			case REALIZATION:
 			case GENERALIZATION:
 				decoration.setBackgroundColor(ColorConstants.white);
 				points.addPoint(0,0);
