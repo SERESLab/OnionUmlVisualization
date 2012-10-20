@@ -1,6 +1,8 @@
 package com.onionuml.visplugin.core;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
@@ -27,19 +29,49 @@ public class UmlClassModel{
 	
 	private String mName;
 	private String mDescription;
-	private Map<String,UmlClassElement> mClasses;
-	private Map<String,UmlRelationshipElement> mRelationships;
+	private Map<String,UmlPackageElement> mPackages =
+			new HashMap<String,UmlPackageElement>();
+	private Map<String,UmlRelationshipElement> mRelationships =
+			new HashMap<String,UmlRelationshipElement>();
 	
 	
-	// PRIVATE CONSTRUCTORS --------------------------------------
-	private UmlClassModel(){}
+	// CONSTRUCTORS --------------------------------------
 	
 	private UmlClassModel(String filename){
+		if(filename == null){
+			throw new InvalidParameterException();
+		}
 		
 		mDescription = filename;
 		readFromFile(filename);
 	}
 	
+	/**
+	 * Constructs a new class model with the specified parameters.
+	 * @param name the name of the model
+	 * @param description description of the model, may be null
+	 * @param packages map of package ids to package element objects, may be null
+	 * @param relationships map of relationship ids to relationship element objects,
+	 * may be null
+	 * @throws InvalidParameterException if the name string is null
+	 */
+	public UmlClassModel(String name, String description, Map<String,UmlPackageElement> packages,
+			Map<String,UmlRelationshipElement> relationships){
+		
+		if(name == null){
+			throw new InvalidParameterException();
+		}
+		
+		mName = name;
+		mDescription = (description != null ? description : "");
+		
+		if(packages != null){
+			mPackages = packages;
+		}
+		if(relationships != null){
+			mRelationships = relationships;
+		}
+	}
 	
 	
 	
@@ -69,10 +101,10 @@ public class UmlClassModel{
 	}
 	
 	/**
-	 * Gets a reference to the map of classes in this model.
+	 * Gets a reference to the map of packages in this model.
 	 */
-	public Map<String,UmlClassElement> getClasses(){
-		return mClasses;
+	public Map<String,UmlPackageElement> getPackages(){
+		return mPackages;
 	}
 	
 	/**
@@ -137,7 +169,7 @@ public class UmlClassModel{
 		}
 	    
 	    mName = saxHandler.getTitle();
-	    mClasses = saxHandler.getClasses();
+	    mPackages = saxHandler.getPackages();
 	    mRelationships = saxHandler.getRelationships();
 	}
 }

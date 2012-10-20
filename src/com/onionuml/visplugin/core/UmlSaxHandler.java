@@ -19,7 +19,7 @@ public class UmlSaxHandler extends DefaultHandler {
 	// PRIVATE MEMBER VARIABLES --------------------------------
 	
 	private String mTitle;
-	private Map<String,UmlClassElement> mClasses = new HashMap<String,UmlClassElement>();
+	private Map<String,UmlPackageElement> mPackages = new HashMap<String,UmlPackageElement>();
 	private Map<String,UmlRelationshipElement> mRelationships =
 			new HashMap<String,UmlRelationshipElement>();
 	
@@ -38,6 +38,13 @@ public class UmlSaxHandler extends DefaultHandler {
 		if(qName.equals("classml")){
 			mTitle = attributes.getValue("title");
 		}
+		if(qName.equals("package")){
+			String id = attributes.getValue("id");
+			String label = attributes.getValue("label");
+			UmlPackageElement p = new UmlPackageElement(label);
+			mPackages.put(id, p);
+			mObjects.push(p);
+		}
 		else if(qName.equals("class")){
 			String id = attributes.getValue("id");
 			String label = attributes.getValue("label");
@@ -46,8 +53,9 @@ public class UmlSaxHandler extends DefaultHandler {
 			UmlClassElement c = new UmlClassElement((label.length() > 0 ? label : "     "),
 					(stereotype != null) ? stereotype : "");
 			c.setIsAbstract(isAbstract != null && (isAbstract.equals("true") || isAbstract.equals("1")));
+			UmlPackageElement p = (UmlPackageElement)mObjects.peek();
+			p.addClass(id, c);
 			mObjects.push(c);
-			mClasses.put(id, c);
 		}
 		else if(qName.equals("attribute")){
 			Visibility vis = Visibility.parseVisibility(attributes.getValue("visibility"));
@@ -121,7 +129,7 @@ public class UmlSaxHandler extends DefaultHandler {
 
 		mElementNames.pop();
 
-		if(qName.equals("class") || qName.equals("operation")){
+		if(qName.equals("package") || qName.equals("class") || qName.equals("operation")){
 			mObjects.pop();
 		}
 	}
@@ -138,10 +146,10 @@ public class UmlSaxHandler extends DefaultHandler {
 	}
 	
 	/**
-	 * Gets a map of each model class id string to its corresponding class.
+	 * Gets a map of each model package id string to its corresponding package.
 	 */
-	public Map<String,UmlClassElement> getClasses(){
-		return mClasses;
+	public Map<String,UmlPackageElement> getPackages(){
+		return mPackages;
 	}
 	
 	/**

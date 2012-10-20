@@ -106,7 +106,6 @@
               </xs:element>
             </xs:all>
             <xs:attributeGroup ref="elementAttrs"/>
-            <xs:attribute name="isDefault" type="xs:boolean" default="false"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="relationships" minOccurs="0">
@@ -131,7 +130,7 @@
       <xs:attribute name="title" type="xs:string" default="Untitled Model"/>
     </xs:complexType>
     <xs:key name="keyElementId">
-      <xs:selector xpath=".//cmlns:package/cmlns:classes/cmlns:class | .//cmlns:relationships/cmlns:relationship"/>
+      <xs:selector xpath=".//cmlns:package | .//cmlns:package/cmlns:classes/cmlns:class | .//cmlns:relationships/cmlns:relationship"/>
       <xs:field xpath="@id"/>
     </xs:key>
     <xs:keyref name="refHeadId" refer="keyElementId">

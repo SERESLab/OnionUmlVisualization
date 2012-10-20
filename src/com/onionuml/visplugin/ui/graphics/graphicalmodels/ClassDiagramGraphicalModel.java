@@ -9,8 +9,9 @@ import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Point;
 
-import com.onionuml.visplugin.core.UmlClassModel;
 import com.onionuml.visplugin.core.UmlClassElement;
+import com.onionuml.visplugin.core.UmlClassModel;
+import com.onionuml.visplugin.core.UmlPackageElement;
 import com.onionuml.visplugin.core.UmlRelationshipElement;
 import com.onionuml.visplugin.ui.graphics.IEventListener;
 import com.onionuml.visplugin.ui.graphics.IEventRegistrar;
@@ -47,13 +48,19 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		mElements = new ArrayList<IElementGraphicalModel>();
 		mClassModel = classModel;
 		
-		Iterator<Entry<String,UmlClassElement>> itClasses = classModel.getClasses().entrySet().iterator();
-		while (itClasses.hasNext()) {
-			Entry<String,UmlClassElement> pairs = (Entry<String,UmlClassElement>)itClasses.next();
-			ClassElementGraphicalModel n = new ClassElementGraphicalModel(pairs.getValue());
-			n.registerEventListener(this);
-			mElements.add(n);
-			mClassIdMap.put(pairs.getKey(), n);
+		Iterator<Entry<String,UmlPackageElement>> itPackages = classModel.getPackages().entrySet().iterator();
+		while (itPackages.hasNext()) {
+			Entry<String,UmlPackageElement> packagePairs = (Entry<String,UmlPackageElement>)itPackages.next();
+			
+			Iterator<Entry<String,UmlClassElement>> itClasses =
+					packagePairs.getValue().getClasses().entrySet().iterator();
+			while (itClasses.hasNext()) {
+				Entry<String,UmlClassElement> classPairs = (Entry<String,UmlClassElement>)itClasses.next();
+				ClassElementGraphicalModel n = new ClassElementGraphicalModel(classPairs.getValue());
+				n.registerEventListener(this);
+				mElements.add(n);
+				mClassIdMap.put(classPairs.getKey(), n);
+			}
 		}
 		
 		Iterator<Entry<String,UmlRelationshipElement>> itRel =
