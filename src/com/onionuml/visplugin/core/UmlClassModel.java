@@ -87,6 +87,22 @@ public class UmlClassModel{
 	}
 	
 	/**
+	 * Writes the class model to the specified file in ClassML format.
+	 */
+	public void toFile(String filename){
+		if(filename == null){
+			throw new InvalidParameterException();
+		}
+		
+		try{
+			ClassmlWriter.write(this, filename);
+		}
+		catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
 	 * Gets the name of the class model.
 	 */
 	public String getName(){

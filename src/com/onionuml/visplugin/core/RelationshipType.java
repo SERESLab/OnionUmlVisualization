@@ -41,4 +41,14 @@ public enum RelationshipType {
         
         return null;
     }
+	
+	@Override
+	public String toString(){
+		if(this == DIRECTEDASSOCIATION){
+			return "directedAssociation";
+		}
+		else{
+			return super.toString().toLowerCase();
+		}
+	}
 }

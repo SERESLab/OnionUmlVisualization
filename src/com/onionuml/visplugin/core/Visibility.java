@@ -22,4 +22,9 @@ public enum Visibility {
         }
         return PRIVATE;
     }
+	
+	@Override
+	public String toString(){
+		return super.toString().toLowerCase();
+	}
 }

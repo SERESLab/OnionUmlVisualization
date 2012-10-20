@@ -19,14 +19,25 @@ public class UmlRelationshipElement {
 		 * NONE if the string is not recognized.
 		 */
 		public static Multiplicity parseMultiplicity(String s) {
-			if(s.equalsIgnoreCase("0")){
+			if(s.equals("0")){
 	        	return ZERO;
-	        } else if(s.equalsIgnoreCase("1")){
+	        } else if(s.equals("1")){
 	        	return ONE;
-	        } else if(s.equalsIgnoreCase("*")){
+	        } else if(s.equals("*")){
 	        	return MANY;
 	        } return NONE;
 	    }
+		
+		@Override
+		public String toString(){
+			if(this == ZERO){
+				return "0";
+			} else if(this == ONE){
+				return "1";
+			} else if(this == MANY){
+				return "*";
+			} return "none";
+		}
 	}
 	
 	
