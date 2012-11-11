@@ -4,6 +4,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
 import com.onionuml.visplugin.core.UmlClassElement;
+import com.onionuml.visplugin.core.UmlPackageElement;
 import com.onionuml.visplugin.ui.graphics.IEventListener;
 import com.onionuml.visplugin.ui.graphics.IEventRegistrar;
 
@@ -23,6 +24,7 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	
 	// PRIVATE MEMBER VARIABLES ---------------------------
 	
+	private UmlPackageElement mPackageElement;
 	private UmlClassElement mClassElement;
 	private Point mPosition;
 	private Dimension mSize;
@@ -33,12 +35,13 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	// PUBLIC METHODS --------------------------------------
 	
 	/**
-	 * Contructs a new ClassGraphicalModel from the given class.
+	 * Contructs a new ClassGraphicalModel from the given class and package.
 	 */
-	public ClassElementGraphicalModel(UmlClassElement c){
+	public ClassElementGraphicalModel(UmlClassElement c, UmlPackageElement p){
 		mClassElement = c;
 		mPosition = new Point();
 		mSize = new Dimension();
+		mPackageElement = p;
 	}
 	
 	@Override
@@ -56,6 +59,13 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	 */
 	public UmlClassElement getClassElement(){
 		return mClassElement;
+	}
+	
+	/**
+	 * Gets a reference to the underlying UmlPackageElement to which the class belongs.
+	 */
+	public UmlPackageElement getPackageElemet(){
+		return mPackageElement;
 	}
 	
 	@Override

@@ -9,6 +9,10 @@ import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Point;
 
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxGeometry;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.view.mxGraph;
 import com.onionuml.visplugin.core.UmlClassElement;
 import com.onionuml.visplugin.core.UmlClassModel;
 import com.onionuml.visplugin.core.UmlPackageElement;
@@ -56,7 +60,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 					packagePairs.getValue().getClasses().entrySet().iterator();
 			while (itClasses.hasNext()) {
 				Entry<String,UmlClassElement> classPairs = (Entry<String,UmlClassElement>)itClasses.next();
-				ClassElementGraphicalModel n = new ClassElementGraphicalModel(classPairs.getValue());
+				ClassElementGraphicalModel n = new ClassElementGraphicalModel(classPairs.getValue(), packagePairs.getValue());
 				n.registerEventListener(this);
 				mElements.add(n);
 				mClassIdMap.put(classPairs.getKey(), n);
@@ -71,6 +75,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 			mElements.add(r);
 			mRelationshipIdMap.put(pairs.getKey(), r);
 		}
+		
 	}
 	
 	@Override
@@ -91,7 +96,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		}
 		else if(evt.equals(ClassDiagramEditPart.EVENT_ACTIVATED)
 				&& mClassSizeChanged && mListener != null){
-			layoutElements();
+			layout();
 			mClassSizeChanged = false;
 			mListener.eventOccured(ClassDiagramEditPart.EVENT_REFRESH_REQUIRED);
 		}
@@ -128,7 +133,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		}
 		Iterator<Entry<String,RelationshipElementGraphicalModel>> itRelationships =
 				mRelationshipIdMap.entrySet().iterator();
-		while (itClasses.hasNext()) {
+		while (itRelationships.hasNext()) {
 			Entry<String,RelationshipElementGraphicalModel> pairs =
 					(Entry<String,RelationshipElementGraphicalModel>)itRelationships.next();
 			if(pairs.getValue().equals(element)){
@@ -151,47 +156,98 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	
 	
 	
-	// PRIVATE METHODS ----------------------------------------
+	// PRIVATE METHODS ------------------------------
 	
-	private void layoutElements(){
+	/*
+	 * Lays out the classes and relationships using the JGraphX library.
+	 */
+	private void layout(){
 		
+		mxGraph graph = new mxGraph();
+		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+		Object defaultParent = graph.getDefaultParent();
+		Map<String,Object> vertexIdMap = new HashMap<String,Object>();
+		Map<String,Object> edgeIdMap = new HashMap<String,Object>();
 		
-		
-		
-		// *********** temp ***********
-		
-		
-		
-		
-		
-		
-		int maxWidth = 1000;
-		int padding = 100;
-		
-		int longestHeight = padding;
-		int curY = padding;
-		
-		mElements.get(0).setPosition(new Point(padding, padding));
-		longestHeight = mElements.get(0).getSize().height;
-		
-		for(int i=1; i < mElements.size(); ++i){
-			IElementGraphicalModel prev = mElements.get(i-1);
-			IElementGraphicalModel cur = mElements.get(i);
-			
-			int x = prev.getPosition().x + prev.getSize().width + padding;
-			int y = curY;
-			
-			if(x+cur.getSize().width > maxWidth){
-				x = padding;
-				y = curY + longestHeight + padding;
-				curY = y;
+		graph.getModel().beginUpdate();
+		try{
+			Iterator<Entry<String,RelationshipElementGraphicalModel>> itRelationships =
+					mRelationshipIdMap.entrySet().iterator();
+			while (itRelationships.hasNext()) {
+				Entry<String,RelationshipElementGraphicalModel> pairs =
+						(Entry<String,RelationshipElementGraphicalModel>)itRelationships.next();
+				
+				// get head and tail classes for each relationship
+				RelationshipElementGraphicalModel rel = pairs.getValue();
+				String relId = pairs.getKey();
+				String headId = rel.getRelationshipElement().getHeadId();
+				String tailId = rel.getRelationshipElement().getTailId();
+				IElementGraphicalModel head = lookupGraphicalModelById(headId);
+				IElementGraphicalModel tail = lookupGraphicalModelById(tailId);
+				
+				// add head and tail classes to layout graph
+				Object headVertex;
+				Object tailVertex;
+				if(vertexIdMap.containsKey(headId)){
+					headVertex = vertexIdMap.get(headId);
+				}
+				else{
+					headVertex = graph.insertVertex(defaultParent, null, headId,
+							head.getPosition().x, head.getPosition().y, 
+							head.getSize().width, head.getSize().height);
+					vertexIdMap.put(headId, headVertex);
+				}
+				
+				if(vertexIdMap.containsKey(tailId)){
+					tailVertex = vertexIdMap.get(tailId);
+				}
+				else{
+					tailVertex = graph.insertVertex(defaultParent, null, tailId,
+							tail.getPosition().x, tail.getPosition().y, 
+							tail.getSize().width, tail.getSize().height);
+					vertexIdMap.put(tailId, tailVertex);
+				}
+				Object edge = graph.insertEdge(defaultParent, null, relId, headVertex, tailVertex);
+				edgeIdMap.put(relId, edge);
 			}
 			
-			cur.setPosition(new Point(x, y));
-			
-			if(cur.getSize().height > longestHeight){
-				longestHeight = cur.getSize().height;
+			// add remaining classes to layout graph
+			Iterator<Entry<String,ClassElementGraphicalModel>> itClasses =
+					mClassIdMap.entrySet().iterator();
+			while (itClasses.hasNext()) {
+				Entry<String,ClassElementGraphicalModel> pairs =
+						(Entry<String,ClassElementGraphicalModel>)itClasses.next();
+				String id = pairs.getKey();
+				ClassElementGraphicalModel c = pairs.getValue();
+				if(!vertexIdMap.containsKey(id)){
+					Object v = graph.insertVertex(defaultParent, null, id,
+							c.getPosition().x, c.getPosition().y, 
+							c.getSize().width, c.getSize().height);
+					vertexIdMap.put(id, v);
+				}
 			}
+			
+			layout.execute(graph.getDefaultParent());
+		}
+		finally{
+			graph.getModel().endUpdate();
+		}
+		
+		// get new position of each class
+		Iterator<Entry<String,Object>> itVertices = vertexIdMap.entrySet().iterator();
+		while (itVertices.hasNext()) {
+			Entry<String,Object> pairs = (Entry<String,Object>)itVertices.next();
+			IElementGraphicalModel gm = lookupGraphicalModelById(pairs.getKey());
+			mxGeometry geom = graph.getModel().getGeometry(pairs.getValue());
+			gm.setPosition(new Point((int)geom.getX(), (int)geom.getY()));
+		}
+		
+		// get new points of each edge
+		Iterator<Entry<String, Object>> itEdges = edgeIdMap.entrySet().iterator();
+		while (itEdges.hasNext()) {
+			Entry<String, Object> pairs = (Entry<String, Object>) itEdges.next();
+			List<mxPoint> points = graph.getModel().getGeometry(pairs.getValue()).getPoints();
+			// TODO set control points for drawing edges
 		}
 	}
 }
