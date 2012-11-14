@@ -1,7 +1,12 @@
 package com.onionuml.visplugin.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.DefaultEditDomain;
+import org.eclipse.gef.editparts.ScalableRootEditPart;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -17,13 +22,14 @@ import com.onionuml.visplugin.ui.graphics.graphicalmodels.ClassDiagramGraphicalM
  */
 public final class ModelViewer extends GraphicalEditor {
 	
-	// PUBLIC MEMBER VARIABLES ---------------------------
+	// CONSTANTS ---------------------------
 	
 	/**
 	 * The id of the editor.
 	 */
 	public static final String ID = Activator.PACKAGE_BASE + ".ui.modelviewer";
 	
+	private static double[] ZOOM_LEVELS = {0.05, 0.1, 0.25, 0.5, 0.75, 1.0};
 	
 	
 	// PRIVATE MEMBER VARIABLES ---------------------------
@@ -60,14 +66,30 @@ public final class ModelViewer extends GraphicalEditor {
 	}
 	
 	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class type){
+		
+		// add support for the ZoomManager
+		if (type == ZoomManager.class){
+			return getGraphicalViewer().getProperty(ZoomManager.class.toString());
+		}
+		return super.getAdapter(type);
+	}
+	
+	@Override
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 		getGraphicalViewer().setEditPartFactory(new EditPartFactory());
+		
+		ScalableRootEditPart root = new ScalableRootEditPart();
+		getGraphicalViewer().setRootEditPart(root);
+		List<String> contributions = new ArrayList<String>();
+		contributions.add(ZoomManager.FIT_ALL);
+		root.getZoomManager().setZoomLevelContributions(contributions);
+		root.getZoomManager().setZoomLevels(ZOOM_LEVELS);
 	}
 
 	@Override
 	protected void initializeGraphicalViewer() {
-		
 		getGraphicalViewer().setContents(mModel);
 	}
 	

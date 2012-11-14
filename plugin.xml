@@ -57,7 +57,8 @@
             class="com.onionuml.visplugin.ui.ModelViewer"
             default="false"
             id="com.onionuml.visplugin.ui.modelviewer"
-            name="Model Viewer">
+            name="Model Viewer"
+            contributorClass="com.onionuml.visplugin.ui.ModelViewerActionBarContributor">
       </editor>
    </extension>
 

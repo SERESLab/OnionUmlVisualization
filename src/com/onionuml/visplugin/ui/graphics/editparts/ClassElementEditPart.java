@@ -38,7 +38,7 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart{
 	
 	@Override
 	public DragTracker getDragTracker(Request request){
-		return null;
+		return super.getDragTracker(request);
 	}
 	
 	@Override

@@ -6,8 +6,15 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
+import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.tools.MarqueeDragTracker;
 
 import com.onionuml.visplugin.ui.graphics.IEventListener;
 import com.onionuml.visplugin.ui.graphics.IEventRegistrar;
@@ -44,23 +51,44 @@ public class ClassDiagramEditPart extends AbstractGraphicalEditPart
 	
 	@Override
 	public void activate(){
+		super.activate();
 		((IEventRegistrar)getModel()).registerEventListener(this);
 		((IEventListener)getModel()).eventOccured(EVENT_ACTIVATED);
 	}
 	
 	@Override
 	public void deactivate(){
+		super.deactivate();
 		((IEventRegistrar)getModel()).unregisterEventListener();
 	}
 	
 	@Override
 	public DragTracker getDragTracker(Request request){
-		
-		return null;
+		return new MarqueeDragTracker();
 	}
 	
 	@Override
 	protected void createEditPolicies() {
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutEditPolicy(){
+
+			@Override
+			protected Command getCreateCommand(CreateRequest request) {
+				return null;
+			}
+			@Override
+			protected EditPolicy createChildEditPolicy(EditPart child) {
+				return new NonResizableEditPolicy(){
+					@Override
+					public boolean isDragAllowed(){
+						return false;
+					}
+					@Override
+					public boolean understandsRequest(Request request){
+						return false;
+					}
+				};
+			}
+		});
 	}
 	
 	@Override

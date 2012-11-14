@@ -52,6 +52,11 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 	}
 	
 	@Override
+	public boolean isSelectable(){
+		return false;
+	}
+	
+	@Override
 	protected void refreshVisuals() {
 		RelationshipElementGraphicalModel model = (RelationshipElementGraphicalModel) getModel();
 		UmlRelationshipElement rel = model.getRelationshipElement();
