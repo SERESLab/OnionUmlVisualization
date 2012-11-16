@@ -1,15 +1,23 @@
 package com.onionuml.visplugin.ui.graphics.editparts;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.draw2d.AbsoluteBendpoint;
+import org.eclipse.draw2d.Bendpoint;
+import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionEndpointLocator;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.MidpointLocator;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.XYAnchor;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
@@ -33,6 +41,7 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 	private static float[] LINE_DASH_STYLE = new float[]{8.0f, 8.0f};
 	private static int LABEL_DISTANCE = 12;
 	
+	private List<Bendpoint> mBendpoints = new ArrayList<Bendpoint>();
 	
 	
 	// OVERRIDE METHODS -------------------------------
@@ -70,44 +79,55 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 		connection.setTargetAnchor(new ChopboxAnchor(headFig));
 		connection.setSourceAnchor(new ChopboxAnchor(tailFig));
 		
-		connection.setTargetDecoration(makeHeadDecoration(rel.getType()));
 		
-		if(rel.getType() == RelationshipType.DEPENDENCY || rel.getType() == RelationshipType.REALIZATION){
+		mBendpoints.clear();
+		List<Point> points = model.getBendPoints();
+		for (Point p : points) {
+			mBendpoints.add(new AbsoluteBendpoint(p.x, p.y));
+		}
+
+		connection.setConnectionRouter(new BendpointConnectionRouter());
+		connection.setRoutingConstraint(mBendpoints);
+
+		connection.setTargetDecoration(makeHeadDecoration(rel.getType()));
+
+		if (rel.getType() == RelationshipType.DEPENDENCY
+				|| rel.getType() == RelationshipType.REALIZATION) {
 			connection.setLineStyle(SWT.LINE_CUSTOM);
 			connection.setLineDash(LINE_DASH_STYLE);
 		}
-		
-		String headLabelStr = makeMultiplicityString(rel.getHeadMultiplicityMin(),
-				rel.getHeadMultiplicityMax());
-		if(headLabelStr != null && headLabelStr.length() > 0){
+
+		String headLabelStr = makeMultiplicityString(
+				rel.getHeadMultiplicityMin(), rel.getHeadMultiplicityMax());
+		if (headLabelStr != null && headLabelStr.length() > 0) {
 			Label l = new Label(headLabelStr);
-			ConnectionEndpointLocator locator = new ConnectionEndpointLocator(connection, true);
+			ConnectionEndpointLocator locator = new ConnectionEndpointLocator(
+					connection, true);
 			locator.setVDistance(LABEL_DISTANCE);
 			connection.add(l, locator);
 		}
-		
-		String tailLabelStr = makeMultiplicityString(rel.getTailMultiplicityMin(),
-				rel.getTailMultiplicityMax());
-		if(tailLabelStr != null && tailLabelStr.length() > 0){
+
+		String tailLabelStr = makeMultiplicityString(
+				rel.getTailMultiplicityMin(), rel.getTailMultiplicityMax());
+		if (tailLabelStr != null && tailLabelStr.length() > 0) {
 			Label l = new Label(tailLabelStr);
-			ConnectionEndpointLocator locator = new ConnectionEndpointLocator(connection, false);
+			ConnectionEndpointLocator locator = new ConnectionEndpointLocator(
+					connection, false);
 			locator.setVDistance(LABEL_DISTANCE);
 			connection.add(l, locator);
 		}
-		
+
 		String relLabelStr = rel.getLabel();
-		if(relLabelStr != null && relLabelStr.length() > 0){
+		if (relLabelStr != null && relLabelStr.length() > 0) {
 			Label l = new Label(relLabelStr);
 			MidpointLocator locator = new MidpointLocator(connection, 0);
 			locator.setGap(LABEL_DISTANCE);
 			locator.setRelativePosition(PositionConstants.NORTH_WEST);
 			connection.add(l, locator);
 		}
-		
-		connection.setConnectionRouter(new ManhattanConnectionRouter());
-		
 		model.setSize(connection.getPreferredSize());
 		model.setPosition(connection.getLocation());
+
 	}
 	
 	
