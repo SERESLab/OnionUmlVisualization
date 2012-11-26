@@ -96,7 +96,6 @@ public final class ModelViewer extends GraphicalEditor {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		
 	}
 	
 	@Override

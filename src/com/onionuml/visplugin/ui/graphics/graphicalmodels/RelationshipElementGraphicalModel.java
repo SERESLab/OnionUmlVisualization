@@ -1,8 +1,5 @@
 package com.onionuml.visplugin.ui.graphics.graphicalmodels;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
@@ -18,7 +15,8 @@ public class RelationshipElementGraphicalModel implements
 	private Point mPosition;
 	private Dimension mSize;
 	private UmlRelationshipElement mRelationship;
-	private List<Point> mPoints = new ArrayList<Point>();
+	
+	
 	
 	/**
 	 * Constructs a new RelationshipElementGraphicalModel from the given
@@ -36,20 +34,6 @@ public class RelationshipElementGraphicalModel implements
 	 */
 	public UmlRelationshipElement getRelationshipElement(){
 		return mRelationship;
-	}
-	
-	/**
-	 * Adds the specified point as a bend point in the relationship line.
-	 */
-	public void addBendPoint(Point p){
-		mPoints.add(p);
-	}
-	
-	/**
-	 * Returns the list of bend points.
-	 */
-	public List<Point> getBendPoints(){
-		return mPoints;
 	}
 	
 	@Override

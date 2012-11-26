@@ -14,6 +14,7 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 	private static final float PROJECT_EXPOLORER_RATIO = 0.20f;
 	private static final float BOTTOM_FOLDER_RATIO = 0.75f;
 	
+	private static final String DIAGRAM_CONTROL_VIEW = Activator.PACKAGE_BASE + ".ui.diagramcontrolview";
 	private static final String BOTTOM_FOLDER_ID = Activator.PACKAGE_BASE + ".ui.BottomFolder";
 	
 	
@@ -30,5 +31,6 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 		bottomFolder.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottomFolder.addView(IPageLayout.ID_PROP_SHEET);
 		bottomFolder.addView(IPageLayout.ID_PROGRESS_VIEW);
+		bottomFolder.addView(DIAGRAM_CONTROL_VIEW);
 	}
 }

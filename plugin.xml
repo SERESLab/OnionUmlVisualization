@@ -61,5 +61,14 @@
             contributorClass="com.onionuml.visplugin.ui.ModelViewerActionBarContributor">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="com.onionuml.visplugin.ui.DiagramControlView"
+            id="com.onionuml.visplugin.ui.diagramcontrolview"
+            name="UML Diagram Control"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>

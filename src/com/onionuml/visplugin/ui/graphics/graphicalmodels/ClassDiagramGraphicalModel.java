@@ -1,7 +1,6 @@
 package com.onionuml.visplugin.ui.graphics.graphicalmodels;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.eclipse.draw2d.geometry.Point;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxGeometry;
-import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxGraph;
 import com.onionuml.visplugin.core.UmlClassElement;
 import com.onionuml.visplugin.core.UmlClassModel;
@@ -241,18 +239,6 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 			IElementGraphicalModel gm = lookupGraphicalModelById(pairs.getKey());
 			mxGeometry geom = graph.getModel().getGeometry(pairs.getValue());
 			gm.setPosition(new Point((int)geom.getX(), (int)geom.getY()));
-		}
-		
-		// get new points of each edge
-		Iterator<Entry<String, Object>> itEdges = edgeIdMap.entrySet().iterator();
-		while (itEdges.hasNext()) {
-			Entry<String, Object> pairs = (Entry<String, Object>) itEdges.next();
-			RelationshipElementGraphicalModel rel = (RelationshipElementGraphicalModel)lookupGraphicalModelById(pairs.getKey());
-			List<mxPoint> controlPoints = graph.getModel().getGeometry(pairs.getValue()).getPoints();
-			Collections.reverse(controlPoints);
-			for(mxPoint p : controlPoints){
-				rel.addBendPoint(new Point((int)p.getX(), (int)p.getY()));
-			}
 		}
 	}
 }

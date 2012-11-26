@@ -1,23 +1,16 @@
 package com.onionuml.visplugin.ui.graphics.editparts;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.eclipse.draw2d.AbsoluteBendpoint;
-import org.eclipse.draw2d.Bendpoint;
-import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionEndpointLocator;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.MidpointLocator;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.XYAnchor;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
@@ -40,8 +33,6 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 	
 	private static float[] LINE_DASH_STYLE = new float[]{8.0f, 8.0f};
 	private static int LABEL_DISTANCE = 12;
-	
-	private List<Bendpoint> mBendpoints = new ArrayList<Bendpoint>();
 	
 	
 	// OVERRIDE METHODS -------------------------------
@@ -78,16 +69,8 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 		
 		connection.setTargetAnchor(new ChopboxAnchor(headFig));
 		connection.setSourceAnchor(new ChopboxAnchor(tailFig));
-		
-		
-		mBendpoints.clear();
-		List<Point> points = model.getBendPoints();
-		for (Point p : points) {
-			mBendpoints.add(new AbsoluteBendpoint(p.x, p.y));
-		}
-
-		connection.setConnectionRouter(new BendpointConnectionRouter());
-		connection.setRoutingConstraint(mBendpoints);
+		//connection.setConnectionRouter(new ShortestPathConnectionRouter(diagramPart.getContentPane()));
+		connection.setConnectionRouter(new ManhattanConnectionRouter());
 
 		connection.setTargetDecoration(makeHeadDecoration(rel.getType()));
 

@@ -36,7 +36,7 @@ public class ClassDiagramEditPart extends AbstractGraphicalEditPart
 	
 	/**
 	 * Event string specifying that the EditPart has been activated. Automatically
-	 * delivered on activation.
+	 * broadcast on activation.
 	 */
 	public static final String EVENT_ACTIVATED = "EVENT_ACTIVATED";
 	
