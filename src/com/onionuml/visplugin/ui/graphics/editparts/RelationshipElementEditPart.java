@@ -10,7 +10,6 @@ import org.eclipse.draw2d.MidpointLocator;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
@@ -69,7 +68,6 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 		
 		connection.setTargetAnchor(new ChopboxAnchor(headFig));
 		connection.setSourceAnchor(new ChopboxAnchor(tailFig));
-		//connection.setConnectionRouter(new ShortestPathConnectionRouter(diagramPart.getContentPane()));
 		connection.setConnectionRouter(new ManhattanConnectionRouter());
 
 		connection.setTargetDecoration(makeHeadDecoration(rel.getType()));

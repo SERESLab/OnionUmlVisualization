@@ -1,7 +1,13 @@
 package com.onionuml.visplugin.ui.graphics.editparts;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutManager;
+import org.eclipse.draw2d.MouseEvent;
+import org.eclipse.draw2d.MouseListener;
+import org.eclipse.draw2d.MouseMotionListener;
+import org.eclipse.draw2d.UpdateManager;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
@@ -21,7 +27,8 @@ import com.onionuml.visplugin.ui.graphics.graphicalmodels.ClassElementGraphicalM
  * Represents the view/controller of a uml class to be rendered with the Eclipse
  * Graphical Editing Framework (GEF).
  */
-public class ClassElementEditPart extends AbstractGraphicalEditPart{
+public class ClassElementEditPart extends AbstractGraphicalEditPart 
+		implements MouseListener, MouseMotionListener{
 	
 	private static final Color CLASS_COLOR = new Color(null, 255, 255, 206);
 	private static final Font NAME_FONT = new Font(null, "Arial", 12, SWT.BOLD);
@@ -31,9 +38,16 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart{
 	private static final Font ABSTRACT_FONT = new Font(null, "Arial", 12, SWT.ITALIC);
 	private static final Font STATIC_FONT = new Font(null, "Arial", 12, SWT.UNDERLINE_SINGLE);
 	
+	
+	private Point mDragLocation = null;
+	
+	
 	@Override
 	protected IFigure createFigure() {
-		return new ClassFigure(CLASS_COLOR, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
+		IFigure f = new ClassFigure(CLASS_COLOR, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
+		f.addMouseListener(this);
+		f.addMouseMotionListener(this);
+		return f;
 	}
 	
 	@Override
@@ -98,5 +112,72 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart{
 		
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this, figure,
 				new Rectangle(model.getPosition(), new Dimension(-1,-1)));
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent me) {
+		if(mDragLocation != null){
+			Point location = me.getLocation();
+			Dimension offset = location.getDifference(mDragLocation);
+			if (offset.width != 0 || offset.height != 0){
+				mDragLocation = location;
+				
+				IFigure f = getFigure();
+				Rectangle bounds = f.getBounds().getCopy();
+				UpdateManager updateManager = f.getUpdateManager();
+				LayoutManager layoutManager = f.getParent().getLayoutManager();
+				updateManager.addDirtyRegion(f.getParent(), bounds);
+				bounds.translate(offset.width, offset.height);
+				f.translate(offset.width, offset.height);
+				layoutManager.setConstraint(f, bounds);
+				updateManager.addDirtyRegion(f.getParent(), bounds);
+				me.consume();
+
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseHover(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent me) {
+		mDragLocation = me.getLocation();
+		me.consume();
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent me) {
+		if(mDragLocation != null){
+			me.consume();
+			mDragLocation = null;
+		}
+	}
+
+	@Override
+	public void mouseDoubleClicked(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
 	}
 }
