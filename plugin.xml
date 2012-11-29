@@ -4,15 +4,15 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="com.onionuml.visplugin.ui.PerspectiveFactory"
-            id="com.onionuml.visplugin.ui.PerspectiveFactory"
+            class="edu.ysu.onionuml.ui.PerspectiveFactory"
+            id="edu.ysu.onionuml.ui.PerspectiveFactory"
             name="Onion UML Perspective">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
-            targetID="com.onionuml.visplugin.ui.PerspectiveFactory">
+            targetID="edu.ysu.onionuml.ui.PerspectiveFactory">
          <view
                id="org.eclipse.ui.console.ConsoleView"
                minimized="false"
@@ -30,7 +30,7 @@
          <menu
                label="Onion UML">
             <command
-                  commandId="com.onionuml.visplugin.ui.command.OpenClassModelCommand"
+                  commandId="edu.ysu.onionuml.ui.command.OpenClassModelCommand"
                   label="Open Class Model..."
                   style="push">
             </command>
@@ -40,32 +40,32 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            id="com.onionuml.visplugin.ui.command.OpenClassModelCommand"
+            id="edu.ysu.onionuml.ui.command.OpenClassModelCommand"
             name="Open Class Model...">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="com.onionuml.visplugin.ui.handler.OpenClassModelCommandHandler"
-            commandId="com.onionuml.visplugin.ui.command.OpenClassModelCommand">
+            class="edu.ysu.onionuml.ui.handler.OpenClassModelCommandHandler"
+            commandId="edu.ysu.onionuml.ui.command.OpenClassModelCommand">
       </handler>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="com.onionuml.visplugin.ui.ModelViewer"
+            class="edu.ysu.onionuml.ui.ModelViewer"
             default="false"
-            id="com.onionuml.visplugin.ui.modelviewer"
+            id="edu.ysu.onionuml.ui.modelviewer"
             name="Model Viewer"
-            contributorClass="com.onionuml.visplugin.ui.ModelViewerActionBarContributor">
+            contributorClass="edu.ysu.onionuml.ui.ModelViewerActionBarContributor">
       </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="com.onionuml.visplugin.ui.DiagramControlView"
-            id="com.onionuml.visplugin.ui.diagramcontrolview"
+            class="edu.ysu.onionuml.ui.DiagramControlView"
+            id="edu.ysu.onionuml.ui.diagramcontrolview"
             name="UML Diagram Control"
             restorable="true">
       </view>

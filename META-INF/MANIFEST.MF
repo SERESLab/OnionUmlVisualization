@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: OnionUmlVisualization
 Bundle-SymbolicName: OnionUmlVisualization;singleton:=true
 Bundle-Version: 1.0.0.0
-Bundle-Activator: com.onionuml.visplugin.Activator
+Bundle-Activator: edu.ysu.onionuml.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.gef;bundle-version="3.8.1"
