@@ -1,6 +1,8 @@
 package edu.ysu.onionuml.ui.graphics.editparts;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -40,6 +42,8 @@ public class ClassDiagramEditPart extends AbstractGraphicalEditPart
 	 */
 	public static final String EVENT_ACTIVATED = "EVENT_ACTIVATED";
 	
+	
+	private Set<ClassElementEditPart> mSelectedClasses = new HashSet<ClassElementEditPart>();
 
 	@Override
 	protected IFigure createFigure() {
@@ -70,7 +74,7 @@ public class ClassDiagramEditPart extends AbstractGraphicalEditPart
 	@Override
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutEditPolicy(){
-
+			
 			@Override
 			protected Command getCreateCommand(CreateRequest request) {
 				return null;
@@ -127,5 +131,27 @@ public class ClassDiagramEditPart extends AbstractGraphicalEditPart
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Adds the specified class element to the set of selected classes.
+	 */
+	public void addToSelection(ClassElementEditPart c){
+		mSelectedClasses.add(c);
+	}
+	
+	/**
+	 * Removes the specified class element from the set of selected classes if it is
+	 * in the list.
+	 */
+	public void removeFromSelection(ClassElementEditPart c){
+		mSelectedClasses.remove(c);
+	}
+	
+	/**
+	 * Gets a reference to the set of selected class elements.
+	 */
+	public Set<ClassElementEditPart> getSelectedClasses(){
+		return mSelectedClasses;
 	}
 }

@@ -1,5 +1,7 @@
 package edu.ysu.onionuml.ui.graphics.editparts;
 
+import java.util.Set;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.MouseEvent;
@@ -10,6 +12,8 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
@@ -41,6 +45,22 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	
 	private Point mDragLocation = null;
 	
+	@Override
+	public void activate(){
+		super.activate();
+		addEditPartListener(new EditPartListener.Stub(){
+			@Override
+			public void selectedStateChanged(EditPart part){
+				ClassElementEditPart c = (ClassElementEditPart)part;
+				if(c.getSelected() != EditPart.SELECTED_NONE){
+					((ClassDiagramEditPart)c.getParent()).addToSelection(c);
+				}
+				else{
+					((ClassDiagramEditPart)c.getParent()).removeFromSelection(c);
+				}
+			}
+		});
+	}
 	
 	@Override
 	protected IFigure createFigure() {
@@ -122,17 +142,36 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 			if (offset.width != 0 || offset.height != 0){
 				mDragLocation = location;
 				
-				IFigure f = getFigure();
-				Rectangle bounds = f.getBounds().getCopy();
-				UpdateManager updateManager = f.getUpdateManager();
-				LayoutManager layoutManager = f.getParent().getLayoutManager();
-				updateManager.addDirtyRegion(f.getParent(), bounds);
-				bounds.translate(offset.width, offset.height);
-				f.translate(offset.width, offset.height);
-				layoutManager.setConstraint(f, bounds);
-				updateManager.addDirtyRegion(f.getParent(), bounds);
+				ClassDiagramEditPart parent = ((ClassDiagramEditPart)getParent());
+				Set<ClassElementEditPart> selected = parent.getSelectedClasses();
+				
+				// if multiple classes are selected, move entire selected at once
+				if(selected.size() > 0){
+					for(ClassElementEditPart c : selected){
+						IFigure f = c.getFigure();
+						Rectangle bounds = f.getBounds().getCopy();
+						UpdateManager updateManager = f.getUpdateManager();
+						LayoutManager layoutManager = f.getParent().getLayoutManager();
+						updateManager.addDirtyRegion(f.getParent(), bounds);
+						bounds.translate(offset.width, offset.height);
+						f.translate(offset.width, offset.height);
+						layoutManager.setConstraint(f, bounds);
+						updateManager.addDirtyRegion(f.getParent(), bounds);
+					}
+				}
+				// otherwise move only the selected class
+				else{
+					IFigure f = getFigure();
+					Rectangle bounds = f.getBounds().getCopy();
+					UpdateManager updateManager = f.getUpdateManager();
+					LayoutManager layoutManager = f.getParent().getLayoutManager();
+					updateManager.addDirtyRegion(f.getParent(), bounds);
+					bounds.translate(offset.width, offset.height);
+					f.translate(offset.width, offset.height);
+					layoutManager.setConstraint(f, bounds);
+					updateManager.addDirtyRegion(f.getParent(), bounds);
+				}
 				me.consume();
-
 			}
 		}
 	}
