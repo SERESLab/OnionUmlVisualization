@@ -11,9 +11,13 @@ import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 
 import edu.ysu.onionuml.ui.graphics.EditPartFactory;
+import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
 
 /**
@@ -62,6 +66,71 @@ public final class ModelViewer extends GraphicalEditor {
 		mEditorInput = ((ModelViewerInput)input);
 		mModel = mEditorInput.getModel();
 		setPartName(mModel.getClassModel().getName());
+		final IWorkbenchPage page = site.getPage();
+		page.addPartListener(new IPartListener2(){
+
+			@Override
+			public void partActivated(IWorkbenchPartReference partRef) {}
+
+			@Override
+			public void partBroughtToTop(IWorkbenchPartReference partRef) {}
+
+			@Override
+			public void partClosed(IWorkbenchPartReference partRef) {}
+
+			@Override
+			public void partDeactivated(IWorkbenchPartReference partRef) {}
+
+			@Override
+			public void partOpened(IWorkbenchPartReference partRef) {
+				if(partRef.getId().equals(ID)){
+					try {
+						page.showView(DiagramControlView.ID);
+					} catch (PartInitException e) {}
+				}
+			}
+
+			@Override
+			public void partHidden(IWorkbenchPartReference partRef) {
+				// when a ModelViewer view becomes hidden disable control
+				// of its ClassDiagramEditPart
+				if(partRef.getId().equals(ID)){
+					ModelViewer viewer = (ModelViewer)partRef.getPart(false);
+					if(viewer != null){
+						DiagramControlView controlView = (DiagramControlView)page
+								.findView(DiagramControlView.ID);
+						if(controlView != null){
+							ClassDiagramEditPart diagram = 
+									(ClassDiagramEditPart)viewer.getGraphicalViewer().getContents();
+							if(controlView.getCurrentClassDiagram() == diagram){
+								controlView.setCurrentClassDiagram(null);
+							}
+						}
+					}
+				}
+			}
+
+			@Override
+			public void partVisible(IWorkbenchPartReference partRef) {
+				// when a ModelViewer view becomes visible enable control of
+				// its ClassDiagramEditPart in the control view until it is hidden
+				if(partRef.getId().equals(ID)){
+					ModelViewer viewer = (ModelViewer)partRef.getPart(false);
+					if(viewer != null){
+						DiagramControlView controlView = (DiagramControlView)page
+								.findView(DiagramControlView.ID);
+						if(controlView != null){
+							ClassDiagramEditPart diagram = 
+									(ClassDiagramEditPart)viewer.getGraphicalViewer().getContents();
+							controlView.setCurrentClassDiagram(diagram);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void partInputChanged(IWorkbenchPartReference partRef) {}
+		});
 	}
 	
 	@Override

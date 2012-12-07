@@ -1,5 +1,9 @@
 package edu.ysu.onionuml.ui;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -10,16 +14,28 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
+import edu.ysu.onionuml.core.UmlClassModel;
+import edu.ysu.onionuml.core.UmlPackageElement;
+import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
+import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
+
 /**
- * ViewPart for controlling the visualization of the UML diagram.
+ * ViewPart for controlling the visualization of a UML diagram.
  */
 public class DiagramControlView extends ViewPart {
 
 	// CONSTANTS -----------------------
+	
+	/**
+	 * The ID of the view.
+	 */
+	public static final String ID = "edu.ysu.onionuml.ui.diagramcontrolview";
+	
 	private static final int PADDING = 10;
 	private static final String TEXT_PACKAGES_CONTROLLER = "View Packages";
 	private static final String TEXT_COMPACTION_CONTROLLER = "Onion Compaction";
@@ -30,24 +46,61 @@ public class DiagramControlView extends ViewPart {
 	private static final String TEXT_COMPACT_ALL = "Compact All";
 	private static final String TEXT_EXPAND_ALL = "Expand All";
 	private static final String TEXT_RESET_ALL = "Reset All";
+	private static final String TEXT_NO_DIAGRAM = "No class diagram currently in view.";
+	
+	private Table mPackageTable;
+	private Composite mDefaultView;
+	private Composite mPackagesView;
+	private Composite mCompactionControlView;
+	private ClassDiagramEditPart mCurrentClassDiagram = null;
 	
 	
-	
-	
-	// OVERRIDE METHODS --------------------------------
+	// PUBLIC METHODS --------------------------------
 
 	@Override
 	public void createPartControl(Composite parent) {
 		
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
-		createPackagesController(parent);
-		createCompactionController(parent);
+		mDefaultView = createDefaultView(parent);
+		mPackagesView = createPackagesController(parent);
+		mCompactionControlView = createCompactionController(parent);
+		mPackagesView.setVisible(false);
+		mCompactionControlView.setVisible(false);
+		mDefaultView.setVisible(true);
+		
 	}
 
 	@Override
 	public void setFocus() {
 	}
 	
+	/**
+	 * Sets the current class diagram to the specified diagram, or null to disable
+	 * control of any diagram.
+	 */
+	public void setCurrentClassDiagram(ClassDiagramEditPart diagram){
+		mCurrentClassDiagram = diagram;
+		
+		if(diagram != null){
+			populatePackageTable();
+			mDefaultView.setVisible(false);
+			mPackagesView.setVisible(true);
+			mCompactionControlView.setVisible(true);
+		}
+		else{
+			mPackagesView.setVisible(false);
+			mCompactionControlView.setVisible(false);
+			mDefaultView.setVisible(true);
+		}
+	}
+	
+	/**
+	 * Returns the current class diagram that the view is currently controlling
+	 * or null if the view is not controlling any diagram.
+	 */
+	public ClassDiagramEditPart getCurrentClassDiagram(){
+		return mCurrentClassDiagram;
+	}
 	
 	
 	// PRIVATE METHODS ---------------------------------------------
@@ -71,19 +124,14 @@ public class DiagramControlView extends ViewPart {
 		selectNoneButton.setText(TEXT_SELECT_NONE);
 		selectNoneButton.setLayoutData(new RowData());
 		
-		Table packageTable = new Table(packageControllerGroup,
+		mPackageTable = new Table(packageControllerGroup,
 				SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		FormData data = new FormData();
 		data.top = new FormAttachment(buttonGroup);
 		data.left = new FormAttachment(0, PADDING);
 		data.right = new FormAttachment(100 -PADDING);
 		data.bottom = new FormAttachment(100, -PADDING);
-		packageTable.setLayoutData(data);
-		
-		for (int i = 0; i < 8; i++) {
-			TableItem item = new TableItem(packageTable, SWT.NONE);
-			/* temp */ item.setText("com.package." + i);
-		}
+		mPackageTable.setLayoutData(data);
 		
 		return packageControllerGroup;
 	}
@@ -135,5 +183,36 @@ public class DiagramControlView extends ViewPart {
 		resetAll.setLayoutData(new RowData());
 		
 		return compactionControllerGroup;
+	}
+	
+	/*
+	 * Creates the blank default composite.
+	 */
+	private Composite createDefaultView(Composite parent){
+		Composite comp = new Composite(parent, SWT.NONE);
+		comp.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Label l = new Label(comp, SWT.NONE);
+		l.setText(TEXT_NO_DIAGRAM);
+		return comp;
+	}
+	
+	/*
+	 * Populates the package table with the packages in the current class diagram.
+	 */
+	private void populatePackageTable(){
+		
+		mPackageTable.removeAll();
+		UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel())
+				.getClassModel();
+		
+		Map<String,UmlPackageElement> packages = model.getPackages();
+		Iterator<Entry<String,UmlPackageElement>>  itPackages = packages.entrySet().iterator();
+		while (itPackages.hasNext()) {
+			Entry<String,UmlPackageElement> pkgPairs = 
+					(Entry<String,UmlPackageElement>)itPackages.next();
+			UmlPackageElement p = pkgPairs.getValue();
+			TableItem item = new TableItem(mPackageTable, SWT.NONE);
+			item.setText(p.getName());
+		}
 	}
 }
