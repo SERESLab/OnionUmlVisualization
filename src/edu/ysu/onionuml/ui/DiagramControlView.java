@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -22,7 +24,9 @@ import org.eclipse.ui.part.ViewPart;
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
+import edu.ysu.onionuml.ui.graphics.editparts.ClassElementEditPart;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
+import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
 /**
  * ViewPart for controlling the visualization of a UML diagram.
@@ -158,10 +162,30 @@ public class DiagramControlView extends ViewPart {
 		Button compactSelected = new Button(selectedButtonGroup, SWT.PUSH);
 		compactSelected.setText(TEXT_COMPACT_SELECTED);
 		compactSelected.setLayoutData(new RowData());
+		compactSelected.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onCompactSelectedPressed();
+			}
+		});
 		
 		Button expandSelected = new Button(selectedButtonGroup, SWT.PUSH);
 		expandSelected.setText(TEXT_EXPAND_SELECTED);
 		expandSelected.setLayoutData(new RowData());
+		expandSelected.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onExpandSelectedPressed();
+			}
+		});
 		
 		// button group for operations on all classes
 		Composite allButtonGroup = new Composite(compactionControllerGroup, SWT.NONE);
@@ -213,6 +237,33 @@ public class DiagramControlView extends ViewPart {
 			UmlPackageElement p = pkgPairs.getValue();
 			TableItem item = new TableItem(mPackageTable, SWT.NONE);
 			item.setText(p.getName());
+		}
+	}
+	
+	
+	/*
+	 * Called when the compact selected button is pressed.
+	 */
+	private void onCompactSelectedPressed(){
+		
+		if(mCurrentClassDiagram != null){
+			for(ClassElementEditPart element : mCurrentClassDiagram.getSelectedClasses()){
+				((ClassElementGraphicalModel)element.getModel()).setIsCompacted(true);
+			}
+			((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
+		}
+	}
+	
+	/*
+	 * Called when the expand selected button is pressed.
+	 */
+	private void onExpandSelectedPressed(){
+		
+		if(mCurrentClassDiagram != null){
+			for(ClassElementEditPart element : mCurrentClassDiagram.getSelectedClasses()){
+				((ClassElementGraphicalModel)element.getModel()).setIsCompacted(false);
+			}
+			((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
 		}
 	}
 }

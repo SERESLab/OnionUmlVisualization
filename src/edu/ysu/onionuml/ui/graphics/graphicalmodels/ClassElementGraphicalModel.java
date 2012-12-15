@@ -28,6 +28,7 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	private UmlClassElement mClassElement;
 	private Point mPosition;
 	private Dimension mSize;
+	private boolean mIsCompacted;
 	
 	private IEventListener mListener;
 	
@@ -66,6 +67,20 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	 */
 	public UmlPackageElement getPackageElemet(){
 		return mPackageElement;
+	}
+	
+	/**
+	 * Returns the compaction status of the class element.
+	 */
+	public boolean isCompacted(){
+		return mIsCompacted;
+	}
+	
+	/**
+	 * Sets whether the class element is compacted.
+	 */
+	public void setIsCompacted(boolean isCompacted){
+		mIsCompacted = isCompacted;
 	}
 	
 	@Override

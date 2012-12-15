@@ -13,6 +13,7 @@ import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.view.mxGraph;
 
+import edu.ysu.onionuml.compact.DiagramGraph;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
@@ -37,6 +38,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	private Map<String,RelationshipElementGraphicalModel> mRelationshipIdMap =
 			new HashMap<String,RelationshipElementGraphicalModel>();
 	private UmlClassModel mClassModel;
+	private DiagramGraph mDiagramGraph = new DiagramGraph();
 	
 	private boolean mClassSizeChanged = false;
 	
@@ -64,6 +66,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 				n.registerEventListener(this);
 				mElements.add(n);
 				mClassIdMap.put(classPairs.getKey(), n);
+				mDiagramGraph.addElement(n);
 			}
 		}
 		
@@ -74,7 +77,12 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 			RelationshipElementGraphicalModel r = new RelationshipElementGraphicalModel(pairs.getValue());
 			mElements.add(r);
 			mRelationshipIdMap.put(pairs.getKey(), r);
+			mDiagramGraph.addRelationship(r, mClassIdMap.get(pairs.getValue().getTailId()), 
+					mClassIdMap.get(pairs.getValue().getHeadId()));
 		}
+		
+		
+		
 		
 	}
 	
@@ -152,6 +160,15 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		
 		IElementGraphicalModel c = mClassIdMap.get(id);
 		return (c != null ? c : mRelationshipIdMap.get(id));
+	}
+	
+	
+	/**
+	 * Updates the entire diagram after changes have been made to individual elements.
+	 */
+	public void update(){
+		mDiagramGraph.update();
+		mListener.eventOccured(ClassDiagramEditPart.EVENT_REFRESH_REQUIRED);
 	}
 	
 	

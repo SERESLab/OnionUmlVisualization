@@ -2,6 +2,7 @@ package edu.ysu.onionuml.ui.graphics.editparts;
 
 import java.util.Set;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.MouseEvent;
@@ -126,6 +127,13 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 					figure.addOperation(o.toString(), null, null);
 				}
 			}
+		}
+		
+		if(model.isCompacted()){
+			figure.setBackgroundColor(ColorConstants.blue);
+		}
+		else{
+			figure.setBackgroundColor(CLASS_COLOR);
 		}
 		
 		model.setSize(figure.getPreferredSize());
