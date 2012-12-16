@@ -19,6 +19,7 @@ import org.eclipse.swt.SWT;
 import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlRelationshipElement;
 import edu.ysu.onionuml.core.UmlRelationshipElement.Multiplicity;
+import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.RelationshipElementGraphicalModel;
 
 /**
@@ -63,51 +64,62 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 		
 		// lookup head and tail figures to set connection anchors
 		ClassDiagramEditPart diagramPart = (ClassDiagramEditPart)getParent();
-		IFigure headFig = diagramPart.lookupEditPartById(rel.getHeadId()).getFigure();
-		IFigure tailFig = diagramPart.lookupEditPartById(rel.getTailId()).getFigure();
+		ClassElementEditPart headPart = (ClassElementEditPart)diagramPart.lookupEditPartById(rel.getHeadId());
+		ClassElementEditPart tailPart = (ClassElementEditPart)diagramPart.lookupEditPartById(rel.getTailId());
 		
-		connection.setTargetAnchor(new ChopboxAnchor(headFig));
-		connection.setSourceAnchor(new ChopboxAnchor(tailFig));
-		connection.setConnectionRouter(new ManhattanConnectionRouter());
-
-		connection.setTargetDecoration(makeHeadDecoration(rel.getType()));
-
-		if (rel.getType() == RelationshipType.DEPENDENCY
-				|| rel.getType() == RelationshipType.REALIZATION) {
-			connection.setLineStyle(SWT.LINE_CUSTOM);
-			connection.setLineDash(LINE_DASH_STYLE);
+		if(!((ClassElementGraphicalModel)headPart.getModel()).isVisible()
+				|| !((ClassElementGraphicalModel)tailPart.getModel()).isVisible()){
+			connection.setVisible(false);
 		}
-
-		String headLabelStr = makeMultiplicityString(
-				rel.getHeadMultiplicityMin(), rel.getHeadMultiplicityMax());
-		if (headLabelStr != null && headLabelStr.length() > 0) {
-			Label l = new Label(headLabelStr);
-			ConnectionEndpointLocator locator = new ConnectionEndpointLocator(
-					connection, true);
-			locator.setVDistance(LABEL_DISTANCE);
-			connection.add(l, locator);
+		else{
+			connection.setVisible(true);
+			
+			IFigure headFig = headPart.getFigure();
+			IFigure tailFig = tailPart.getFigure();
+			
+			connection.setTargetAnchor(new ChopboxAnchor(headFig));
+			connection.setSourceAnchor(new ChopboxAnchor(tailFig));
+			connection.setConnectionRouter(new ManhattanConnectionRouter());
+	
+			connection.setTargetDecoration(makeHeadDecoration(rel.getType()));
+	
+			if (rel.getType() == RelationshipType.DEPENDENCY
+					|| rel.getType() == RelationshipType.REALIZATION) {
+				connection.setLineStyle(SWT.LINE_CUSTOM);
+				connection.setLineDash(LINE_DASH_STYLE);
+			}
+	
+			String headLabelStr = makeMultiplicityString(
+					rel.getHeadMultiplicityMin(), rel.getHeadMultiplicityMax());
+			if (headLabelStr != null && headLabelStr.length() > 0) {
+				Label l = new Label(headLabelStr);
+				ConnectionEndpointLocator locator = new ConnectionEndpointLocator(
+						connection, true);
+				locator.setVDistance(LABEL_DISTANCE);
+				connection.add(l, locator);
+			}
+	
+			String tailLabelStr = makeMultiplicityString(
+					rel.getTailMultiplicityMin(), rel.getTailMultiplicityMax());
+			if (tailLabelStr != null && tailLabelStr.length() > 0) {
+				Label l = new Label(tailLabelStr);
+				ConnectionEndpointLocator locator = new ConnectionEndpointLocator(
+						connection, false);
+				locator.setVDistance(LABEL_DISTANCE);
+				connection.add(l, locator);
+			}
+	
+			String relLabelStr = rel.getLabel();
+			if (relLabelStr != null && relLabelStr.length() > 0) {
+				Label l = new Label(relLabelStr);
+				MidpointLocator locator = new MidpointLocator(connection, 0);
+				locator.setGap(LABEL_DISTANCE);
+				locator.setRelativePosition(PositionConstants.NORTH_WEST);
+				connection.add(l, locator);
+			}
+			model.setSize(connection.getPreferredSize());
+			model.setPosition(connection.getLocation());
 		}
-
-		String tailLabelStr = makeMultiplicityString(
-				rel.getTailMultiplicityMin(), rel.getTailMultiplicityMax());
-		if (tailLabelStr != null && tailLabelStr.length() > 0) {
-			Label l = new Label(tailLabelStr);
-			ConnectionEndpointLocator locator = new ConnectionEndpointLocator(
-					connection, false);
-			locator.setVDistance(LABEL_DISTANCE);
-			connection.add(l, locator);
-		}
-
-		String relLabelStr = rel.getLabel();
-		if (relLabelStr != null && relLabelStr.length() > 0) {
-			Label l = new Label(relLabelStr);
-			MidpointLocator locator = new MidpointLocator(connection, 0);
-			locator.setGap(LABEL_DISTANCE);
-			locator.setRelativePosition(PositionConstants.NORTH_WEST);
-			connection.add(l, locator);
-		}
-		model.setSize(connection.getPreferredSize());
-		model.setPosition(connection.getLocation());
 
 	}
 	

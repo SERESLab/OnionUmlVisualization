@@ -1,8 +1,11 @@
 package edu.ysu.onionuml.ui.graphics.graphicalmodels;
 
+import java.util.List;
+
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
+import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlPackageElement;
 import edu.ysu.onionuml.ui.graphics.IEventListener;
@@ -24,11 +27,14 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	
 	// PRIVATE MEMBER VARIABLES ---------------------------
 	
+	private List<RelationshipType> mChildRelationships;
 	private UmlPackageElement mPackageElement;
 	private UmlClassElement mClassElement;
 	private Point mPosition;
 	private Dimension mSize;
 	private boolean mIsCompacted;
+	private boolean mIsParentCompacted;
+	private boolean mIsVisible = true;
 	
 	private IEventListener mListener;
 	
@@ -53,6 +59,24 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	@Override
 	public void unregisterEventListener() {
 		mListener = null;
+	}
+	
+	/**
+	 * Sets the relationships with children of this class for displaying the
+	 * compacted version of this element. The specified list may be empty
+	 * or null. Relationships will be displayed from left to right in the
+	 * order given by the list.
+	 */
+	public void setChildRelationships(List<RelationshipType> childRelationships){
+		mChildRelationships = childRelationships;
+	}
+	
+	/**
+	 * Gets a list of relationships with the children of this class element. List
+	 * may be empty or null.
+	 */
+	public List<RelationshipType> getChildRelationships(){
+		return mChildRelationships;
 	}
 	
 	/**
@@ -81,6 +105,36 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	 */
 	public void setIsCompacted(boolean isCompacted){
 		mIsCompacted = isCompacted;
+	}
+	
+	/**
+	 * Returns the compaction status of the class element's parent class
+	 * or false if the class element has no parent.
+	 */
+	public boolean isParentCompacted(){
+		return mIsParentCompacted;
+	}
+	
+	/**
+	 * Sets whether the class element's parent class element is compacted.
+	 */
+	public void setIsParentCompacted(boolean isParentCompacted){
+		mIsParentCompacted = isParentCompacted;
+	}
+	
+	/**
+	 * Returns true if the class element has been marked visible (true by default) and
+	 * the parent class is not compacted.
+	 */
+	public boolean isVisible(){
+		return (mIsVisible && !mIsParentCompacted);
+	}
+	
+	/**
+	 * Sets whether the class element is visible. True by default.
+	 */
+	public void setIsVisible(boolean isVisible){
+		mIsVisible = isVisible;
 	}
 	
 	@Override

@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.TreeMap;
 
+import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.IElementGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.RelationshipElementGraphicalModel;
@@ -111,9 +113,12 @@ public class DiagramGraph {
 	// PRIVATE METHODS --------------------------------------
 	
 	/*
-	 * Recursively updates the specified node and its children.
+	 * Updates the specified node and its children in a breadth-first traversal.
 	 */
 	private void updateGraph(){
+		
+		TreeMap<Integer,RelationshipType> positionRelationMap =
+				new TreeMap<Integer,RelationshipType>();
 		
 		// sweep nodes to mark as unvisited
 		Iterator<Entry<ClassElementGraphicalModel,Node>> itNodes =
@@ -134,29 +139,57 @@ public class DiagramGraph {
 					continue;
 				}
 				
-				// if a parent is compacted then set this node to compacted but
-				// do not expand unless explicitly chosen
+				boolean isParentCompacted = false;
 				for(Node parent : currentNode.parents){
+					// if a parent is compacted then set this node to compacted but
+					// do not expand unless explicitly chosen
 					if(parent.classElement.isCompacted()){
 						currentNode.classElement.setIsCompacted(true);
+						isParentCompacted = true;
 					}
 				}
+				currentNode.classElement.setIsParentCompacted(isParentCompacted);
 				
+				if(currentNode.classElement.isCompacted()){
+					positionRelationMap.clear();
+				}
+				
+				// process children of the current element and add to queue
 				Iterator<Entry<Node,RelationshipElementGraphicalModel>> itChildren =
 						currentNode.children.entrySet().iterator();
 				while (itChildren.hasNext()) {
 					Entry<Node,RelationshipElementGraphicalModel> pairs =
 							(Entry<Node,RelationshipElementGraphicalModel>)itChildren.next();
 					Node child = pairs.getKey();
+					RelationshipElementGraphicalModel relationship = pairs.getValue();
 					if(!nodeQueue.contains(child)){
 						nodeQueue.add(child);
 					}
+					// add child relationship to map sorted by X position
+					if(currentNode.classElement.isCompacted()){
+						Integer pos = Integer.valueOf(child.classElement.getPosition().x);
+						RelationshipType rel = relationship.getRelationshipElement().getType();
+						positionRelationMap.put(pos, rel);
+					}
 				}
+				
+				if(currentNode.classElement.isCompacted()){
+					List<RelationshipType> childRelationships =
+							currentNode.classElement.getChildRelationships();
+					if(childRelationships == null){
+						childRelationships = new ArrayList<RelationshipType>();
+						currentNode.classElement.setChildRelationships(childRelationships);
+					}
+					else{
+						childRelationships.clear();
+					}
+					for(RelationshipType rel: positionRelationMap.values()){
+						childRelationships.add(rel);
+					}
+				}
+				
 				currentNode.visited = true;
 			}
-		
 		}
-
-		
 	}
 }

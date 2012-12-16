@@ -2,7 +2,6 @@ package edu.ysu.onionuml.ui.graphics.editparts;
 
 import java.util.Set;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.MouseEvent;
@@ -22,6 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 
+import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlAttribute;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlOperation;
@@ -86,58 +86,61 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 		ClassFigure figure = (ClassFigure) getFigure();
 		UmlClassElement classElement = model.getClassElement();
 		
-		figure.clear();
-		
-		if(classElement.getIsAbstract()){
-			figure.setNameFont(NAME_ABSTRACT_FONT);
-		}
-		
-		figure.setNameString(classElement.getName());
-		
-		String stereotype = classElement.getStereotype();
-		if(stereotype != null && stereotype.length() > 0){
-			figure.setStereotypeString("Ç" + stereotype + "È");
-		}
-		
-		// setup properties
-		if(classElement.getAttributes().size() == 0){
-			figure.addProperty("", null, null);
+		if(!model.isVisible()){
+			figure.setVisible(false);
 		}
 		else{
-			for(UmlAttribute a : classElement.getAttributes()){
-				figure.addProperty(a.toString(), null, null);
-			}
-		}
-		
-		
-		// setup operations
-		if(classElement.getOperations().size() == 0){
-			figure.addOperation("", null, null);
-		}
-		else{
-			for(UmlOperation o : classElement.getOperations()){
-				
-				if(o.isAbstract){
-					figure.addOperation(o.toString(), null, ABSTRACT_FONT);
+			figure.setVisible(true);
+			figure.clear();
+			
+			if(model.isCompacted()){
+				for(RelationshipType relationship : model.getChildRelationships()){
+					figure.addProperty(relationship.toString(), null, null);
 				}
-				else if(o.isStatic){
-					figure.addOperation(o.toString(), null, STATIC_FONT);
+			}
+			else{
+				if(classElement.getIsAbstract()){
+					figure.setNameFont(NAME_ABSTRACT_FONT);
+				}
+				
+				figure.setNameString(classElement.getName());
+				
+				String stereotype = classElement.getStereotype();
+				if(stereotype != null && stereotype.length() > 0){
+					figure.setStereotypeString("Ç" + stereotype + "È");
+				}
+				
+				// setup properties
+				if(classElement.getAttributes().size() == 0){
+					figure.addProperty("", null, null);
 				}
 				else{
-					figure.addOperation(o.toString(), null, null);
+					for(UmlAttribute a : classElement.getAttributes()){
+						figure.addProperty(a.toString(), null, null);
+					}
+				}
+				
+				// setup operations
+				if(classElement.getOperations().size() == 0){
+					figure.addOperation("", null, null);
+				}
+				else{
+					for(UmlOperation o : classElement.getOperations()){
+						
+						if(o.isAbstract){
+							figure.addOperation(o.toString(), null, ABSTRACT_FONT);
+						}
+						else if(o.isStatic){
+							figure.addOperation(o.toString(), null, STATIC_FONT);
+						}
+						else{
+							figure.addOperation(o.toString(), null, null);
+						}
+					}
 				}
 			}
 		}
-		
-		if(model.isCompacted()){
-			figure.setBackgroundColor(ColorConstants.blue);
-		}
-		else{
-			figure.setBackgroundColor(CLASS_COLOR);
-		}
-		
 		model.setSize(figure.getPreferredSize());
-		
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this, figure,
 				new Rectangle(model.getPosition(), new Dimension(-1,-1)));
 	}
@@ -185,28 +188,16 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent me) {}
 
 	@Override
-	public void mouseExited(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent me) {}
 
 	@Override
-	public void mouseHover(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseHover(MouseEvent me) {}
 
 	@Override
-	public void mouseMoved(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseMoved(MouseEvent me) {}
 
 	@Override
 	public void mousePressed(MouseEvent me) {
@@ -223,8 +214,5 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	}
 
 	@Override
-	public void mouseDoubleClicked(MouseEvent me) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseDoubleClicked(MouseEvent me) {}
 }
