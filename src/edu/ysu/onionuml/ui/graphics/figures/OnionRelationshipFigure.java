@@ -24,7 +24,7 @@ public class OnionRelationshipFigure extends Figure {
 
 	private static final Rectangle CANVAS = new Rectangle(0, 0, 48, 48);
 	private static final int BORDER_THICKNESS = 1;
-	private static final float[] LINE_DASH = new float[]{8.0f, 8.0f};
+	private static final float[] LINE_DASH = new float[]{12.0f, 12.0f};
 	
 	private Color mFillColor;
 	private PointList mPolygon;
@@ -51,8 +51,11 @@ public class OnionRelationshipFigure extends Figure {
 	public void primTranslate(int dx, int dy) {
 		super.primTranslate(dx, dy);
 		
-		if(mRelationshipType != null && mPolygon != null){
+		if(mPolygon != null){
 			mPolygon.translate(dx, dy);
+		}
+		
+		if(mRelationshipType != null){
 			mLinePoints.translate(dx, dy);
 			mLine.setPoints(mLinePoints);
 		}
@@ -67,9 +70,11 @@ public class OnionRelationshipFigure extends Figure {
 		
 		mLine.paint(graphics);
 		
-		graphics.setBackgroundColor(mFillColor);
-		graphics.drawPolygon(mPolygon);
-		graphics.fillPolygon(mPolygon);
+		if(mPolygon != null){
+			graphics.setBackgroundColor(mFillColor);
+			graphics.drawPolygon(mPolygon);
+			graphics.fillPolygon(mPolygon);
+		}
 	}
 	
 	
