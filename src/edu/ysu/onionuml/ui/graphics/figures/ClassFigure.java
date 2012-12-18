@@ -9,6 +9,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
+import edu.ysu.onionuml.core.RelationshipType;
+
 /**
  * Represents a class in a uml class diagram to be displayed with the Eclipse
  * Graphical Editing Framework (GEF).
@@ -17,9 +19,11 @@ public class ClassFigure extends Figure {
 	
 	private ClassSectionFigure mPropertiesFigure;
 	private ClassSectionFigure mOperationsFigure;
+	private ClassSectionFigure mOnionRelationshipsFigure;
 	private Font mContentFont;
 	private Label mNameLabel;
 	private Label mStereotypeLabel;
+	private boolean mIsOnion;
 	
 	
 	/**
@@ -46,8 +50,9 @@ public class ClassFigure extends Figure {
 		
 		mContentFont = contentFont;
 		
-		mPropertiesFigure = new ClassSectionFigure();
-		mOperationsFigure = new ClassSectionFigure();
+		mPropertiesFigure = new ClassSectionFigure(false);
+		mOperationsFigure = new ClassSectionFigure(false);
+		mOnionRelationshipsFigure = new ClassSectionFigure(true);
 		
 		reconstruct();
 	}
@@ -118,6 +123,7 @@ public class ClassFigure extends Figure {
 	public void clear(){
 		mPropertiesFigure.removeAll();
 		mOperationsFigure.removeAll();
+		mOnionRelationshipsFigure.removeAll();
 		mNameLabel.setText("");
 		mNameLabel.setIcon(null);
 		mStereotypeLabel.setText("");
@@ -125,6 +131,20 @@ public class ClassFigure extends Figure {
 		reconstruct();
 	}
 	
+	/**
+	 * Adds a figure to the class figure representing the specified relationship.
+	 * Figures are rendered from left to right in the order they are added.
+	 */
+	public void addOnionRelationship(RelationshipType relationshipType){
+		mOnionRelationshipsFigure.add(new OnionRelationshipFigure(relationshipType));
+	}
+	
+	/**
+	 * Sets whether the class will be rendered in onion notation.
+	 */
+	public void setIsOnion(boolean isOnion){
+		mIsOnion = isOnion;
+	}
 	
 	// PRIVATE METHODS --------------------------------------------------
 	
@@ -132,12 +152,17 @@ public class ClassFigure extends Figure {
 		
 		removeAll();
 		
-		String stereotype = mStereotypeLabel.getText();
-		if(stereotype != null && stereotype.length() > 0){
-			add(mStereotypeLabel);
+		if(mIsOnion){
+			add(mOnionRelationshipsFigure);
 		}
-		add(mNameLabel);
-		add(mPropertiesFigure);
-		add(mOperationsFigure);
+		else{
+			String stereotype = mStereotypeLabel.getText();
+			if(stereotype != null && stereotype.length() > 0){
+				add(mStereotypeLabel);
+			}
+			add(mNameLabel);
+			add(mPropertiesFigure);
+			add(mOperationsFigure);
+		}
 	}
 }

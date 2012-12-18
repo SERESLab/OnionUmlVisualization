@@ -17,12 +17,15 @@ public class ClassSectionFigure extends Figure {
 	
 	/**
 	 * Constructs a new ClassSectionFigure with a top border.
+	 * @param isHorizontal set true if the layout should be horizontal,
+	 * false otherwise
 	 */
-	public ClassSectionFigure() {
+	public ClassSectionFigure(boolean isHorizontal) {
 		ToolbarLayout layout = new ToolbarLayout();
 		layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
 		layout.setStretchMinorAxis(false);
 		layout.setSpacing(SPACING);
+		layout.setHorizontal(isHorizontal);
 		setLayoutManager(layout);
 		
 		setBorder(new AbstractBorder(){

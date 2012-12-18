@@ -91,14 +91,23 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 		}
 		else{
 			figure.setVisible(true);
-			figure.clear();
 			
 			if(model.isCompacted()){
-				for(RelationshipType relationship : model.getChildRelationships()){
-					figure.addProperty(relationship.toString(), null, null);
+				figure.setIsOnion(true);
+				figure.clear();
+				if(!model.getChildRelationships().isEmpty()){
+					for(RelationshipType relationship : model.getChildRelationships()){
+						figure.addOnionRelationship(relationship);
+					}
+				}
+				else{
+					figure.addOnionRelationship(null);
 				}
 			}
 			else{
+				figure.setIsOnion(false);
+				figure.clear();
+				
 				if(classElement.getIsAbstract()){
 					figure.setNameFont(NAME_ABSTRACT_FONT);
 				}
@@ -140,6 +149,7 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 				}
 			}
 		}
+		
 		model.setSize(figure.getPreferredSize());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this, figure,
 				new Rectangle(model.getPosition(), new Dimension(-1,-1)));
