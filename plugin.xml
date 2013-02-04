@@ -55,10 +55,11 @@
          point="org.eclipse.ui.editors">
       <editor
             class="edu.ysu.onionuml.ui.ModelViewer"
+            contributorClass="edu.ysu.onionuml.ui.ModelViewerActionBarContributor"
             default="false"
+            extensions="cml"
             id="edu.ysu.onionuml.ui.modelviewer"
-            name="Model Viewer"
-            contributorClass="edu.ysu.onionuml.ui.ModelViewerActionBarContributor">
+            name="Model Viewer">
       </editor>
    </extension>
    <extension

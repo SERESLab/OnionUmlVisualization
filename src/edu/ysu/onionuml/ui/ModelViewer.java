@@ -15,7 +15,9 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
 
+import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.ui.graphics.EditPartFactory;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
@@ -60,11 +62,19 @@ public final class ModelViewer extends GraphicalEditor {
 		super.init(site, input);
 		
 		if (!(input instanceof ModelViewerInput)) {
-			throw new RuntimeException("Input not of ModelViewerInput type.");
+			if(!(input instanceof FileEditorInput)){
+				throw new RuntimeException("Input could not be opened.");
+			}
+			
+			UmlClassModel model = UmlClassModel.fromFile(((FileEditorInput)input).getPath().toString());
+			mModel = new ClassDiagramGraphicalModel(model);
+        	mEditorInput = new ModelViewerInput(mModel);
 		}
+    	else{
+    		mEditorInput = ((ModelViewerInput)input);
+    		mModel = mEditorInput.getModel();
+    	}
 		
-		mEditorInput = ((ModelViewerInput)input);
-		mModel = mEditorInput.getModel();
 		setPartName(mModel.getClassModel().getName());
 		final IWorkbenchPage page = site.getPage();
 		page.addPartListener(new IPartListener2(){
