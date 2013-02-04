@@ -1,7 +1,10 @@
 package edu.ysu.onionuml.ui.graphics.figures;
 
+import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.ToolbarLayout;
@@ -72,6 +75,13 @@ public class ClassFigure extends Figure {
 	}
 	
 	/**
+	 * Gets the text of the name label.
+	 */
+	public String getNameString(){
+		return mNameLabel.getText();
+	}
+	
+	/**
 	 * Sets the icon of the name label to the specified image.
 	 */
 	public void setNameIcon(Image icon){
@@ -84,6 +94,13 @@ public class ClassFigure extends Figure {
 	public void setStereotypeString(String stereotype){
 		mStereotypeLabel.setText(stereotype);
 		reconstruct();
+	}
+	
+	/**
+	 * Gets the text of the stereotype label.
+	 */
+	public String getStereotypeString(){
+		return mStereotypeLabel.getText();
 	}
 	
 	/**
@@ -101,6 +118,41 @@ public class ClassFigure extends Figure {
 		mPropertiesFigure.add(l);
 	}
 	
+	
+	/**
+	 * Gets the index of the property at the specified point in the figure,
+	 * or -1 if the point is out of bounds.
+	 */
+	public int getPropertyIndex(int x, int y){
+		@SuppressWarnings("unchecked")
+		List<IFigure> children = mPropertiesFigure.getChildren();
+		for(int i=0; i < children.size(); ++i){
+			IFigure child = children.get(i);
+			if(child.containsPoint(x, y) && child instanceof Label){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
+	/**
+	 * Returns the property string at the specified property index, or
+	 * null if there is no property with the specified index.
+	 */
+	public String getPropertyString(int index){
+		@SuppressWarnings("rawtypes")
+		List children = mPropertiesFigure.getChildren();
+		if(index >= 0 && index < children.size()){
+			Object child = children.get(index);
+			if(child instanceof Label){
+				return ((Label)child).getText();
+			}
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * Adds the specified string and icon to the operations section of the class.
 	 * If a font is specified, it will be used instead of the default.
@@ -115,6 +167,41 @@ public class ClassFigure extends Figure {
 		}
 		mOperationsFigure.add(l);
 	}
+	
+	
+	/**
+	 * Gets the index of the operation at the specified point in the figure,
+	 * or -1 if the point is out of bounds.
+	 */
+	public int getOperationIndex(int x, int y){
+		@SuppressWarnings("unchecked")
+		List<IFigure> children = mOperationsFigure.getChildren();
+		for(int i=0; i < children.size(); ++i){
+			IFigure child = children.get(i);
+			if(child.containsPoint(x, y) && child instanceof Label){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
+	/**
+	 * Returns the operation string at the specified operation index, or
+	 * null if there is no operation with the specified index.
+	 */
+	public String getOperationString(int index){
+		@SuppressWarnings("rawtypes")
+		List children = mOperationsFigure.getChildren();
+		if(index >= 0 && index < children.size()){
+			Object child = children.get(index);
+			if(child instanceof Label){
+				return ((Label)child).getText();
+			}
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * Clears all properties and operations from the class and resets the name

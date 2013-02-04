@@ -69,13 +69,14 @@ public final class ModelViewer extends GraphicalEditor {
 			UmlClassModel model = UmlClassModel.fromFile(((FileEditorInput)input).getPath().toString());
 			mModel = new ClassDiagramGraphicalModel(model);
         	mEditorInput = new ModelViewerInput(mModel);
+        	setPartName(((FileEditorInput)input).getName());
 		}
     	else{
     		mEditorInput = ((ModelViewerInput)input);
     		mModel = mEditorInput.getModel();
+    		setPartName(mModel.getClassModel().getName());
     	}
 		
-		setPartName(mModel.getClassModel().getName());
 		final IWorkbenchPage page = site.getPage();
 		page.addPartListener(new IPartListener2(){
 
@@ -93,11 +94,11 @@ public final class ModelViewer extends GraphicalEditor {
 
 			@Override
 			public void partOpened(IWorkbenchPartReference partRef) {
-				if(partRef.getId().equals(ID)){
-					try {
-						page.showView(DiagramControlView.ID);
-					} catch (PartInitException e) {}
-				}
+//				if(partRef.getId().equals(ID)){
+//					try {
+//						page.showView(DiagramControlView.ID);
+//					} catch (PartInitException e) {}
+//				}
 			}
 
 			@Override
