@@ -90,6 +90,7 @@ public class DiagramGraph {
 		}
 		if(parentNode.children.containsKey(childNode)
 				|| childNode.parents.contains(parentNode)){
+			System.out.println(parentNode.children.containsKey(childNode) + " - " + childNode.parents.contains(parentNode));
 			throw new RuntimeException("A relationship already exists between specified elements.");
 		}
 		parentNode.children.put(childNode, relationToParent);

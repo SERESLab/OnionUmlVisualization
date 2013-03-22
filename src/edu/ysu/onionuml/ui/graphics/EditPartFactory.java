@@ -4,6 +4,7 @@ import org.eclipse.gef.EditPart;
 
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassElementEditPart;
+import edu.ysu.onionuml.ui.graphics.editparts.HyperClassElementEditPart;
 import edu.ysu.onionuml.ui.graphics.editparts.RelationshipElementEditPart;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
@@ -25,7 +26,13 @@ public class EditPartFactory implements org.eclipse.gef.EditPartFactory {
 		}
 		
 		if(model instanceof ClassElementGraphicalModel){
-			EditPart e = new ClassElementEditPart();
+			EditPart e;
+			if(!((ClassElementGraphicalModel)model).isHyper()){
+				e = new ClassElementEditPart();
+			}
+			else{
+				e = new HyperClassElementEditPart();
+			}
 			e.setModel(model);
 			return e;
 		}

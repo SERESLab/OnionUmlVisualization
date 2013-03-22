@@ -35,6 +35,7 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	private boolean mIsCompacted;
 	private boolean mIsParentCompacted;
 	private boolean mIsVisible = true;
+	private boolean mIsHyper = false;
 	
 	private IEventListener mListener;
 	
@@ -49,6 +50,20 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 		mPosition = new Point();
 		mSize = new Dimension();
 		mPackageElement = p;
+	}
+	
+	/**
+	 * Sets whether this class element is a hyper class.
+	 */
+	public void setIsHyper(boolean isHyper){
+		mIsHyper = isHyper;
+	}
+	
+	/**
+	 * Gets whether this class element is a hyper class.
+	 */
+	public boolean isHyper(){
+		return mIsHyper;
 	}
 	
 	@Override

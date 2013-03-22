@@ -14,6 +14,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.view.mxGraph;
 
 import edu.ysu.onionuml.compact.DiagramGraph;
+import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
@@ -28,6 +29,8 @@ import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
  * Eclipse Graphical Editing Framework (GEF).
  */
 public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistrar {
+	
+	private static final int NUM_CLASSES_FOR_HYPEREDGES = 3;	// minimum number of child classes for inserting hyperedges
 	
 	// PRIVATE MEMBER VARIABLES ----------------------------------
 	
@@ -70,20 +73,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 			}
 		}
 		
-		Iterator<Entry<String,UmlRelationshipElement>> itRel =
-				classModel.getRelationships().entrySet().iterator();
-		while (itRel.hasNext()) {
-			Entry<String,UmlRelationshipElement> pairs = (Entry<String,UmlRelationshipElement>)itRel.next();
-			RelationshipElementGraphicalModel r = new RelationshipElementGraphicalModel(pairs.getValue());
-			mElements.add(r);
-			mRelationshipIdMap.put(pairs.getKey(), r);
-			mDiagramGraph.addRelationship(r, mClassIdMap.get(pairs.getValue().getTailId()), 
-					mClassIdMap.get(pairs.getValue().getHeadId()));
-		}
-		
-		
-		
-		
+		initEdges();
 	}
 	
 	@Override
@@ -139,6 +129,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 				return pairs.getKey();
 			}
 		}
+		
 		Iterator<Entry<String,RelationshipElementGraphicalModel>> itRelationships =
 				mRelationshipIdMap.entrySet().iterator();
 		while (itRelationships.hasNext()) {
@@ -250,13 +241,159 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 			graph.getModel().endUpdate();
 		}
 		
-		// get new position of each class
+		// get new position of each class and find its children for each relationship
 		Iterator<Entry<String,Object>> itVertices = vertexIdMap.entrySet().iterator();
 		while (itVertices.hasNext()) {
 			Entry<String,Object> pairs = (Entry<String,Object>)itVertices.next();
 			IElementGraphicalModel gm = lookupGraphicalModelById(pairs.getKey());
 			mxGeometry geom = graph.getModel().getGeometry(pairs.getValue());
 			gm.setPosition(new Point((int)geom.getX(), (int)geom.getY()));
+			mElements.add(gm);
+		}
+	}
+	
+	// initializes the edges in the graphical model
+	private void initEdges(){
+		
+		// maps of each class to its children for joining relationship arcs with hypervertices
+		Map<String, ArrayList<String>> aggregationChildren = new HashMap<String, ArrayList<String>>();
+		Map<String, ArrayList<String>> associationChildren = new HashMap<String, ArrayList<String>>();
+		Map<String, ArrayList<String>> realizationChildren = new HashMap<String, ArrayList<String>>();
+		Map<String, ArrayList<String>> compositionChildren = new HashMap<String, ArrayList<String>>();
+		Map<String, ArrayList<String>> dependencyChildren = new HashMap<String, ArrayList<String>>();
+		Map<String, ArrayList<String>> dirAssociationChildren = new HashMap<String, ArrayList<String>>();
+		Map<String, ArrayList<String>> generalizationChildren = new HashMap<String, ArrayList<String>>();
+		
+		
+		Iterator<Entry<String,UmlRelationshipElement>> itRel =
+				mClassModel.getRelationships().entrySet().iterator();
+		while (itRel.hasNext()) {
+			Entry<String,UmlRelationshipElement> pairs = (Entry<String,UmlRelationshipElement>)itRel.next();
+			UmlRelationshipElement rel = pairs.getValue();
+			String headId = rel.getHeadId();
+			String tailId = rel.getTailId();
+			
+			// get the children of each relationship type for each class
+			Map<String, ArrayList<String>> relMap = null;
+			switch(rel.getType()){
+			case AGGREGATION:
+				relMap = aggregationChildren;
+				break;
+			case ASSOCIATION:
+				relMap = associationChildren;
+				break;
+			case DIRECTEDASSOCIATION:
+				relMap = dirAssociationChildren;
+				break;
+			case COMPOSITION:
+				relMap = compositionChildren;
+				break;
+			case DEPENDENCY:
+				relMap = dependencyChildren;
+				break;
+			case REALIZATION:
+				relMap = realizationChildren;
+				break;
+			case GENERALIZATION:
+				relMap = generalizationChildren;
+				break;
+			}
+			
+			if(relMap.containsKey(headId)){
+				relMap.get(headId).add(tailId);
+			}
+			else{
+				ArrayList<String> children = new ArrayList<String>();
+				children.add(tailId);
+				relMap.put(headId, children);
+			}
+			
+		}
+		
+		// insert hypervertices for each edge
+		layoutEdges(aggregationChildren, RelationshipType.AGGREGATION);
+		layoutEdges(associationChildren, RelationshipType.ASSOCIATION);
+		layoutEdges(realizationChildren, RelationshipType.REALIZATION);
+		layoutEdges(compositionChildren, RelationshipType.COMPOSITION);
+		layoutEdges(dependencyChildren, RelationshipType.DEPENDENCY);
+		layoutEdges(dirAssociationChildren, RelationshipType.DIRECTEDASSOCIATION);
+		layoutEdges(generalizationChildren, RelationshipType.GENERALIZATION);
+	}
+	
+	// inserts hyperedges for classes with many children
+	private void layoutEdges(Map<String, ArrayList<String>> childrenIdMap, RelationshipType relType){
+		Iterator<Entry<String, ArrayList<String>>> itChildren = childrenIdMap.entrySet().iterator();
+		while (itChildren.hasNext()) {
+			Entry<String, ArrayList<String>> pairs =
+					(Entry<String, ArrayList<String>>)itChildren.next();
+			String headId = pairs.getKey();
+			ArrayList<String> children = pairs.getValue();
+			
+			
+			if(children.size() >= NUM_CLASSES_FOR_HYPEREDGES){
+				
+				RelationshipType hyperRelType = null;
+				switch(relType){
+				case AGGREGATION:
+					hyperRelType = RelationshipType.HYPER_AGGREGATION;
+					break;
+				case ASSOCIATION:
+					hyperRelType = RelationshipType.HYPER_ASSOCIATION;
+					break;
+				case DIRECTEDASSOCIATION:
+					hyperRelType = RelationshipType.HYPER_DIRECTEDASSOCIATION;
+					break;
+				case COMPOSITION:
+					hyperRelType = RelationshipType.HYPER_COMPOSITION;
+					break;
+				case DEPENDENCY:
+					hyperRelType = RelationshipType.HYPER_DEPENDENCY;
+					break;
+				case REALIZATION:
+					hyperRelType = RelationshipType.HYPER_REALIZATION;
+					break;
+				case GENERALIZATION:
+					hyperRelType = RelationshipType.HYPER_GENERALIZATION;
+					break;
+				}
+				
+				ClassElementGraphicalModel headElement = (ClassElementGraphicalModel)lookupGraphicalModelById(headId);
+				String hyperClassId = "HYPER-" + headId + relType.toString();
+				ClassElementGraphicalModel hyperClass = new ClassElementGraphicalModel(null, null);
+				hyperClass.setIsHyper(true);
+				mDiagramGraph.addElement(hyperClass);
+				mClassIdMap.put(hyperClassId, hyperClass);
+				mElements.add(hyperClass);
+				
+				
+				for(String tailId : children){
+					try{
+						UmlRelationshipElement newRel = new UmlRelationshipElement(null, headId, hyperClassId, relType);
+						UmlRelationshipElement newHyperRel = new UmlRelationshipElement(null, hyperClassId, tailId, hyperRelType);
+						RelationshipElementGraphicalModel r = new RelationshipElementGraphicalModel(newRel);
+						RelationshipElementGraphicalModel hr = new RelationshipElementGraphicalModel(newHyperRel);
+						mElements.add(r);
+						mElements.add(hr);
+						mRelationshipIdMap.put("EDGE-" + headId + ":" + hyperClassId, r);
+						mRelationshipIdMap.put("EDGE-" + hyperClassId + ":" + tailId, hr);
+						mDiagramGraph.addRelationship(r, hyperClass, headElement);
+						mDiagramGraph.addRelationship(hr, mClassIdMap.get(tailId), hyperClass);
+					}
+					catch(RuntimeException rte){
+						// TODO figure out why duplicate relationships are being added to graph
+					}
+				}
+				
+			}
+			else{
+				for(String tailId : children){
+					UmlRelationshipElement newRel = new UmlRelationshipElement(null, headId, tailId, relType);
+					RelationshipElementGraphicalModel r = new RelationshipElementGraphicalModel(newRel);
+					mElements.add(r);
+					mRelationshipIdMap.put(pairs.getKey(), r);
+					mDiagramGraph.addRelationship(r, mClassIdMap.get(tailId), mClassIdMap.get(headId));
+				}
+			}
 		}
 	}
 }

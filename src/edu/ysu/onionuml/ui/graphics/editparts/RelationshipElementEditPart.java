@@ -84,7 +84,9 @@ public class RelationshipElementEditPart extends AbstractGraphicalEditPart {
 			connection.setTargetDecoration(makeHeadDecoration(rel.getType()));
 	
 			if (rel.getType() == RelationshipType.DEPENDENCY
-					|| rel.getType() == RelationshipType.REALIZATION) {
+					|| rel.getType() == RelationshipType.REALIZATION
+					|| rel.getType() == RelationshipType.HYPER_DEPENDENCY
+					|| rel.getType() == RelationshipType.HYPER_REALIZATION) {
 				connection.setLineStyle(SWT.LINE_CUSTOM);
 				connection.setLineDash(LINE_DASH_STYLE);
 			}
