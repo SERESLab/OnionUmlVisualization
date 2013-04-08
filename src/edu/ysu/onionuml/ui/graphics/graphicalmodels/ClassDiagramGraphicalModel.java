@@ -365,25 +365,20 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 				mClassIdMap.put(hyperClassId, hyperClass);
 				mElements.add(hyperClass);
 				
+				UmlRelationshipElement newRel = new UmlRelationshipElement(null, headId, hyperClassId, relType);
+				RelationshipElementGraphicalModel r = new RelationshipElementGraphicalModel(newRel);
+				mElements.add(r);
+				mRelationshipIdMap.put("EDGE-" + headId + ":" + hyperClassId, r);
+				mDiagramGraph.addRelationship(r, hyperClass, headElement);
 				
 				for(String tailId : children){
-					try{
-						UmlRelationshipElement newRel = new UmlRelationshipElement(null, headId, hyperClassId, relType);
-						UmlRelationshipElement newHyperRel = new UmlRelationshipElement(null, hyperClassId, tailId, hyperRelType);
-						RelationshipElementGraphicalModel r = new RelationshipElementGraphicalModel(newRel);
-						RelationshipElementGraphicalModel hr = new RelationshipElementGraphicalModel(newHyperRel);
-						mElements.add(r);
-						mElements.add(hr);
-						mRelationshipIdMap.put("EDGE-" + headId + ":" + hyperClassId, r);
-						mRelationshipIdMap.put("EDGE-" + hyperClassId + ":" + tailId, hr);
-						mDiagramGraph.addRelationship(r, hyperClass, headElement);
-						mDiagramGraph.addRelationship(hr, mClassIdMap.get(tailId), hyperClass);
-					}
-					catch(RuntimeException rte){
-						// TODO figure out why duplicate relationships are being added to graph
-					}
+					
+					UmlRelationshipElement newHyperRel = new UmlRelationshipElement(null, hyperClassId, tailId, hyperRelType);
+					RelationshipElementGraphicalModel hr = new RelationshipElementGraphicalModel(newHyperRel);
+					mElements.add(hr);
+					mRelationshipIdMap.put("EDGE-" + hyperClassId + ":" + tailId, hr);
+					mDiagramGraph.addRelationship(hr, mClassIdMap.get(tailId), hyperClass);
 				}
-				
 			}
 			else{
 				for(String tailId : children){
