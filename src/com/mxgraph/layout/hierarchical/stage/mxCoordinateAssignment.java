@@ -1799,32 +1799,24 @@ public class mxCoordinateAssignment implements mxHierarchicalLayoutStage
 		 */
 		public int compareTo(Object arg0)
 		{
-			if (arg0 instanceof WeightedCellSorter)
+			WeightedCellSorter wcs = (WeightedCellSorter)arg0;
+			if (weightedValue < wcs.weightedValue)
 			{
-				if (weightedValue > ((WeightedCellSorter) arg0).weightedValue)
-				{
-					return -1;
-				}
-				else if (weightedValue < ((WeightedCellSorter) arg0).weightedValue)
-				{
-					return 1;
-				}
-				else
-				{
-					if (nudge)
-					{
-						return -1;
-					}
-					else
-					{
-						return 1;
-					}
-				}
+				return -1;
 			}
-			else
+			if (weightedValue > wcs.weightedValue)
 			{
-				return 0;
+				return 1;
 			}
+			if (nudge && !wcs.nudge)
+			{
+				return -1;
+			}
+			if(!nudge && wcs.nudge)
+			{
+				return 1;
+			}
+			return 0;
 		}
 
 	}
