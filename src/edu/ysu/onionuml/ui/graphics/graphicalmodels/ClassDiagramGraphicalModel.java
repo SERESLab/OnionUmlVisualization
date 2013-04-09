@@ -360,7 +360,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 				ClassElementGraphicalModel headElement = (ClassElementGraphicalModel)lookupGraphicalModelById(headId);
 				String hyperClassId = "HYPER-" + headId + relType.toString();
 				ClassElementGraphicalModel hyperClass = new ClassElementGraphicalModel(null, null);
-				hyperClass.setIsHyper(true);
+				hyperClass.setIsHyper(true, mClassIdMap.get(headId));
 				mDiagramGraph.addElement(hyperClass);
 				mClassIdMap.put(hyperClassId, hyperClass);
 				mElements.add(hyperClass);

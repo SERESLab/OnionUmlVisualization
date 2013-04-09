@@ -90,30 +90,37 @@ public class OnionRelationshipFigure extends Figure {
 		// construct points as percentages inside canvas
 		switch(relationshipType){
 			case AGGREGATION:
+			case HYPER_AGGREGATION:
 				mFillColor = ColorConstants.white;
 			case COMPOSITION:
+			case HYPER_COMPOSITION:
 				points.add(new Point2D.Float(0.5f, 0.05f));
 				points.add(new Point2D.Float(0.3f, 0.3f));
 				points.add(new Point2D.Float(0.5f, 0.55f));
 				points.add(new Point2D.Float(0.7f, 0.3f));
 				break;
 			case DEPENDENCY:
+			case HYPER_DEPENDENCY:
 				isLineDashed = true;
 			case DIRECTEDASSOCIATION:
+			case HYPER_DIRECTEDASSOCIATION:
 				points.add(new Point2D.Float(0.5f, 0.05f));
 				points.add(new Point2D.Float(0.2f, 0.3f));
 				points.add(new Point2D.Float(0.5f, 0.05f));
 				points.add(new Point2D.Float(0.8f, 0.3f));
 				break;
 			case REALIZATION:
+			case HYPER_REALIZATION:
 				isLineDashed = true;
 			case GENERALIZATION:
+			case HYPER_GENERALIZATION:
 				mFillColor = ColorConstants.white;
 				points.add(new Point2D.Float(0.5f, 0.05f));
 				points.add(new Point2D.Float(0.2f, 0.45f));
 				points.add(new Point2D.Float(0.8f, 0.45f));
 				break;
 			case ASSOCIATION:
+			case HYPER_ASSOCIATION:
 				// no head
 				break;
 			default:

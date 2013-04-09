@@ -36,6 +36,7 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	private boolean mIsParentCompacted;
 	private boolean mIsVisible = true;
 	private boolean mIsHyper = false;
+	private ClassElementGraphicalModel mActualHead = null;
 	
 	private IEventListener mListener;
 	
@@ -55,8 +56,9 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	/**
 	 * Sets whether this class element is a hyper class.
 	 */
-	public void setIsHyper(boolean isHyper){
+	public void setIsHyper(boolean isHyper, ClassElementGraphicalModel actualHead){
 		mIsHyper = isHyper;
+		mActualHead = isHyper ? actualHead : null;
 	}
 	
 	/**
@@ -64,6 +66,13 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	 */
 	public boolean isHyper(){
 		return mIsHyper;
+	}
+	
+	/**
+	 * Gets the hyper class's actual head, or null if this is not a hyper class.
+	 */
+	public ClassElementGraphicalModel getActualHead(){
+		return mActualHead;
 	}
 	
 	@Override

@@ -144,7 +144,11 @@ public class DiagramGraph {
 				for(Node parent : currentNode.parents){
 					// if a parent is compacted then set this node to compacted but
 					// do not expand unless explicitly chosen
-					if(parent.classElement.isCompacted()){
+					ClassElementGraphicalModel parentClass = parent.classElement;
+					if(parentClass.isHyper()){
+						parentClass = parentClass.getActualHead();
+					}
+					if(parentClass.isCompacted()){
 						currentNode.classElement.setIsCompacted(true);
 						isParentCompacted = true;
 					}
@@ -167,7 +171,11 @@ public class DiagramGraph {
 						nodeQueue.add(child);
 					}
 					// add child relationship to map sorted by X position
-					if(currentNode.classElement.isCompacted()){
+					ClassElementGraphicalModel classElement = currentNode.classElement;
+					if(classElement.isHyper()){
+						classElement = classElement.getActualHead();
+					}
+					if(classElement.isCompacted()){
 						Integer pos = Integer.valueOf(child.classElement.getPosition().x);
 						RelationshipType rel = relationship.getRelationshipElement().getType();
 						positionRelationMap.put(pos, rel);
@@ -177,17 +185,66 @@ public class DiagramGraph {
 				if(currentNode.classElement.isCompacted()){
 					List<RelationshipType> childRelationships =
 							currentNode.classElement.getChildRelationships();
+					if(currentNode.classElement.isHyper()){
+						childRelationships =
+								currentNode.classElement.getActualHead().getChildRelationships();
+					}
 					if(childRelationships == null){
 						childRelationships = new ArrayList<RelationshipType>();
-						currentNode.classElement.setChildRelationships(childRelationships);
+						if(currentNode.classElement.isHyper()){
+							currentNode.classElement.getActualHead().setChildRelationships(childRelationships);
+						}
+						else{
+							currentNode.classElement.setChildRelationships(childRelationships);
+						}
 					}
-					else{
+					else if(!currentNode.classElement.isHyper()){
 						childRelationships.clear();
 					}
 					for(RelationshipType rel: positionRelationMap.values()){
 						childRelationships.add(rel);
 					}
+					
+					
+					
+					if(currentNode.classElement.isHyper()){
+						List<RelationshipType> relsToRemove = new ArrayList<RelationshipType>();
+						for(RelationshipType rel : childRelationships){
+							if(rel == RelationshipType.AGGREGATION
+									&& childRelationships.contains(RelationshipType.HYPER_AGGREGATION)){
+								relsToRemove.add(rel);
+							}
+							else if(rel == RelationshipType.ASSOCIATION
+									&& childRelationships.contains(RelationshipType.HYPER_ASSOCIATION)){
+								relsToRemove.add(rel);
+							}
+							else if(rel == RelationshipType.COMPOSITION
+									&& childRelationships.contains(RelationshipType.HYPER_COMPOSITION)){
+								relsToRemove.add(rel);
+							}
+							else if(rel == RelationshipType.DEPENDENCY
+									&& childRelationships.contains(RelationshipType.HYPER_DEPENDENCY)){
+								relsToRemove.add(rel);
+							}
+							else if(rel == RelationshipType.DIRECTEDASSOCIATION
+									&& childRelationships.contains(RelationshipType.HYPER_DIRECTEDASSOCIATION)){
+								relsToRemove.add(rel);
+							}
+							else if(rel == RelationshipType.GENERALIZATION
+									&& childRelationships.contains(RelationshipType.HYPER_GENERALIZATION)){
+								relsToRemove.add(rel);
+							}
+							else if(rel == RelationshipType.REALIZATION
+									&& childRelationships.contains(RelationshipType.HYPER_REALIZATION)){
+								relsToRemove.add(rel);
+							}
+						}
+						childRelationships.removeAll(relsToRemove);
+					}
 				}
+				
+				
+				
 				
 				currentNode.visited = true;
 			}
