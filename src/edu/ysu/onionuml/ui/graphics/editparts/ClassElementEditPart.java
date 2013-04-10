@@ -92,7 +92,7 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 		else{
 			figure.setVisible(true);
 			
-			if(model.isCompacted()){
+			if(model.isCompacted() && !model.getChildRelationships().isEmpty()){
 				figure.setIsOnion(true);
 				figure.clear();
 				if(!model.getChildRelationships().isEmpty()){
