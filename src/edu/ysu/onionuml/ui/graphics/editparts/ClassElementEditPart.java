@@ -178,6 +178,8 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 						f.translate(offset.width, offset.height);
 						layoutManager.setConstraint(f, bounds);
 						updateManager.addDirtyRegion(f.getParent(), bounds);
+						ClassElementGraphicalModel model = (ClassElementGraphicalModel)c.getModel();
+						model.setPosition(bounds.getLocation());
 					}
 				}
 				// otherwise move only the selected class
@@ -191,6 +193,8 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 					f.translate(offset.width, offset.height);
 					layoutManager.setConstraint(f, bounds);
 					updateManager.addDirtyRegion(f.getParent(), bounds);
+					ClassElementGraphicalModel model = (ClassElementGraphicalModel)getModel();
+					model.setPosition(bounds.getLocation());
 				}
 				me.consume();
 			}
