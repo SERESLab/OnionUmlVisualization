@@ -56,6 +56,7 @@ public class DiagramControlView extends ViewPart {
 	private Composite mDefaultView;
 	private Composite mPackagesView;
 	private Composite mCompactionControlView;
+	private Composite mParentComposite;
 	private ClassDiagramEditPart mCurrentClassDiagram = null;
 	
 	
@@ -65,12 +66,7 @@ public class DiagramControlView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
-		mDefaultView = createDefaultView(parent);
-		mPackagesView = createPackagesController(parent);
-		mCompactionControlView = createCompactionController(parent);
-		mPackagesView.setVisible(false);
-		mCompactionControlView.setVisible(false);
-		mDefaultView.setVisible(true);
+		mParentComposite = parent;
 		
 	}
 
@@ -86,16 +82,29 @@ public class DiagramControlView extends ViewPart {
 		mCurrentClassDiagram = diagram;
 		
 		if(diagram != null){
-			populatePackageTable();
-			mDefaultView.setVisible(false);
-			mPackagesView.setVisible(true);
-			mCompactionControlView.setVisible(true);
+			if(mPackagesView == null && mCompactionControlView == null){
+				mPackagesView = createPackagesController(mParentComposite);
+				mCompactionControlView = createCompactionController(mParentComposite);
+				populatePackageTable();
+			}
+			if(mDefaultView != null){
+				mDefaultView.dispose();
+				mDefaultView = null;
+			}
 		}
 		else{
-			mPackagesView.setVisible(false);
-			mCompactionControlView.setVisible(false);
-			mDefaultView.setVisible(true);
+			if(mPackagesView != null && mCompactionControlView != null){
+				mPackagesView.dispose();
+				mCompactionControlView.dispose();
+				mPackagesView = null;
+				mCompactionControlView = null;
+			}
+			if(mDefaultView == null){
+				mDefaultView = createDefaultView(mParentComposite);
+			}
 		}
+		
+		mParentComposite.pack(true);
 	}
 	
 	/**
@@ -237,6 +246,7 @@ public class DiagramControlView extends ViewPart {
 			UmlPackageElement p = pkgPairs.getValue();
 			TableItem item = new TableItem(mPackageTable, SWT.NONE);
 			item.setText(p.getName());
+			item.setChecked(true);
 		}
 	}
 	
