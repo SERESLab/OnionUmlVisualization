@@ -72,8 +72,8 @@ public class OnionRelationshipFigure extends Figure {
 		
 		if(mPolygon != null){
 			graphics.setBackgroundColor(mFillColor);
-			graphics.drawPolygon(mPolygon);
 			graphics.fillPolygon(mPolygon);
+			graphics.drawPolygon(mPolygon);
 		}
 	}
 	
@@ -115,9 +115,9 @@ public class OnionRelationshipFigure extends Figure {
 			case GENERALIZATION:
 			case HYPER_GENERALIZATION:
 				mFillColor = ColorConstants.white;
-				points.add(new Point2D.Float(0.5f, 0.05f));
-				points.add(new Point2D.Float(0.2f, 0.45f));
-				points.add(new Point2D.Float(0.8f, 0.45f));
+				points.add(new Point2D.Float(0.5f, 0.1f));
+				points.add(new Point2D.Float(0.25f, 0.4f));
+				points.add(new Point2D.Float(0.75f, 0.4f));
 				break;
 			case ASSOCIATION:
 			case HYPER_ASSOCIATION:
@@ -147,6 +147,9 @@ public class OnionRelationshipFigure extends Figure {
 		if(isLineDashed){
 			mLine.setLineDash(LINE_DASH);
 			mLine.setLineStyle(SWT.LINE_DASH);
+		}
+		else{
+			mLine.setLineStyle(SWT.LINE_SOLID);
 		}
 	}
 }
