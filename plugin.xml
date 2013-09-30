@@ -82,5 +82,31 @@
             name="UML Model Viewer">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="edu.ysu.onionuml.preferences.GeneralPreferencePage"
+            id="edu.ysu.onionuml.preferences.GeneralPreferencePage"
+            name="OnionUmlVisualization">
+      </page>
+      <page
+            class="edu.ysu.onionuml.preferences.VisibilityPreferencePage"
+            id="edu.ysu.onionuml.preferences.VisibilityPreferencePage"
+            name="Visibility"
+            category="edu.ysu.onionuml.preferences.GeneralPreferencePage">
+      </page>
+      <page
+            class="edu.ysu.onionuml.preferences.ColorsPreferencePage"
+            id="edu.ysu.onionuml.preferences.ColorsPreferencePage"
+            name="Colors"
+            category="edu.ysu.onionuml.preferences.GeneralPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="edu.ysu.onionuml.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
