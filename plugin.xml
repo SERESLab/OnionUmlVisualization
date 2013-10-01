@@ -43,12 +43,20 @@
             id="edu.ysu.onionuml.ui.command.OpenClassModelCommand"
             name="Open Class Model...">
       </command>
+      <command
+            id="edu.ysu.onionuml.ui.command.OpenSearchCommand"
+            name="Search Class Model...">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="edu.ysu.onionuml.ui.handler.OpenClassModelCommandHandler"
             commandId="edu.ysu.onionuml.ui.command.OpenClassModelCommand">
+      </handler>
+      <handler
+            class="edu.ysu.onionuml.ui.handler.OpenSearchCommandHandler"
+            commandId="edu.ysu.onionuml.ui.command.OpenSearchCommand">
       </handler>
    </extension>
    <extension
@@ -107,6 +115,15 @@
       <initializer
             class="edu.ysu.onionuml.preferences.PreferenceInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="edu.ysu.onionuml.ui.command.OpenSearchCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+5">
+      </key>
    </extension>
 
 </plugin>
