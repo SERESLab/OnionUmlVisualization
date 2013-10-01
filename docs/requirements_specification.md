@@ -1,11 +1,11 @@
 
-<Onion Uml Visualization>
+Onion Uml Visualization
 
 Software Requirements Specification
 
-<Version 2>
+Version 2
 
-<9/30/2013>
+9/30/2013
 
 <Samuel Addai>
 
@@ -55,7 +55,7 @@ Table of Contents
 
 
 
-1. Introduction
+####1. Introduction
 
 The OnionUmlVisualization is an Eclipse plug-in that reduce the number of visible 
 classes in a UML class diagram while preserving structure and semantics of the UML
@@ -63,13 +63,13 @@ elements. The goal is that developers will be able to view and understand a
 subsystems of a large software while being able to visualize how that system fits 
 into the whole system.
 
-1.1 PURPOSE
+**1.1 PURPOSE**
 
 Currently some of the functions of the plug-in does not work. The purpose of this 
 project is to make some of the functions of the plug-in work and also if possible 
 add some more functionalities.
 
-1.2 SCOPE
+**1.2 SCOPE**
 
 Onion Uml Visualization is a Uml class diagram visualization program.
 This Eclipse plug-in will allow a developer(user) to visualize and understand how
@@ -78,11 +78,11 @@ class and object in the system could also b seen too. This plug-in cannot displa
 these diagrams unless a .cml file has already been generated and then open in the
 Onion Uml Visualization program.
 
-1.3 DATA DICTIONARY, ACRONYMS, AND ABBREVIATIONS
+**1.3 DATA DICTIONARY, ACRONYMS, AND ABBREVIATIONS**
 
 .cml Chemical Mark-up Language.
 
-1.3.1 DATA DICTIONARY
+**1.3.1 DATA DICTIONARY**
 
 * RelationshipType (Types of Relationships)
 
@@ -152,32 +152,32 @@ Onion Uml Visualization program.
 	* OperationsFigure
 	* OnionRelationshipsFigure
 	
-1.4 REFERENCES
+**1.4 REFERENCES**
 
 kagdi-VISSOFT07-Onion Graphs for Focus+Context Views of UML Class Diagrams
 OnionUML Visualization Tool: Falcone-ICPC2013
 
-2. GENERAL DESCRIPTION
+####2. GENERAL DESCRIPTION
 
-2.1 PRODUCT PERSPECTIVE
-2.2 PRODUCT FUNCTIONS
-2.3 USER CHARETERISTICS
-2.4 GENERAL CONSTRAINTS
-2.5 ASSUMPTIONS AND DEPENDENCIES
+**2.1 PRODUCT PERSPECTIVE**
+**2.2 PRODUCT FUNCTIONS**
+**2.3 USER CHARETERISTICS**
+**2.4 GENERAL CONSTRAINTS**
+**2.5 ASSUMPTIONS AND DEPENDENCIES**
 
-3. SPECIFIC REQUIREMENTS
+####3. SPECIFIC REQUIREMENTS
 
-3.1 EXTERNAL INTERFACE REQUIREMENTS
-3.1.1 User Interface
+**3.1 EXTERNAL INTERFACE REQUIREMENTS**
+**3.1.1 User Interface**
 
-3.2 FUNCTIONAL REQUIREMENTS
-3.2.1 Feature #1
-3.2.1 Feature #2
+**3.2 FUNCTIONAL REQUIREMENTS**
+**3.2.1 Feature #1**
+**3.2.1 Feature #2**
 
-3.3 USE CASES
-3.3.1 Use Case #1
+**3.3 USE CASES**
+**3.3.1 Use Case #1**
 
-3.3.2 Search Dialog 
+**3.3.2 Search Dialog**
 
 **Use Case ID:** UC2  
 **Use Case Name:** Search Dialog  
@@ -236,19 +236,19 @@ None
 #### Notes and Issues:
 None
 
-3.4 CLASSES/OBJECTS
-3.4.1 Class/Object #1
-3.4.2 Class/Object #2
+**3.4 CLASSES/OBJECTS**
+*3.4.1 Class/Object #1*
+*3.4.2 Class/Object #2*
 
-3.5 DESIGN CONSTRAINTS
+**3.5 DESIGN CONSTRAINTS**
 
-3.6 OTHER REQUIREMENTS
+**3.6 OTHER REQUIREMENTS**
     
-4 ANALYSIS MODELS
+####4 ANALYSIS MODELS
 
-4.1 SEQUENCE DIAGRAMS
-4.2 DATA FLOW DIAGRAMS(DFD)
-4.3 STATE TRNASITION DIAGRAMS(STD)
+**4.1 SEQUENCE DIAGRAMS**
+**4.2 DATA FLOW DIAGRAMS(DFD)**
+**4.3 STATE TRNASITION DIAGRAMS(STD)**
   
-5 CHANGE MANAGMENT PROCESS
+####5 CHANGE MANAGMENT PROCESS
  
