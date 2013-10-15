@@ -32,8 +32,12 @@ Table of Contents
     * 3.1 EXTERNAL INTERFACE REQUIREMENTS
       * 3.1.1 User Interface
     * 3.2 FUNCTIONAL REQUIREMENTS
-      * 3.2.1 Feature #1
-      * 3.2.1 Feature #2
+      * 3.2.1 Feature #1 - Zoom Shorcuts
+      * 3.2.2 Feature #2 - Stereotype Display
+      * 3.2.3 Feature #3 - Unique Stereotype Colors
+      * 3.2.4 Feature #4 - Class Search Box
+      * 3.2.5 Feature #5 - View Package Selector
+      * 3.2.6 Feature #6 - Save Layout
     * 3.3 USE CASES
       * 3.3.1 Use Case #1
       * 3.3.2 Search Dialog 
@@ -585,7 +589,117 @@ Onion Uml Visualization program.
 
 **3.2.1 Feature #1**
 
-**3.2.1 Feature #2**
+- **Name:** 
+**Zoom Shortcuts**
+
+- **Description:**
+User can zoom in or out using standard 'CTRL+' and 'CTRL-' or CTRL with Scroll Wheel
+
+- **Implementation:** 
+This should only require modification of the plugin.xml file.  Zoom capability is already available from the Eclipse interface (currently using a dropdown box in the Eclipse toolbar).  We should be able to define an extension point in plugin.xml that will create shortcuts for this built-in Eclipse capability.
+
+- **Resources:**
+Eclipse Resources on Extension Points - http://www.eclipse.org/resources/?category=Extension%20point
+
+- **Estimated Time:** 
+3 hours 
+
+
+**3.2.2 Feature #2**
+
+- **Name:** 
+**Stereotype Display**
+
+- **Description:**
+User can choose whether to display the stereotype in the class object above the class name as '&lt;&lt;stereotype>>'
+
+- **Implementation:** 
+    - Step 1. [COMPLETE] Create a preferences menu where the user can choose whether to display or hide class stereotypes.  This will be implemented as a new Eclipse PreferencePage or FieldEditorPreferencePage.
+
+    - Step 2. Get every class opject to display the string '&lt;&lt;stereotype>>' above the class name.  (modifies onionuml.ui.graphics.figures.ClassFigure and possibly also onionuml.ui.graphics.editparts.ClassElementEditPart)
+
+    - Step 3. Get the user preference for viewing stereotypes out of the Eclipse Preference Store and use it to display or hide the stereotype string.  (modifies same class(es) as Step 2, also consider building a new class that will return values from the Preference Store)
+
+    - Step 4. Get stereotype name from .cml file and store as part of the class model.  Use this name to display the correct stereotype value for each class.  (modifies onionuml.core classes)
+
+    - Step 5. We may need to build a .cml file for testing that has at least one of each stereotype represented.
+
+- **Outstanding Questions**
+How are stereotypes determined in the generation of the .cml file?  How are they represented in the .cml file?  Does the current model collect and store stereotype values, or will the model need to be modified to do so?
+
+- **Estimated Time:** 
+    - Step 1: 8 hours
+    - Step 2: 1 hour
+    - Step 3: 4 hours
+    - Step 4: XX hours (time will be determined after outstanding questions are answered) 
+
+
+**3.2.3 Feature #3**
+
+- **Name:** 
+**Unique Stereotype Colors**
+
+- **Description:**
+A user should be able to select the color scheme of the diagram. Certain classes or sets of classes that belong to a specific category (or stereotype) should be colored the same.  The default color scheme should be: (Stereoptype and RGB values)
+    - Control - red 255 204 204
+    - Boundary - blue 204 236 255
+    - Entity - green 225 255 226
+    - yellow for notes 255 255 226    
+
+- **Dependencies**
+requires functionality created in Feature 2 (Steps 1, 4 and 5)   
+  
+- **Implementation:** 
+    - Step 1. [COMPLETE] Add elements to the preferences menu where the user can choose whether to show stereotypes in different colors and select which colors to use for each stereotype.  The default colors should be set to values in the table above. (modifies the Preferences package)
+
+    - Step 2. Using the user's color preferences and the stereotype values for each class, assign the appropriate color to class objects.  (modifies onionuml.ui.graphics.figures.ClassFigure and possibly also onionuml.ui.graphics.editparts.ClassElementEditPart)
+
+- **Estimated Time:** 
+    - Step 1: 3 hours
+    - Step 2: 10 hour
+
+
+**3.2.4 Feature #4**
+
+- **Name:** 
+**Class Search Box**
+
+- **Description:**
+User can open a form for searching classes with Ctrl+F.  They will see a text box where they can enter a regular expression for searching class names.  Search results will appear as a list with checkboxes for each class.  When complete, a new diagram view will open with only the selected classes shown.
+
+- **Implementation:** 
+
+
+- **Estimated Time:** 
+
+
+**3.2.5 Feature #5**
+
+- **Name:** 
+**View Package Selector**
+
+- **Description:**
+Currently, a selectable list of packages is shown in the Diagram Control View.  We need to implement the functionality of this tool. When a user deselects a package, the classes from that package should disappear from the diagram.  When a user reselects a package, the classes should reappear.
+
+- **Implementation:** 
+
+
+- **Estimated Time:** 
+
+
+**3.2.6 Feature #6**
+
+- **Name:** 
+**Save Layout**
+
+- **Description:**
+Users will be able to store a specific layout to a file.  The layout file will be saved and stored together with the .cml file.  Users will need both the layout and .cml (model) files to reopen a project layout later.
+
+- **Implementation:** 
+
+
+- **Estimated Time:** 
+
 
 **3.3 USE CASES**
 
