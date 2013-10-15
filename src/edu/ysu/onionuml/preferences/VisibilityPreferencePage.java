@@ -47,6 +47,27 @@ public class VisibilityPreferencePage
 				getFieldEditorParent()
 			)
 		);
+		addField(
+			new BooleanFieldEditor(
+				PreferenceConstants.P_SHOW_PRIVATE_METHODS,
+				"&Show Private Methods",
+				getFieldEditorParent()
+			)
+		);
+		addField(
+			new BooleanFieldEditor(
+				PreferenceConstants.P_SHOW_UML,
+				"&Show UML",
+				getFieldEditorParent()
+			)
+		);
+		addField(
+			new BooleanFieldEditor(
+			PreferenceConstants.P_SHOW_PRIVATE_ELEMENTS,
+				"&Show Onion",
+				getFieldEditorParent()
+			)
+		);
 
 	}
 

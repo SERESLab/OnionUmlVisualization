@@ -28,4 +28,10 @@ public class PreferenceConstants {
 	public static final String P_BOUNDARY_CLASS_COLOR = "rgbBoundaryClassColor";
 	
 	public static final String P_CONTROL_CLASS_COLOR = "rgbControlClassColor";
+	
+	public static final String P_SHOW_PRIVATE_METHODS = "boolShowPrivateMethod";
+	
+	public static final String P_SHOW_UML = "boolShowUml";
+	
+	public static final String P_SHOW_ONION = "boolShowOnio";
 }
