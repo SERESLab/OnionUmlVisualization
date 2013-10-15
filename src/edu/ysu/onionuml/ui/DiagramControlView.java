@@ -132,10 +132,30 @@ public class DiagramControlView extends ViewPart {
 		Button selectAllButton = new Button(buttonGroup, SWT.PUSH);
 		selectAllButton.setText(TEXT_SELECT_ALL);
 		selectAllButton.setLayoutData(new RowData());
+		selectAllButton.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onViewAllPressed();
+			}
+		});
 		
 		Button selectNoneButton = new Button(buttonGroup, SWT.PUSH);
 		selectNoneButton.setText(TEXT_SELECT_NONE);
 		selectNoneButton.setLayoutData(new RowData());
+		selectNoneButton.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onViewNonePressed();
+			}
+		});
 		
 		mPackageTable = new Table(packageControllerGroup,
 				SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -233,8 +253,7 @@ public class DiagramControlView extends ViewPart {
 	 * Populates the package table with the packages in the current class diagram.
 	 */
 	private void populatePackageTable(){
-		
-		mPackageTable.removeAll();
+				mPackageTable.removeAll();
 		UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel())
 				.getClassModel();
 		
@@ -250,6 +269,29 @@ public class DiagramControlView extends ViewPart {
 		}
 	}
 	
+	/*
+	 * Checks all packages from the Package Table when View All is pressed.
+	 */
+	private void onViewAllPressed(){
+		if(mPackageTable != null){
+			for(TableItem item : mPackageTable.getItems()){
+				item.setChecked(true);
+				
+			}
+		}
+	}
+	
+	/*
+	 * Unchecks all packages from the Package Table when View None is pressed.
+	 */
+	private void onViewNonePressed(){
+		if(mPackageTable != null){
+			for(TableItem item : mPackageTable.getItems()){
+				item.setChecked(false);
+				
+			}
+		}
+	}
 	
 	/*
 	 * Called when the compact selected button is pressed.
