@@ -33,7 +33,7 @@ Triggered when the eclipse user holds Ctrl and scrolls a negative or position in
 3.  Diagram view Zooms Out.
 
 #### Exceptions:
-1. Event will not work properly in diagram in not in focus.
+1. Event will not work properly if diagram is not in focus.
 
 #### Includes:
 None
