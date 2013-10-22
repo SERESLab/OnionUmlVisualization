@@ -700,6 +700,32 @@ Users will be able to store a specific layout to a file.  The layout file will b
 
 - **Estimated Time:** 
 
+**3.2.7 Feature #7**
+
+- **Name:**
+**Create Update Site Package**
+
+- **Description:**
+
+
+- **Implementation:** 
+
+
+- **Estimated Time:** 
+
+**3.2.8 Feature #8**
+
+- **Name:**
+**Generate ClassML from Eclipse**
+
+- **Description:**
+
+
+- **Implementation:** 
+
+
+- **Estimated Time:**
+
 
 **3.3 USE CASES**
 

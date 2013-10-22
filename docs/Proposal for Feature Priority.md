@@ -1,5 +1,6 @@
 ## Proposal for Feature Priority ##
 
+#### DEPRECATED: Add all new features to requirements_specification.md ####
 
 ###Setting Windows for color scheme:###
 
