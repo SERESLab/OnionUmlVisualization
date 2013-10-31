@@ -2,5 +2,6 @@ bin/[^.]*
 
 .DS_Store
 /bin
+Thumbs.db
 
 docs/*.html
