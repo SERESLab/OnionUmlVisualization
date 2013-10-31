@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
@@ -44,22 +45,25 @@ public class SearchDialog extends Window {
 	}
 
 	public Control createContents(Composite parent) {
-		parent.setLayout(new RowLayout());
+		parent.setLayout(new FillLayout(SWT.VERTICAL));
 
-		//TODO: Search input box.
+		//Search input box.
+		Text searchBox = new Text(parent, SWT.SEARCH);
 
 		//Search button and close button.
 		Composite buttons_container = new Composite(parent, 0);
 		buttons_container.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		Button search_button = new Button(parent, SWT.PUSH);
+		Button search_button = new Button(buttons_container, SWT.PUSH);
 		search_button.setText(SEARCH_BUTTON_TEXT);
 
-		Button close_button = new Button(parent, SWT.PUSH);
+		Button close_button = new Button(buttons_container, SWT.PUSH);
 		close_button.setText(CLOSE_BUTTON_TEXT);
 
-		//TODO: Search results.
+		//Search results.
+		createClassFilterListBoxController(parent);
 
+		parent.pack();
 		return parent;
 	}
 	
