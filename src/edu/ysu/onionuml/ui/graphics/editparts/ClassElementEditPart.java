@@ -17,14 +17,17 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 
+import edu.ysu.onionuml.Activator;
 import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlAttribute;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlOperation;
+import edu.ysu.onionuml.preferences.PreferenceConstants;
 import edu.ysu.onionuml.ui.graphics.figures.ClassFigure;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
@@ -115,8 +118,13 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 				figure.setNameString(classElement.getName());
 				
 				String stereotype = classElement.getStereotype();
+				//if the sterotype is set
 				if(stereotype != null && stereotype.length() > 0){
-					figure.setStereotypeString("Ç" + stereotype + "È");
+					//check user preferences for stereotype display and set the stereotype
+					IPreferenceStore store = Activator.getDefault().getPreferenceStore();				
+					if (store.getBoolean(PreferenceConstants.P_SHOW_STEREOTYPES)) {
+						figure.setStereotypeString("<<" + stereotype + ">>");
+					}
 				}
 				
 				// setup properties
