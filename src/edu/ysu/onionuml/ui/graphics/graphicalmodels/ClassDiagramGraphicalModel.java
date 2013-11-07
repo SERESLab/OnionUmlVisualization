@@ -8,11 +8,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.view.mxGraph;
 
+import edu.ysu.onionuml.Activator;
 import edu.ysu.onionuml.compact.DiagramGraph;
 import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlClassElement;
@@ -72,7 +76,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 				mDiagramGraph.addElement(n);
 			}
 		}
-		
+		this.attachPreferenceStoreListener();
 		initEdges();
 	}
 	
@@ -165,6 +169,19 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	
 	
 	// PRIVATE METHODS ------------------------------
+	
+	/*
+	 * Creates a listener for changes in the preferences store.
+	 * Any changes will trigger an update of this class diagram.
+	 */
+	private void attachPreferenceStoreListener()  {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		store.addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				ClassDiagramGraphicalModel.this.update();
+			}
+		});
+	}
 	
 	/*
 	 * Lays out the classes and relationships using the JGraphX library.
