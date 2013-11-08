@@ -18,9 +18,13 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 
 import edu.ysu.onionuml.Activator;
 import edu.ysu.onionuml.core.RelationshipType;
@@ -38,7 +42,7 @@ import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 public class ClassElementEditPart extends AbstractGraphicalEditPart 
 		implements MouseListener, MouseMotionListener{
 	
-	private static final Color CLASS_COLOR = new Color(null, 255, 255, 206);
+	//private static final Color CLASS_COLOR = new Color(null, 255, 255, 206);
 	private static final Font NAME_FONT = new Font(null, "Arial", 12, SWT.BOLD);
 	private static final Font STEREOTYPE_FONT = new Font(null, "Arial", 10, SWT.NORMAL);
 	private static final Font NAME_ABSTRACT_FONT = new Font(null, "Arial", 12, SWT.BOLD | SWT.ITALIC);
@@ -67,10 +71,12 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	}
 	
 	@Override
-	protected IFigure createFigure() {
-		IFigure f = new ClassFigure(CLASS_COLOR, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
+	protected IFigure createFigure() {		
+		Color classColor = getClassColorFromPreferences();
+		IFigure f = new ClassFigure(classColor, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
 		f.addMouseListener(this);
 		f.addMouseMotionListener(this);
+		this.attachPreferenceStoreListener();
 		return f;
 	}
 	
@@ -126,6 +132,10 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 						figure.setStereotypeString("<<" + stereotype + ">>");
 					}
 				}
+				
+				// set the background color
+				Color classColor = getClassColorFromPreferences();
+				figure.setBackgroundColor(classColor);
 				
 				// setup properties
 				if(classElement.getAttributes().size() == 0){
@@ -237,4 +247,26 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 
 	@Override
 	public void mouseDoubleClicked(MouseEvent me) {}
+	
+	
+	/* Private Methods **************************************************/
+	
+	//adds a listener to refresh class elements whenever user preferences are changed
+	private void attachPreferenceStoreListener()  {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		store.addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				ClassElementEditPart.this.refreshVisuals();
+			}
+		});
+	}
+	
+	//returns the appropriate class background color based on user preferences
+	private Color getClassColorFromPreferences() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		RGB myRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CLASS_COLOR);
+		return new Color(null, myRGB);
+	}
+	
+	
 }
