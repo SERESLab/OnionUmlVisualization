@@ -19,8 +19,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -76,7 +74,6 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 		IFigure f = new ClassFigure(classColor, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
 		f.addMouseListener(this);
 		f.addMouseMotionListener(this);
-		this.attachPreferenceStoreListener();
 		return f;
 	}
 	
@@ -250,16 +247,6 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	
 	
 	/* Private Methods **************************************************/
-	
-	//adds a listener to refresh class elements whenever user preferences are changed
-	private void attachPreferenceStoreListener()  {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		store.addPropertyChangeListener(new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				ClassElementEditPart.this.refreshVisuals();
-			}
-		});
-	}
 	
 	//returns the appropriate class background color based on user preferences
 	private Color getClassColorFromPreferences() {
