@@ -128,11 +128,15 @@ public class UmlClassModel{
 	 */
 	public Map<String,UmlRelationshipElement> getRelationships(){
 		return mRelationships;
-	} 
+	}
 	
 	
 	// PRIVATE METHODS -----------------------------------
 	
+	/**
+	 * Construct current object from ClassML file.
+	 * @param filename Path to ClassML file.
+	 */
 	private void readFromFile(String filename){
 		
 		Schema schema = null;
