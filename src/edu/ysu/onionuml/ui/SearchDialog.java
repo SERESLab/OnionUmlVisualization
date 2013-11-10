@@ -10,6 +10,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -45,13 +47,19 @@ public class SearchDialog extends Window {
 	}
 
 	public Control createContents(Composite parent) {
-		parent.setLayout(new FillLayout(SWT.VERTICAL));
+		parent.setLayout(new GridLayout());
 
+		//Everything in this should have fixed size.
+		Composite fixedSize = new Composite(parent, SWT.PUSH);
+		fixedSize.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING,
+				true, false));
+		fixedSize.setLayout(new FillLayout(SWT.VERTICAL));
+		
 		//Search input box.
-		Text searchBox = new Text(parent, SWT.SEARCH);
+		Text searchBox = new Text(fixedSize, SWT.SEARCH);
 
 		//Search button and close button.
-		Composite buttons_container = new Composite(parent, 0);
+		Composite buttons_container = new Composite(fixedSize, 0);
 		buttons_container.setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		Button search_button = new Button(buttons_container, SWT.PUSH);
@@ -60,8 +68,14 @@ public class SearchDialog extends Window {
 		Button close_button = new Button(buttons_container, SWT.PUSH);
 		close_button.setText(CLOSE_BUTTON_TEXT);
 
+		//Everything in this should have dynamic size.
+		Composite dynamicSize = new Composite(parent, SWT.PUSH);
+		dynamicSize.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
+				true, true));
+		dynamicSize.setLayout(new FillLayout(SWT.VERTICAL));
+		
 		//Search results.
-		createClassFilterListBoxController(parent);
+		createClassFilterListBoxController(dynamicSize);
 
 		parent.pack();
 		return parent;
