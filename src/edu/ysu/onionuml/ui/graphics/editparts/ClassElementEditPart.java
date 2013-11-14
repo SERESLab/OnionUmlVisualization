@@ -70,7 +70,10 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	
 	@Override
 	protected IFigure createFigure() {		
-		Color classColor = getClassColorFromPreferences();
+		ClassElementGraphicalModel model = (ClassElementGraphicalModel) getModel();
+		UmlClassElement classElement = model.getClassElement();
+		String stereotype = classElement.getStereotype();
+		Color classColor = getClassColorFromPreferences(stereotype);
 		IFigure f = new ClassFigure(classColor, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
 		f.addMouseListener(this);
 		f.addMouseMotionListener(this);
@@ -131,7 +134,7 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 				}
 				
 				// set the background color
-				Color classColor = getClassColorFromPreferences();
+				Color classColor = getClassColorFromPreferences(stereotype);
 				figure.setBackgroundColor(classColor);
 				
 				// setup properties
@@ -248,11 +251,33 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	
 	/* Private Methods **************************************************/
 	
-	//returns the appropriate class background color based on user preferences
-	private Color getClassColorFromPreferences() {
+	/**
+	 * Returns the appropriate class background color based on user preferences.
+	 * 
+	 * @param stereotype	the stereotype of the class
+	 * @return				the background color for the class
+	 */
+	private Color getClassColorFromPreferences(String stereotype) {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		RGB myRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CLASS_COLOR);
-		return new Color(null, myRGB);
+		RGB classRGB = new RGB(255, 255, 206);
+		//if using stereotype colors, gets appropriate color for stereotype
+		//returns default class color if stereotype isn't recognized
+		if (store.getBoolean(PreferenceConstants.P_USE_STEREOTYPE_COLORS)) {
+			if (stereotype.equalsIgnoreCase("boundary")) {
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_BOUNDARY_CLASS_COLOR);
+			} else if (stereotype.equalsIgnoreCase("control")){
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CONTROL_CLASS_COLOR);
+			} else if (stereotype.equalsIgnoreCase("entity")){
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_ENTITY_CLASS_COLOR);
+			} else {
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CLASS_COLOR);
+			}
+		}
+		//if not using stereotype colors, returns default class color for every class
+		else {
+			classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CLASS_COLOR);
+		}
+		return new Color(null, classRGB);
 	}
 	
 	
