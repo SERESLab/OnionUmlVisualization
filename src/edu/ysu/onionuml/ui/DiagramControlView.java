@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -51,6 +53,7 @@ public class DiagramControlView extends ViewPart {
 	private static final String TEXT_EXPAND_ALL = "Expand All";
 	private static final String TEXT_RESET_ALL = "Reset All";
 	private static final String TEXT_NO_DIAGRAM = "No class diagram currently in view.";
+	private static final String TEXT_UPDATE_DIAGRAM = "Update Diagram";
 	
 	private Table mPackageTable;
 	private Composite mDefaultView;
@@ -58,7 +61,6 @@ public class DiagramControlView extends ViewPart {
 	private Composite mCompactionControlView;
 	private Composite mParentComposite;
 	private ClassDiagramEditPart mCurrentClassDiagram = null;
-	
 	
 	// PUBLIC METHODS --------------------------------
 
@@ -159,6 +161,20 @@ public class DiagramControlView extends ViewPart {
 			}
 		});
 		
+		Button updateDiagramButton = new Button(buttonGroup, SWT.PUSH);
+		updateDiagramButton.setText(TEXT_UPDATE_DIAGRAM);
+		updateDiagramButton.setLayoutData(new RowData());
+		updateDiagramButton.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onUpdateDiagramPressed();
+			}
+		});
+		
 		mPackageTable = new Table(packageControllerGroup,
 				SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		FormData data = new FormData();
@@ -228,10 +244,30 @@ public class DiagramControlView extends ViewPart {
 		Button compactAll = new Button(allButtonGroup, SWT.PUSH);
 		compactAll.setText(TEXT_COMPACT_ALL);
 		compactAll.setLayoutData(new RowData());
+		compactAll.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onCompactAllPressed();
+			}
+		});
 		
 		Button expandAll = new Button(allButtonGroup, SWT.PUSH);
 		expandAll.setText(TEXT_EXPAND_ALL);
 		expandAll.setLayoutData(new RowData());
+		expandAll.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onExpandAllPressed();
+			}
+		});
 		
 		Button resetAll = new Button(allButtonGroup, SWT.PUSH);
 		resetAll.setText(TEXT_RESET_ALL);
@@ -278,7 +314,7 @@ public class DiagramControlView extends ViewPart {
 		if(mPackageTable != null){
 			for(TableItem item : mPackageTable.getItems()){
 				item.setChecked(true);
-				
+	
 			}
 		}
 	}
@@ -294,6 +330,34 @@ public class DiagramControlView extends ViewPart {
 			}
 		}
 	}
+	
+	/*
+	 * Update graph after selecting/deselecting packages
+	 */
+	private void onUpdateDiagramPressed(){
+			UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).getClassModel();
+					Map<String,UmlPackageElement> packages = model.getPackages();
+			Iterator<Entry<String,UmlPackageElement>>  itPackages = packages.entrySet().iterator();
+			while (itPackages.hasNext()) {
+				Entry<String,UmlPackageElement> pkgPairs = 
+						(Entry<String,UmlPackageElement>)itPackages.next();
+				UmlPackageElement p = pkgPairs.getValue();
+				for(TableItem item : mPackageTable.getItems()){
+					if(item.getText() == p.getName() && item.getChecked() == false){
+						//for(each class){
+							//set visibility to false
+						//}
+						
+					}
+				}
+			}
+		//find classes that match package name item.getText()
+		//set visibility to false
+
+		((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
+	}
+	
+
 	
 	/*
 	 * Called when the compact selected button is pressed.
@@ -320,4 +384,39 @@ public class DiagramControlView extends ViewPart {
 			((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
 		}
 	}
+	
+	/*
+	 * Called when the compact all button is pressed.
+	 */
+	private void onCompactAllPressed(){
+		/*UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel())
+				.getClassModel();
+		
+		Map<String,UmlClassElement> classes = model.getClasses();
+		Iterator<Entry<String,UmlClassElement>>  itClasses = classes.entrySet().iterator();
+		while (itClasses.hasNext()) {
+			Entry<String,UmlClassElement> classPairs = 
+					(Entry<String,UmlClassElement>)itClasses.next();
+			UmlClassElement c = classPairs.getValue();
+			addToSelection(c);
+		}
+		
+	/*	for(){
+			//
+			//((ClassDiagramEditPart)c.getParent()).addToSelection(c); // c is class
+		}*/
+		((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
+	}
+	
+	/*
+	 * Called when the expand all button is pressed.
+	 */
+	private void onExpandAllPressed(){
+	/*	for(){
+			//
+			//((ClassDiagramEditPart)c.getParent()).removeFromSelection(c); // c is class
+		}*/
+	}
 }
+
+//for debug BS JOptionPane.showMessageDialog( null, s,"title",JOptionPane.OK_CANCEL_OPTION); 
