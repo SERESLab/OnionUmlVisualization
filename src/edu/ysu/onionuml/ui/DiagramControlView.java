@@ -77,6 +77,7 @@ public class DiagramControlView extends ViewPart {
 	/**
 	 * Sets the current class diagram to the specified diagram, or null to disable
 	 * control of any diagram.
+	 * @param diagram 
 	 */
 	public void setCurrentClassDiagram(ClassDiagramEditPart diagram){
 		mCurrentClassDiagram = diagram;
@@ -110,6 +111,7 @@ public class DiagramControlView extends ViewPart {
 	/**
 	 * Returns the current class diagram that the view is currently controlling
 	 * or null if the view is not controlling any diagram.
+	 * @return This returns the current class diagram. 
 	 */
 	public ClassDiagramEditPart getCurrentClassDiagram(){
 		return mCurrentClassDiagram;

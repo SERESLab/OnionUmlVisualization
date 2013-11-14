@@ -30,6 +30,10 @@ import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 
 
+/**
+ * This is the class the builds the search dialog window.
+ *
+ */
 public class SearchDialog extends Window {
 	private static final String SEARCH_BUTTON_TEXT = "Search";
 	private static final String CLOSE_BUTTON_TEXT = "Close";
@@ -42,6 +46,9 @@ public class SearchDialog extends Window {
 	private Table mClassTable;
 	private ClassDiagramEditPart mCurrentClassDiagram = null;
 
+	/**
+	 * @param parentShell
+	 */
 	public SearchDialog(Shell parentShell) {
 		super(parentShell);
 	}

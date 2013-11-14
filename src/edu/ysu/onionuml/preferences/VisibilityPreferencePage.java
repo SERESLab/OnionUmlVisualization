@@ -20,6 +20,9 @@ public class VisibilityPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
+	/**
+	 * This builds the visibility preference page.
+	 */
 	public VisibilityPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());

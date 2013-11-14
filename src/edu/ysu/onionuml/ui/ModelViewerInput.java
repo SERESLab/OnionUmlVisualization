@@ -24,6 +24,7 @@ public class ModelViewerInput implements IEditorInput {
 
 	/**
 	 * Constructs a new ModelViewerInput from the given diagram.
+	 * @param model 
 	 */
 	public ModelViewerInput(ClassDiagramGraphicalModel model) {
 
@@ -33,13 +34,15 @@ public class ModelViewerInput implements IEditorInput {
 
 	/**
 	 * Gets a unique integer ID specifying the model this object represents.
+	 * @return model Id 
 	 */
 	public int getId() {
 		return mId;
 	}
 
 	/**
-	 * Returns the class model respresented by this ModelViewerInput object.
+	 * Returns the class model represented by this ModelViewerInput object.
+	 * @return model list id
 	 * 
 	 * @throws RuntimeException
 	 *             if the dispose() method has already been called.

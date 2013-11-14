@@ -23,6 +23,9 @@ public class GeneralPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
+	/**
+	 * This builds the main page for the preference page.
+	 */
 	public GeneralPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
