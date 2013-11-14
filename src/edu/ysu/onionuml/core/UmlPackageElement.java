@@ -38,7 +38,9 @@ public class UmlPackageElement {
 	}
 	
 	/**
-	 * Returns the name of the package.
+	 * Gets the name of the package.
+	 * 
+	 * @return name of package
 	 */
 	public String getName(){
 		return mName;
@@ -56,6 +58,8 @@ public class UmlPackageElement {
 	
 	/**
 	 * Gets a reference to the map of classes in the package.
+	 * 
+	 * @return classes
 	 */
 	public Map<String,UmlClassElement> getClasses(){
 		return mClasses;

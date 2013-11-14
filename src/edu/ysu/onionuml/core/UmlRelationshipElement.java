@@ -15,8 +15,7 @@ public class UmlRelationshipElement {
 		MANY;
 		
 		/**
-		 * Returns the Multiplicity represented by the specified string, or
-		 * NONE if the string is not recognized.
+		 * @return the Multiplicity represented by the specified string or NONE if the string is not recognized.
 		 */
 		public static Multiplicity parseMultiplicity(String s) {
 			if(s.equals("0")){
@@ -110,7 +109,9 @@ public class UmlRelationshipElement {
 	}
 	
 	/**
-	 * Returns the label to be displayed on the relationship.
+	 * Gets the label to be displayed on the relationship.
+	 * 
+	 * @return the label to be displayed on the relationship
 	 */
 	public String getLabel(){
 		return mLabel;
@@ -124,7 +125,9 @@ public class UmlRelationshipElement {
 	}
 	
 	/**
-	 * Returns the id of the head element in the relationship.
+	 * Gets the id of the head element in the relationship.
+	 * 
+	 * @return the id of the head element in the relationship.
 	 */
 	public String getHeadId(){
 		return mHeadId;
@@ -138,7 +141,9 @@ public class UmlRelationshipElement {
 	}
 	
 	/**
-	 * Returns the id of the tail element in the relationship.
+	 * Gets the id of the tail element in the relationship.
+	 * 
+	 * @return the id of the tail element in the relationship.
 	 */
 	public String getTailId(){
 		return mTailId;
@@ -153,6 +158,8 @@ public class UmlRelationshipElement {
 	
 	/**
 	 * Gets the type of relationship element.
+	 * 
+	 * @return the type of relationship element.
 	 */
 	public RelationshipType getType(){
 		return mType;
@@ -166,7 +173,9 @@ public class UmlRelationshipElement {
 	}
 	
 	/**
-	 * Returns the minimum multiplicity of the head element in the relationship
+	 * Gets the minimum multiplicity of the head element in the relationship.
+	 * 
+	 * @return the minimum multiplicity of the head element in the relationship.
 	 */
 	public Multiplicity getHeadMultiplicityMin(){
 		return mHeadMultiplicityMin;
@@ -180,7 +189,9 @@ public class UmlRelationshipElement {
 	}
 	
 	/**
-	 * Returns the maximum multiplicity of the head element in the relationship
+	 * Gets the maximum multiplicity of the head element in the relationship.
+	 * 
+	 * @return the maximum multiplicity of the head element in the relationship.
 	 */
 	public Multiplicity getHeadMultiplicityMax(){
 		return mHeadMultiplicityMax;
@@ -194,7 +205,9 @@ public class UmlRelationshipElement {
 	}
 	
 	/**
-	 * Returns the minimum multiplicity of the tail element in the relationship
+	 * Gets the minimum multiplicity of the tail element in the relationship.
+	 * 
+	 * @return the minimum multiplicity of the tail element in the relationship.
 	 */
 	public Multiplicity getTailMultiplicityMin(){
 		return mTailMultiplicityMin;
@@ -208,7 +221,9 @@ public class UmlRelationshipElement {
 	}
 	
 	/**
-	 * Returns the maximum multiplicity of the tail element in the relationship
+	 * Gets the maximum multiplicity of the tail element in the relationship.
+	 * 
+	 * @return the maximum multiplicity of the tail element in the relationship.
 	 */
 	public Multiplicity getTailMultiplicityMax(){
 		return mTailMultiplicityMax;

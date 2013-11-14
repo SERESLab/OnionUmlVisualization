@@ -29,6 +29,7 @@ public class ClassmlWriter {
 	
 	/**
 	 * Writes the specified class model to the specified filename.
+	 * 
 	 * @throws ParserConfigurationException from the document builder
 	 * @throws TransformerException from the document builder
 	 */
