@@ -52,6 +52,8 @@ public class UmlClassElement {
 	
 	/**
 	 * Sets the name of this class.
+	 * 
+	 * @param name name of the class
 	 */
 	public void setName(String name){
 		mName = name;
@@ -59,6 +61,8 @@ public class UmlClassElement {
 	
 	/**
 	 * Gets the name of this class.
+	 * 
+	 * @return name of this class.
 	 */
 	public String getName(){
 		return mName;
@@ -66,6 +70,8 @@ public class UmlClassElement {
 	
 	/**
 	 * Sets whether this class is abstract.
+	 * 
+	 * @param isAbstract
 	 */
 	public void setIsAbstract(boolean isAbstract){
 		mIsAbstract = isAbstract;
@@ -73,13 +79,17 @@ public class UmlClassElement {
 	
 	/**
 	 * Gets whether the class is abstract.
+	 * 
+	 * @return is class abstract?
 	 */
 	public boolean getIsAbstract(){
 		return mIsAbstract;
 	}
 	
 	/**
-	 * Sets the sterotype of this class to the specified stereotype.
+	 * Sets the stereotype of this class to the specified stereotype.
+	 * 
+	 * @param stereotype
 	 */
 	public void setStereotype(String stereotype){
 		mStereotype = stereotype;
@@ -87,6 +97,8 @@ public class UmlClassElement {
 	
 	/**
 	 * Gets a string specifying the stereotype of this class.
+	 * 
+	 * @return a string specifying the stereotype of this class.
 	 */
 	public String getStereotype(){
 		return mStereotype;
@@ -100,7 +112,9 @@ public class UmlClassElement {
 	}
 	
 	/**
-	 * Returns a reference to the list of attributes in this class.
+	 * Gets a reference to the list of attributes in this class.
+	 * 
+	 * @return a reference to the list of attributes in this class.
 	 */
 	public List<UmlAttribute> getAttributes(){
 		return mAttributes;
@@ -114,7 +128,9 @@ public class UmlClassElement {
 	}
 	
 	/**
-	 * Returns a reference to the list of operations in this class.
+	 * Gets a reference to the list of operations in this class.
+	 * 
+	 * @return a reference to the list of operations in this class.
 	 */
 	public List<UmlOperation> getOperations(){
 		return mOperations;
@@ -122,6 +138,8 @@ public class UmlClassElement {
 	
 	/**
 	 * Gets the visibility of the class.
+	 * 
+	 * @return the visibility of the class.
 	 */
 	public Visibility getVisibility(){
 		return mVisibility;
