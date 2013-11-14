@@ -6,8 +6,8 @@ import org.eclipse.draw2d.geometry.Point;
 import edu.ysu.onionuml.core.UmlRelationshipElement;
 
 /**
- * Represents the model of a uml diagram relationship between two elements to
- * be rendered with the Eclipse Graphical Editing Framework (GEF).
+ * Represents the model of a UML relationship between two elements.
+ * This will be rendered with the Eclipse Graphical Editing Framework (GEF).
  */
 public class RelationshipElementGraphicalModel implements
 		IElementGraphicalModel {
@@ -21,7 +21,10 @@ public class RelationshipElementGraphicalModel implements
 	/**
 	 * Constructs a new RelationshipElementGraphicalModel from the given
 	 * UmlRelationshipElement object.
-	 * @param rel the UmlRelationshipElement object representing the relationship 
+	 * 
+	 * @param rel 	the UML Relationship Element object representing 
+	 * 				the relationship 
+	 * @see 		core.UmlRelationshipElement
 	 */
 	public RelationshipElementGraphicalModel(UmlRelationshipElement rel){
 		mRelationship = rel;
@@ -30,7 +33,9 @@ public class RelationshipElementGraphicalModel implements
 	}
 	
 	/**
-	 * Gets a reference to the underlying UmlRelationshipElement object.
+	 * Gets a reference to the underlying UMLRelationshipElement object.
+	 * 
+	 * @return		associated UML Relationship Element
 	 */
 	public UmlRelationshipElement getRelationshipElement(){
 		return mRelationship;

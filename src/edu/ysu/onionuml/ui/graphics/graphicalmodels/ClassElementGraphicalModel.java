@@ -12,8 +12,8 @@ import edu.ysu.onionuml.ui.graphics.IEventListener;
 import edu.ysu.onionuml.ui.graphics.IEventRegistrar;
 
 /**
- * Represents the model of a uml class to be rendered with the Eclipse
- * Graphical Editing Framework (GEF).
+ * Represents the model of a UML class.
+ * This will be rendered with the Eclipse Graphical Editing Framework (GEF).
  */
 public class ClassElementGraphicalModel implements IElementGraphicalModel, IEventRegistrar {
 	
@@ -44,7 +44,10 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	// PUBLIC METHODS --------------------------------------
 	
 	/**
-	 * Contructs a new ClassGraphicalModel from the given class and package.
+	 * Constructs a new ClassGraphicalModel from the given class and package.
+	 * 
+	 * @param c		the class that this model will represent
+	 * @param p		the package that the class belongs to
 	 */
 	public ClassElementGraphicalModel(UmlClassElement c, UmlPackageElement p){
 		mClassElement = c;
@@ -54,22 +57,29 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	}
 	
 	/**
-	 * Sets whether this class element is a hyper class.
+	 * Sets whether this class element is a hyperclass.
+	 * 
+	 * @param isHyper		true if this class element is a hyperclass
+	 * @param actualHead	???
+	 * @see					ui.graphics.editparts.HyperClassElementEditPart
 	 */
 	public void setIsHyper(boolean isHyper, ClassElementGraphicalModel actualHead){
 		mIsHyper = isHyper;
 		mActualHead = isHyper ? actualHead : null;
 	}
-	
+		
 	/**
-	 * Gets whether this class element is a hyper class.
+	 * Gets whether this class element is a hyperclass.
+	 * 
+	 * @return		true if this class element is a hyperclass
+	 * @see			ui.graphics.editparts.HyperClassElementEditPart
 	 */
 	public boolean isHyper(){
 		return mIsHyper;
 	}
 	
 	/**
-	 * Gets the hyper class's actual head, or null if this is not a hyper class.
+	 * Gets the hyperclass's actual head, or null if this is not a hyperclass.
 	 */
 	public ClassElementGraphicalModel getActualHead(){
 		return mActualHead;

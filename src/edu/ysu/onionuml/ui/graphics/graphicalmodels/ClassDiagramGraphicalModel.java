@@ -121,6 +121,9 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	/**
 	 * Finds the id assigned to the specified element graphical model, or null if the
 	 * element cannot be found.
+	 * 
+	 * @param element	the graphical model element for which the id is desired
+	 * @return			the id of the provided graphical model element
 	 */
 	public String lookupIdByGraphicalModel(IElementGraphicalModel element){
 		
@@ -150,7 +153,10 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	/**
 	 * Finds the element graphical model associated with the specified id, or null if an
 	 * element cannot be found.
-	 */
+	 * 
+	 * @param id	the id of the graphical model that is desired
+	 * @return		the graphical model element matching the provided id
+	 */	
 	public IElementGraphicalModel lookupGraphicalModelById(String id){
 		
 		IElementGraphicalModel c = mClassIdMap.get(id);
@@ -170,7 +176,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	
 	// PRIVATE METHODS ------------------------------
 	
-	/*
+	/**
 	 * Creates a listener for changes in the preferences store.
 	 * Any changes will trigger an update of this class diagram.
 	 */
@@ -183,7 +189,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		});
 	}
 	
-	/*
+	/**
 	 * Lays out the classes and relationships using the JGraphX library.
 	 */
 	private void layout(){
@@ -269,7 +275,9 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		}
 	}
 	
-	// initializes the edges in the graphical model
+	/**
+	 *  Initializes the edges in the graphical model.
+	 */
 	private void initEdges(){
 		
 		// maps of each class to its children for joining relationship arcs with hypervertices
@@ -337,7 +345,12 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		layoutEdges(generalizationChildren, RelationshipType.GENERALIZATION);
 	}
 	
-	// inserts hyperedges for classes with many children
+	/**
+	 *  Inserts hyperedges for classes with many children.
+	 *  
+	 * @param childrenIdMap		an array of all the children classes contained in the hyperelement
+	 * @param relType			the type of class relationship contained in the hyperelement
+	 */
 	private void layoutEdges(Map<String, ArrayList<String>> childrenIdMap, RelationshipType relType){
 		Iterator<Entry<String, ArrayList<String>>> itChildren = childrenIdMap.entrySet().iterator();
 		while (itChildren.hasNext()) {

@@ -9,6 +9,11 @@ import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Command that opens the search dialog box.
+ * 
+ * @see org.eclipse.core.commands.IHandler
+ */
 public class OpenSearchCommandHandler implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
