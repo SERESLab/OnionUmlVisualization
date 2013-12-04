@@ -20,8 +20,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_SHOW_STEREOTYPES, true);
-		store.setDefault(PreferenceConstants.P_SHOW_PRIVATE_ELEMENTS, true);
 		store.setDefault(PreferenceConstants.P_USE_STEREOTYPE_COLORS, true);
+		store.setDefault(PreferenceConstants.P_SHOW_METHODS, true);
+		store.setDefault(PreferenceConstants.P_SHOW_FIELDS, true);
 		PreferenceConverter.setDefault(store,PreferenceConstants.P_CLASS_COLOR,
 				new RGB(255,255,226));
 		PreferenceConverter.setDefault(store,PreferenceConstants.P_BOUNDARY_CLASS_COLOR,
