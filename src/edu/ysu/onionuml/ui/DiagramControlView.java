@@ -344,6 +344,7 @@ public class DiagramControlView extends ViewPart {
 				UmlPackageElement p = pkgPairs.getValue();
 				for(TableItem item : mPackageTable.getItems()){
 					if(item.getText() == p.getName() && item.getChecked() == false){
+						JOptionPane.showMessageDialog( null, p.getName(),"title",JOptionPane.OK_CANCEL_OPTION); 
 						//for(each class){
 							//set visibility to false
 						//}
