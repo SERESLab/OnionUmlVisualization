@@ -137,20 +137,34 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 				Color classColor = getClassColorFromPreferences(stereotype);
 				figure.setBackgroundColor(classColor);
 				
-				// setup properties
+				IPreferenceStore store = Activator.getDefault().getPreferenceStore();               
+				
+				// setup properties (fields)
 				if(classElement.getAttributes().size() == 0){
 					figure.addProperty("", null, null);
 				}
+				
+				else if (!store.getBoolean(PreferenceConstants.P_SHOW_FIELDS))
+				{
+					figure.addProperty("...", null, null);
+				}
+				
 				else{
 					for(UmlAttribute a : classElement.getAttributes()){
 						figure.addProperty(a.toString(), null, null);
 					}
 				}
 				
-				// setup operations
+				// setup operations (methods)
 				if(classElement.getOperations().size() == 0){
 					figure.addOperation("", null, null);
 				}
+				
+				else if (!store.getBoolean(PreferenceConstants.P_SHOW_METHODS))
+				{
+					figure.addOperation("...", null, null);
+				}
+				
 				else{
 					for(UmlOperation o : classElement.getOperations()){
 						
