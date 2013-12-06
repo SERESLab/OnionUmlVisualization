@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
+import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
 import edu.ysu.onionuml.preferences.VisibilityPreferencePage;
@@ -359,26 +360,21 @@ public class DiagramControlView extends ViewPart {
 	 * Update graph after selecting/deselecting packages
 	 */
 	private void onUpdateDiagramPressed(){
-			UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).getClassModel();
-					Map<String,UmlPackageElement> packages = model.getPackages();
-			Iterator<Entry<String,UmlPackageElement>>  itPackages = packages.entrySet().iterator();
-			while (itPackages.hasNext()) {
-				Entry<String,UmlPackageElement> pkgPairs = 
-						(Entry<String,UmlPackageElement>)itPackages.next();
-				UmlPackageElement p = pkgPairs.getValue();
-				for(TableItem item : mPackageTable.getItems()){
-					if(item.getText() == p.getName() && item.getChecked() == false){
-						JOptionPane.showMessageDialog( null, p.getName(),"title",JOptionPane.OK_CANCEL_OPTION); 
-						//for(each class){
-							//set visibility to false
-						//}
-						
+		UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).getClassModel();
+		Map<String,UmlPackageElement> packages = model.getPackages();
+		Iterator<Entry<String,UmlPackageElement>>  itPackages = packages.entrySet().iterator();
+		while (itPackages.hasNext()) {
+			Entry<String,UmlPackageElement> pkgPairs = (Entry<String,UmlPackageElement>)itPackages.next();
+			UmlPackageElement p = pkgPairs.getValue();
+			for(TableItem item : mPackageTable.getItems()){
+				if(item.getText() == p.getName() && item.getChecked() == false){
+					for(UmlClassElement c : p.getClasses().values()){
+						String s = c.getName();
+						JOptionPane.showMessageDialog( null, s,"title",JOptionPane.OK_CANCEL_OPTION); 
 					}
 				}
 			}
-		//find classes that match package name item.getText()
-		//set visibility to false
-
+		}
 		((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
 	}
 	
@@ -414,22 +410,7 @@ public class DiagramControlView extends ViewPart {
 	 * Called when the compact all button is pressed.
 	 */
 	private void onCompactAllPressed(){
-		/*UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel())
-				.getClassModel();
-		
-		Map<String,UmlClassElement> classes = model.getClasses();
-		Iterator<Entry<String,UmlClassElement>>  itClasses = classes.entrySet().iterator();
-		while (itClasses.hasNext()) {
-			Entry<String,UmlClassElement> classPairs = 
-					(Entry<String,UmlClassElement>)itClasses.next();
-			UmlClassElement c = classPairs.getValue();
-			addToSelection(c);
-		}
-		
-	/*	for(){
-			//
-			//((ClassDiagramEditPart)c.getParent()).addToSelection(c); // c is class
-		}*/
+
 		((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
 	}
 	
@@ -444,4 +425,12 @@ public class DiagramControlView extends ViewPart {
 	}
 }
 
-//for debug BS JOptionPane.showMessageDialog( null, s,"title",JOptionPane.OK_CANCEL_OPTION); 
+
+/*   brandis notes
+		if(item.getText() == p.getName() && item.getChecked() == false){
+			for(UmlClassElement c : p.getClasses().values()){
+				String s = c.getName();
+				JOptionPane.showMessageDialog( null, s,"title",JOptionPane.OK_CANCEL_OPTION); 
+		
+	}
+}*/

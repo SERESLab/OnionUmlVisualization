@@ -123,7 +123,7 @@ public class ClassElementGraphicalModel implements IElementGraphicalModel, IEven
 	/**
 	 * Gets a reference to the underlying UmlPackageElement to which the class belongs.
 	 */
-	public UmlPackageElement getPackageElemet(){
+	public UmlPackageElement getPackageElement(){
 		return mPackageElement;
 	}
 	
