@@ -3,9 +3,11 @@ package edu.ysu.onionuml.ui;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -25,6 +27,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
+import edu.ysu.onionuml.preferences.VisibilityPreferencePage;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassElementEditPart;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
@@ -45,6 +48,7 @@ public class DiagramControlView extends ViewPart {
 	private static final int PADDING = 10;
 	private static final String TEXT_PACKAGES_CONTROLLER = "View Packages";
 	private static final String TEXT_COMPACTION_CONTROLLER = "Onion Compaction";
+	private static final String TEXT_VISIBILITY_PREFERENCE_CONTROLLER = "Visibility Preference";
 	private static final String TEXT_SELECT_ALL = "View All";
 	private static final String TEXT_SELECT_NONE = "View None";
 	private static final String TEXT_COMPACT_SELECTED = "Compact Selected";
@@ -60,6 +64,7 @@ public class DiagramControlView extends ViewPart {
 	private Composite mPackagesView;
 	private Composite mCompactionControlView;
 	private Composite mParentComposite;
+	private Composite mVisibilityPreference;
 	private ClassDiagramEditPart mCurrentClassDiagram = null;
 	
 	// PUBLIC METHODS --------------------------------
@@ -88,6 +93,7 @@ public class DiagramControlView extends ViewPart {
 			if(mPackagesView == null && mCompactionControlView == null){
 				mPackagesView = createPackagesController(mParentComposite);
 				mCompactionControlView = createCompactionController(mParentComposite);
+				mVisibilityPreference = createVisibilityPreference(mParentComposite);
 				populatePackageTable();
 			}
 			if(mDefaultView != null){
@@ -99,8 +105,10 @@ public class DiagramControlView extends ViewPart {
 			if(mPackagesView != null && mCompactionControlView != null){
 				mPackagesView.dispose();
 				mCompactionControlView.dispose();
+				mVisibilityPreference.dispose();
 				mPackagesView = null;
 				mCompactionControlView = null;
+				mVisibilityPreference = null;
 			}
 			if(mDefaultView == null){
 				mDefaultView = createDefaultView(mParentComposite);
@@ -275,6 +283,22 @@ public class DiagramControlView extends ViewPart {
 		
 		return compactionControllerGroup;
 	}
+	
+	/*
+	 * Creates the composite for displaying Visibility Preference options.
+	 */	
+	private Composite createVisibilityPreference(Composite parent){
+		Group createVisibilityPreference = new Group(parent, SWT.VERTICAL);
+		createVisibilityPreference.setText(TEXT_VISIBILITY_PREFERENCE_CONTROLLER);
+	
+		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+		layout.marginLeft = PADDING;
+		layout.marginRight = PADDING;
+		createVisibilityPreference.setLayout(layout);
+		
+		return createVisibilityPreference;
+	}
+	
 	
 	/*
 	 * Creates the blank default composite.
