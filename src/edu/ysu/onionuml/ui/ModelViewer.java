@@ -204,4 +204,8 @@ public final class ModelViewer extends GraphicalEditor {
 	public void doSaveAs() {
 		// no save
 	}
+
+	public ClassDiagramGraphicalModel getModel() {
+		return mModel;
+	}
 }

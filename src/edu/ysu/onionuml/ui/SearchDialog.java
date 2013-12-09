@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
@@ -44,13 +46,18 @@ public class SearchDialog extends Window {
 	private static final String TEXT_SELECT_NONE = "View None";
 	
 	private Table mClassTable;
-	private ClassDiagramEditPart mCurrentClassDiagram = null;
+	private UmlClassModel mModel = null;
 
 	/**
 	 * @param parentShell
 	 */
 	public SearchDialog(Shell parentShell) {
 		super(parentShell);
+
+		IEditorPart editorPart = PlatformUI.getWorkbench().
+				getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		if (editorPart instanceof ModelViewer)
+			mModel = ((ModelViewer) editorPart).getModel().getClassModel();
 	}
 
 	public Control createContents(Composite parent) {
@@ -83,6 +90,7 @@ public class SearchDialog extends Window {
 		
 		//Search results.
 		createClassFilterListBoxController(dynamicSize);
+		populateClassTable();
 
 		parent.pack();
 		return parent;
@@ -125,18 +133,25 @@ public class SearchDialog extends Window {
 
 	private void populateClassTable(){		
 		mClassTable.removeAll();
-		UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel())
-				.getClassModel();
 		
-		Map<String,UmlClassElement> classes = model.getClasses();
-		Iterator<Entry<String,UmlClassElement>>  itClasses = classes.entrySet().iterator();
-		while (itClasses.hasNext()) {
-			Entry<String,UmlClassElement> classPairs = 
-					(Entry<String,UmlClassElement>)itClasses.next();
-			UmlClassElement c = classPairs.getValue();
-			TableItem item = new TableItem(mClassTable, SWT.NONE);
-			item.setText(c.getName());
-			item.setChecked(true);
+		//Get all classes in all packages and add them to the class table using
+		//fully qualified names.
+		Map<String, UmlPackageElement> packages = mModel.getPackages();
+		Iterator<Entry<String, UmlPackageElement>> packagesIter =
+				packages.entrySet().iterator();
+		while (packagesIter.hasNext())
+		{
+			UmlPackageElement curPackage = packagesIter.next().getValue();
+			Iterator<Entry<String, UmlClassElement>> classesIter =
+					curPackage.getClasses().entrySet().iterator();
+			while (classesIter.hasNext())
+			{
+				UmlClassElement curClass = classesIter.next().getValue();
+
+				TableItem item = new TableItem(mClassTable, SWT.NONE);
+				item.setText(curPackage.getName() + '.' + curClass.getName());
+				item.setChecked(true);
+			}
 		}
 	}
 

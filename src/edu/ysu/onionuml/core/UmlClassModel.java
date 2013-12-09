@@ -200,9 +200,4 @@ public class UmlClassModel{
 	    mPackages = saxHandler.getPackages();
 	    mRelationships = saxHandler.getRelationships();
 	}
-
-	public Map<String, UmlClassElement> getClasses() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
