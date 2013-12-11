@@ -1,8 +1,8 @@
-Example Use Case
+Changing Preferences
 ================
 
 **Use Case ID:** UC4  
-**Use Case Name:** Settings
+**Use Case Name:** Changing Preferences
 
 **Created By:** Samuel Addai
 **Date Created:** 30 October 2013
