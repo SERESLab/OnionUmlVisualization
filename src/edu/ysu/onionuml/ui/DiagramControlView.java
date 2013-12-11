@@ -7,6 +7,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -25,9 +26,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
+import edu.ysu.onionuml.Activator;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
+import edu.ysu.onionuml.preferences.PreferenceConstants;
 import edu.ysu.onionuml.preferences.VisibilityPreferencePage;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassElementEditPart;
@@ -59,6 +62,9 @@ public class DiagramControlView extends ViewPart {
 	private static final String TEXT_RESET_ALL = "Reset All";
 	private static final String TEXT_NO_DIAGRAM = "No class diagram currently in view.";
 	private static final String TEXT_UPDATE_DIAGRAM = "Update Diagram";
+	private static final String TEXT_SHOW_STEREOTYPES = "Show class stereotypes";
+	private static final String TEXT_SHOW_FIELDS = "Show class fields";
+	private static final String TEXT_SHOW_METHODS = "Show class methods";
 	
 	private Table mPackageTable;
 	private Composite mDefaultView;
@@ -289,15 +295,75 @@ public class DiagramControlView extends ViewPart {
 	 * Creates the composite for displaying Visibility Preference options.
 	 */	
 	private Composite createVisibilityPreference(Composite parent){
-		Group createVisibilityPreference = new Group(parent, SWT.VERTICAL);
-		createVisibilityPreference.setText(TEXT_VISIBILITY_PREFERENCE_CONTROLLER);
+		Group visibilityPreferenceGroup = new Group(parent, SWT.VERTICAL);
+		visibilityPreferenceGroup.setText(TEXT_VISIBILITY_PREFERENCE_CONTROLLER);
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();                
 	
 		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
 		layout.marginLeft = PADDING;
 		layout.marginRight = PADDING;
-		createVisibilityPreference.setLayout(layout);
+		visibilityPreferenceGroup.setLayout(layout);
 		
-		return createVisibilityPreference;
+		
+		
+		Button showStereotypes = new Button(visibilityPreferenceGroup, SWT.CHECK);
+		showStereotypes.setText(TEXT_SHOW_STEREOTYPES);
+		showStereotypes.setLayoutData(new RowData());
+		showStereotypes.setSelection(store.getBoolean(PreferenceConstants.P_SHOW_STEREOTYPES));
+		showStereotypes.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onShowStereotypesPressed();
+			}
+		});
+		
+		Button showFields = new Button(visibilityPreferenceGroup, SWT.CHECK);
+		showFields.setText(TEXT_SHOW_FIELDS);
+		showFields.setLayoutData(new RowData());
+		showFields.setSelection(store.getBoolean(PreferenceConstants.P_SHOW_FIELDS));
+		showFields.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onShowFieldsPressed();
+			}
+		});
+		
+		Button showMethods = new Button(visibilityPreferenceGroup, SWT.CHECK);
+		showMethods.setText(TEXT_SHOW_METHODS);
+		showMethods.setLayoutData(new RowData());
+		showMethods.setSelection(store.getBoolean(PreferenceConstants.P_SHOW_METHODS));
+		showMethods.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onShowMethodsPressed();
+			}
+		});
+		
+		return visibilityPreferenceGroup;
+	}
+	
+	private void onShowStereotypesPressed(){
+		//add code to update preference store
+	}
+	
+	private void onShowFieldsPressed(){
+		//add code to update preference store
+	}
+
+	private void onShowMethodsPressed(){
+		//add code to update preference store
 	}
 	
 	
