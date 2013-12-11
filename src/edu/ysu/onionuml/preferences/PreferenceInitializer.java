@@ -23,6 +23,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_USE_STEREOTYPE_COLORS, true);
 		store.setDefault(PreferenceConstants.P_SHOW_METHODS, true);
 		store.setDefault(PreferenceConstants.P_SHOW_FIELDS, true);
+		store.setDefault(PreferenceConstants.P_LAYOUT_ALGORITHM, 
+				PreferenceConstants.PVAL_HIERARCHICAL_LAYOUT);
 		PreferenceConverter.setDefault(store,PreferenceConstants.P_CLASS_COLOR,
 				new RGB(255,255,226));
 		PreferenceConverter.setDefault(store,PreferenceConstants.P_BOUNDARY_CLASS_COLOR,

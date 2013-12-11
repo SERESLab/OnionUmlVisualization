@@ -29,4 +29,10 @@ public class PreferenceConstants {
 	/** Defining SHOW PRIVATE METHODS as a string */
 	public static final String P_SHOW_METHODS = "boolShowMethods";
 	
+	/** Defining LAYOUT ALGORITHM as a string */
+	public static final String P_LAYOUT_ALGORITHM = "radioLayoutAlgorithm";
+	/** Defining value options for the LAYOUT ALGORITHM */
+	public static final String PVAL_HIERARCHICAL_LAYOUT = "hierarchical";
+	public static final String PVAL_MULTICLUSTER_LAYOUT = "multicluster";
+	
 }
