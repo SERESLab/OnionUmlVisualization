@@ -45,7 +45,7 @@ public class ClassFigure extends Figure {
 		setBackgroundColor(bgColor);
 		setOpaque(true);
 		
-		mStereotypeLabel = new Label("<<stereotype>>");
+		mStereotypeLabel = new Label("");
 		mNameLabel = new Label("");
 		mStereotypeLabel.setFont(stereotypeFont);
 		mNameLabel.setFont(nameFont);
@@ -91,7 +91,6 @@ public class ClassFigure extends Figure {
 	 * Sets the text of the stereotype label to specified string.
 	 */
 	public void setStereotypeString(String stereotype){
-		stereotype = "<<stereotype>>";
 		mStereotypeLabel.setText(stereotype);
 		reconstruct();
 	}
@@ -99,8 +98,7 @@ public class ClassFigure extends Figure {
 	/**
 	 * Gets the text of the stereotype label.
 	 */
-	public String getStereotypeString(String stereotype){
-		stereotype = "<<stereotype>>";
+	public String getStereotypeString(){
 		return mStereotypeLabel.getText();
 	}
 	
@@ -214,7 +212,7 @@ public class ClassFigure extends Figure {
 		mOnionRelationshipsFigure.removeAll();
 		mNameLabel.setText("");
 		mNameLabel.setIcon(null);
-		mStereotypeLabel.setText("<<stereotype>>");
+		mStereotypeLabel.setText("");
 		mStereotypeLabel.setIcon(null);
 		reconstruct();
 	}

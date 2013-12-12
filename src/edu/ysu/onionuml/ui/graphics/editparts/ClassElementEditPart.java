@@ -17,14 +17,19 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 
+import edu.ysu.onionuml.Activator;
 import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlAttribute;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlOperation;
+import edu.ysu.onionuml.preferences.PreferenceConstants;
 import edu.ysu.onionuml.ui.graphics.figures.ClassFigure;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
@@ -35,7 +40,7 @@ import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 public class ClassElementEditPart extends AbstractGraphicalEditPart 
 		implements MouseListener, MouseMotionListener{
 	
-	private static final Color CLASS_COLOR = new Color(null, 255, 255, 206);
+	//private static final Color CLASS_COLOR = new Color(null, 255, 255, 206);
 	private static final Font NAME_FONT = new Font(null, "Arial", 12, SWT.BOLD);
 	private static final Font STEREOTYPE_FONT = new Font(null, "Arial", 10, SWT.NORMAL);
 	private static final Font NAME_ABSTRACT_FONT = new Font(null, "Arial", 12, SWT.BOLD | SWT.ITALIC);
@@ -64,8 +69,12 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	}
 	
 	@Override
-	protected IFigure createFigure() {
-		IFigure f = new ClassFigure(CLASS_COLOR, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
+	protected IFigure createFigure() {		
+		ClassElementGraphicalModel model = (ClassElementGraphicalModel) getModel();
+		UmlClassElement classElement = model.getClassElement();
+		String stereotype = classElement.getStereotype();
+		Color classColor = getClassColorFromPreferences(stereotype);
+		IFigure f = new ClassFigure(classColor, NAME_FONT, NORMAL_FONT, STEREOTYPE_FONT);
 		f.addMouseListener(this);
 		f.addMouseMotionListener(this);
 		return f;
@@ -115,24 +124,47 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 				figure.setNameString(classElement.getName());
 				
 				String stereotype = classElement.getStereotype();
+				//if the sterotype is set
 				if(stereotype != null && stereotype.length() > 0){
-					figure.setStereotypeString("Ç" + stereotype + "È");
+					//check user preferences for stereotype display and set the stereotype
+					IPreferenceStore store = Activator.getDefault().getPreferenceStore();				
+					if (store.getBoolean(PreferenceConstants.P_SHOW_STEREOTYPES)) {
+						figure.setStereotypeString("<<" + stereotype + ">>");
+					}
 				}
 				
-				// setup properties
+				// set the background color
+				Color classColor = getClassColorFromPreferences(stereotype);
+				figure.setBackgroundColor(classColor);
+				
+				IPreferenceStore store = Activator.getDefault().getPreferenceStore();               
+				
+				// setup properties (fields)
 				if(classElement.getAttributes().size() == 0){
 					figure.addProperty("", null, null);
 				}
+				
+				else if (!store.getBoolean(PreferenceConstants.P_SHOW_FIELDS))
+				{
+					figure.addProperty("...", null, null);
+				}
+				
 				else{
 					for(UmlAttribute a : classElement.getAttributes()){
 						figure.addProperty(a.toString(), null, null);
 					}
 				}
 				
-				// setup operations
+				// setup operations (methods)
 				if(classElement.getOperations().size() == 0){
 					figure.addOperation("", null, null);
 				}
+				
+				else if (!store.getBoolean(PreferenceConstants.P_SHOW_METHODS))
+				{
+					figure.addOperation("...", null, null);
+				}
+				
 				else{
 					for(UmlOperation o : classElement.getOperations()){
 						
@@ -229,4 +261,38 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 
 	@Override
 	public void mouseDoubleClicked(MouseEvent me) {}
+	
+	
+	/* Private Methods **************************************************/
+	
+	/**
+	 * Returns the appropriate class background color based on user preferences.
+	 * 
+	 * @param stereotype	the stereotype of the class
+	 * @return				the background color for the class
+	 */
+	private Color getClassColorFromPreferences(String stereotype) {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		RGB classRGB = new RGB(255, 255, 206);
+		//if using stereotype colors, gets appropriate color for stereotype
+		//returns default class color if stereotype isn't recognized
+		if (store.getBoolean(PreferenceConstants.P_USE_STEREOTYPE_COLORS)) {
+			if (stereotype.equalsIgnoreCase("boundary")) {
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_BOUNDARY_CLASS_COLOR);
+			} else if (stereotype.equalsIgnoreCase("control")){
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CONTROL_CLASS_COLOR);
+			} else if (stereotype.equalsIgnoreCase("entity")){
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_ENTITY_CLASS_COLOR);
+			} else {
+				classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CLASS_COLOR);
+			}
+		}
+		//if not using stereotype colors, returns default class color for every class
+		else {
+			classRGB = PreferenceConverter.getColor(store, PreferenceConstants.P_CLASS_COLOR);
+		}
+		return new Color(null, classRGB);
+	}
+	
+	
 }

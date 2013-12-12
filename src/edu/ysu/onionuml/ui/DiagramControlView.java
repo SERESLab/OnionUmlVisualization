@@ -2,8 +2,15 @@ package edu.ysu.onionuml.ui;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
+import java.util.prefs.Preferences;
 
+import javax.swing.JOptionPane;
+
+import org.eclipse.gef.EditPart;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -21,10 +28,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
+import edu.ysu.onionuml.Activator;
+import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
+import edu.ysu.onionuml.preferences.PreferenceConstants;
+import edu.ysu.onionuml.preferences.VisibilityPreferencePage;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassElementEditPart;
+import edu.ysu.onionuml.ui.graphics.figures.ClassFigure;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
@@ -43,6 +55,7 @@ public class DiagramControlView extends ViewPart {
 	private static final int PADDING = 10;
 	private static final String TEXT_PACKAGES_CONTROLLER = "View Packages";
 	private static final String TEXT_COMPACTION_CONTROLLER = "Onion Compaction";
+	private static final String TEXT_VISIBILITY_PREFERENCE_CONTROLLER = "Visibility Preference";
 	private static final String TEXT_SELECT_ALL = "View All";
 	private static final String TEXT_SELECT_NONE = "View None";
 	private static final String TEXT_COMPACT_SELECTED = "Compact Selected";
@@ -51,14 +64,18 @@ public class DiagramControlView extends ViewPart {
 	private static final String TEXT_EXPAND_ALL = "Expand All";
 	private static final String TEXT_RESET_ALL = "Reset All";
 	private static final String TEXT_NO_DIAGRAM = "No class diagram currently in view.";
+	private static final String TEXT_UPDATE_DIAGRAM = "Update Diagram";
+	private static final String TEXT_SHOW_STEREOTYPES = "Show class stereotypes";
+	private static final String TEXT_SHOW_FIELDS = "Show class fields";
+	private static final String TEXT_SHOW_METHODS = "Show class methods";
 	
 	private Table mPackageTable;
 	private Composite mDefaultView;
 	private Composite mPackagesView;
 	private Composite mCompactionControlView;
 	private Composite mParentComposite;
+	private Composite mVisibilityPreference;
 	private ClassDiagramEditPart mCurrentClassDiagram = null;
-	
 	
 	// PUBLIC METHODS --------------------------------
 
@@ -77,6 +94,7 @@ public class DiagramControlView extends ViewPart {
 	/**
 	 * Sets the current class diagram to the specified diagram, or null to disable
 	 * control of any diagram.
+	 * @param diagram 
 	 */
 	public void setCurrentClassDiagram(ClassDiagramEditPart diagram){
 		mCurrentClassDiagram = diagram;
@@ -85,6 +103,7 @@ public class DiagramControlView extends ViewPart {
 			if(mPackagesView == null && mCompactionControlView == null){
 				mPackagesView = createPackagesController(mParentComposite);
 				mCompactionControlView = createCompactionController(mParentComposite);
+				mVisibilityPreference = createVisibilityPreference(mParentComposite);
 				populatePackageTable();
 			}
 			if(mDefaultView != null){
@@ -96,8 +115,10 @@ public class DiagramControlView extends ViewPart {
 			if(mPackagesView != null && mCompactionControlView != null){
 				mPackagesView.dispose();
 				mCompactionControlView.dispose();
+				mVisibilityPreference.dispose();
 				mPackagesView = null;
 				mCompactionControlView = null;
+				mVisibilityPreference = null;
 			}
 			if(mDefaultView == null){
 				mDefaultView = createDefaultView(mParentComposite);
@@ -110,6 +131,7 @@ public class DiagramControlView extends ViewPart {
 	/**
 	 * Returns the current class diagram that the view is currently controlling
 	 * or null if the view is not controlling any diagram.
+	 * @return This returns the current class diagram. 
 	 */
 	public ClassDiagramEditPart getCurrentClassDiagram(){
 		return mCurrentClassDiagram;
@@ -154,6 +176,20 @@ public class DiagramControlView extends ViewPart {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				onViewNonePressed();
+			}
+		});
+		
+		Button updateDiagramButton = new Button(buttonGroup, SWT.PUSH);
+		updateDiagramButton.setText(TEXT_UPDATE_DIAGRAM);
+		updateDiagramButton.setLayoutData(new RowData());
+		updateDiagramButton.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onUpdateDiagramPressed();
 			}
 		});
 		
@@ -226,10 +262,30 @@ public class DiagramControlView extends ViewPart {
 		Button compactAll = new Button(allButtonGroup, SWT.PUSH);
 		compactAll.setText(TEXT_COMPACT_ALL);
 		compactAll.setLayoutData(new RowData());
+		compactAll.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onCompactAllPressed();
+			}
+		});
 		
 		Button expandAll = new Button(allButtonGroup, SWT.PUSH);
 		expandAll.setText(TEXT_EXPAND_ALL);
 		expandAll.setLayoutData(new RowData());
+		expandAll.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onExpandAllPressed();
+			}
+		});
 		
 		Button resetAll = new Button(allButtonGroup, SWT.PUSH);
 		resetAll.setText(TEXT_RESET_ALL);
@@ -237,6 +293,82 @@ public class DiagramControlView extends ViewPart {
 		
 		return compactionControllerGroup;
 	}
+	
+	/*
+	 * Creates the composite for displaying Visibility Preference options.
+	 */	
+	private Composite createVisibilityPreference(Composite parent){
+		Group visibilityPreferenceGroup = new Group(parent, SWT.VERTICAL);
+		visibilityPreferenceGroup.setText(TEXT_VISIBILITY_PREFERENCE_CONTROLLER);
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();                
+	
+		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+		layout.marginLeft = PADDING;
+		layout.marginRight = PADDING;
+		visibilityPreferenceGroup.setLayout(layout);
+		
+		
+		
+		Button showStereotypes = new Button(visibilityPreferenceGroup, SWT.CHECK);
+		showStereotypes.setText(TEXT_SHOW_STEREOTYPES);
+		showStereotypes.setLayoutData(new RowData());
+		showStereotypes.setSelection(store.getBoolean(PreferenceConstants.P_SHOW_STEREOTYPES));
+		showStereotypes.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onShowStereotypesPressed();
+			}
+		});
+		
+		Button showFields = new Button(visibilityPreferenceGroup, SWT.CHECK);
+		showFields.setText(TEXT_SHOW_FIELDS);
+		showFields.setLayoutData(new RowData());
+		showFields.setSelection(store.getBoolean(PreferenceConstants.P_SHOW_FIELDS));
+		showFields.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onShowFieldsPressed();
+			}
+		});
+		
+		Button showMethods = new Button(visibilityPreferenceGroup, SWT.CHECK);
+		showMethods.setText(TEXT_SHOW_METHODS);
+		showMethods.setLayoutData(new RowData());
+		showMethods.setSelection(store.getBoolean(PreferenceConstants.P_SHOW_METHODS));
+		showMethods.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onShowMethodsPressed();
+			}
+		});
+		
+		return visibilityPreferenceGroup;
+	}
+	
+	private void onShowStereotypesPressed(){
+		//add code to update preference store
+	}
+	
+	private void onShowFieldsPressed(){
+		//add code to update preference store
+	}
+
+	private void onShowMethodsPressed(){
+		//add code to update preference store
+	}
+	
 	
 	/*
 	 * Creates the blank default composite.
@@ -276,7 +408,7 @@ public class DiagramControlView extends ViewPart {
 		if(mPackageTable != null){
 			for(TableItem item : mPackageTable.getItems()){
 				item.setChecked(true);
-				
+	
 			}
 		}
 	}
@@ -292,6 +424,31 @@ public class DiagramControlView extends ViewPart {
 			}
 		}
 	}
+	
+	/*
+	 * Update graph after selecting/deselecting packages
+	 */
+	private void onUpdateDiagramPressed(){
+		
+		UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).getClassModel();
+		Map<String,UmlPackageElement> packages = model.getPackages();
+		Iterator<Entry<String,UmlPackageElement>>  itPackages = packages.entrySet().iterator();
+		while (itPackages.hasNext()) {
+			Entry<String,UmlPackageElement> pkgPairs = (Entry<String,UmlPackageElement>)itPackages.next();
+			UmlPackageElement p = pkgPairs.getValue();
+			for(TableItem item : mPackageTable.getItems()){
+				if(item.getText() == p.getName() && item.getChecked() == false){					
+					//make package (p) invisible here
+					
+				}else if(item.getText() == p.getName() && item.getChecked() == true){
+					//make package (p) visible here
+					
+				}
+			}
+		}
+		((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
+	}	
+
 	
 	/*
 	 * Called when the compact selected button is pressed.
@@ -318,4 +475,21 @@ public class DiagramControlView extends ViewPart {
 			((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
 		}
 	}
+	
+	/*
+	 * Called when the compact all button is pressed.
+	 */
+	private void onCompactAllPressed(){
+
+
+	}
+	
+	/*
+	 * Called when the expand all button is pressed.
+	 */
+	private void onExpandAllPressed(){
+		
+		
+	}
 }
+

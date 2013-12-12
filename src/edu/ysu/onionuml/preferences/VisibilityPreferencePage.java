@@ -20,6 +20,9 @@ public class VisibilityPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
+	/**
+	 * This builds the visibility preference page.
+	 */
 	public VisibilityPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
@@ -36,38 +39,25 @@ public class VisibilityPreferencePage
 		addField(
 			new BooleanFieldEditor(
 				PreferenceConstants.P_SHOW_STEREOTYPES,
-				"&Show Stereotypes",
+				"&Show class stereotypes",
 				getFieldEditorParent()
 			)
 		);
 		addField(
 			new BooleanFieldEditor(
-				PreferenceConstants.P_SHOW_PRIVATE_ELEMENTS,
-				"&Show Private Fields and Methods",
+				PreferenceConstants.P_SHOW_FIELDS,
+				"&Show class fields",
 				getFieldEditorParent()
 			)
 		);
 		addField(
 			new BooleanFieldEditor(
-				PreferenceConstants.P_SHOW_PRIVATE_METHODS,
-				"&Show Private Methods",
+				PreferenceConstants.P_SHOW_METHODS,
+				"&Show class methods",
 				getFieldEditorParent()
 			)
 		);
-		addField(
-			new BooleanFieldEditor(
-				PreferenceConstants.P_SHOW_UML,
-				"&Show UML",
-				getFieldEditorParent()
-			)
-		);
-		addField(
-			new BooleanFieldEditor(
-			PreferenceConstants.P_SHOW_PRIVATE_ELEMENTS,
-				"&Show Onion",
-				getFieldEditorParent()
-			)
-		);
+		
 
 	}
 

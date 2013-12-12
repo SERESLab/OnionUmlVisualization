@@ -139,7 +139,9 @@ public class UmlSaxHandler extends DefaultHandler {
 	// PUBLIC METHODS -------------------------------------
 	
 	/**
-	 * Returns the title of the UML class model.
+	 * Gets the title of the UML class model.
+	 * 
+	 * @return the title of the UML class model.
 	 */
 	public String getTitle(){
 		return mTitle;
@@ -147,6 +149,8 @@ public class UmlSaxHandler extends DefaultHandler {
 	
 	/**
 	 * Gets a map of each model package id string to its corresponding package.
+	 * 
+	 * @return a map of each model package id string to its corresponding package.
 	 */
 	public Map<String,UmlPackageElement> getPackages(){
 		return mPackages;
@@ -154,6 +158,8 @@ public class UmlSaxHandler extends DefaultHandler {
 	
 	/**
 	 * Gets a map of each model relationship id string to its corresponding relationship.
+	 * 
+	 * @return a map of each model relationship id string to its corresponding relationship.
 	 */
 	public Map<String,UmlRelationshipElement> getRelationships(){
 		return mRelationships;

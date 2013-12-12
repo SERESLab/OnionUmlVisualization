@@ -8,17 +8,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.view.mxGraph;
 
+import edu.ysu.onionuml.Activator;
 import edu.ysu.onionuml.compact.DiagramGraph;
 import edu.ysu.onionuml.core.RelationshipType;
 import edu.ysu.onionuml.core.UmlClassElement;
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.core.UmlPackageElement;
 import edu.ysu.onionuml.core.UmlRelationshipElement;
+import edu.ysu.onionuml.preferences.PreferenceConstants;
 import edu.ysu.onionuml.ui.graphics.IEventListener;
 import edu.ysu.onionuml.ui.graphics.IEventRegistrar;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
@@ -72,7 +77,7 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 				mDiagramGraph.addElement(n);
 			}
 		}
-		
+		this.attachPreferenceStoreListener();
 		initEdges();
 	}
 	
@@ -117,6 +122,9 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	/**
 	 * Finds the id assigned to the specified element graphical model, or null if the
 	 * element cannot be found.
+	 * 
+	 * @param element	the graphical model element for which the id is desired
+	 * @return			the id of the provided graphical model element
 	 */
 	public String lookupIdByGraphicalModel(IElementGraphicalModel element){
 		
@@ -146,7 +154,10 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	/**
 	 * Finds the element graphical model associated with the specified id, or null if an
 	 * element cannot be found.
-	 */
+	 * 
+	 * @param id	the id of the graphical model that is desired
+	 * @return		the graphical model element matching the provided id
+	 */	
 	public IElementGraphicalModel lookupGraphicalModelById(String id){
 		
 		IElementGraphicalModel c = mClassIdMap.get(id);
@@ -166,10 +177,47 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 	
 	// PRIVATE METHODS ------------------------------
 	
-	/*
-	 * Lays out the classes and relationships using the JGraphX library.
+	/**
+	 * Creates a listener for changes in the preferences store.
+	 * Any changes will trigger an update of this class diagram.
 	 */
-	private void layout(){
+	private void attachPreferenceStoreListener()  {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		store.addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				ClassDiagramGraphicalModel.this.update();
+			}
+		});
+	}
+
+/**
+ * Uses the layout choice in the preference store to call the correct algorithm
+ * 
+ * Current algorithm available are hierarchical and multicluster (experimental)
+ */
+private void layout() {
+	IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+	String layout = store.getString(PreferenceConstants.P_LAYOUT_ALGORITHM);
+	if (layout.equals(PreferenceConstants.PVAL_MULTICLUSTER_LAYOUT)) {
+		this.layoutMulticluster();
+	} else {
+		this.layoutHierarchical();
+	}	
+}
+
+/**
+ * Lays out the classes and relationships using the JGraphX library.
+ * 
+ * This layout model loops through relationships with unique head classes.  If
+ * a class is the head of more than one relationship, only the first
+ * relationship is used (sorted alphabetically by relationship ID). For each 
+ * relationship in set, draws the head class, the tail class and the
+ * relationship between them.
+ * Once that set is complete, loops through all classes, adding any to the view
+ * that have not yet been added.
+ * 
+ */
+private void layoutHierarchical(){
 		
 		mxGraph graph = new mxGraph();
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
@@ -251,8 +299,117 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 			mElements.add(gm);
 		}
 	}
+
+/**
+ * Lays out the classes and relationships using the JGraphX library.
+ * 
+ * This is an experimental layout model that needs more work. Works similar to
+ * hierarchical model, except it doesn't treat all relationship types the same.
+ * Relationships are prioritized in the order or composition, aggregation, 
+ * association, dependency, generalization, realization.
+ */
+private void layoutMulticluster(){
 	
-	// initializes the edges in the graphical model
+	mxGraph graph = new mxGraph();
+	mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+	Object defaultParent = graph.getDefaultParent();
+	Map<String,Object> vertexIdMap = new HashMap<String,Object>();
+	Map<String,Object> edgeIdMap = new HashMap<String,Object>();
+	RelationshipType[] arrRelationships = {
+			RelationshipType.parseRelationshipType("composition"), 
+			RelationshipType.parseRelationshipType("aggregation"), 
+			RelationshipType.parseRelationshipType("association"), 
+			RelationshipType.parseRelationshipType("dependency"),
+			RelationshipType.parseRelationshipType("generalization"),
+			RelationshipType.parseRelationshipType("realization")
+	};
+	
+	graph.getModel().beginUpdate();
+	try{
+		//loop through each relationship type in order
+		for (RelationshipType relType : arrRelationships) {
+			Iterator<Entry<String,RelationshipElementGraphicalModel>> itRelationships =
+					mRelationshipIdMap.entrySet().iterator();
+			while (itRelationships.hasNext()) {
+				Entry<String,RelationshipElementGraphicalModel> pairs =
+						(Entry<String,RelationshipElementGraphicalModel>)itRelationships.next();
+				
+				// get head and tail classes for each relationship
+				RelationshipElementGraphicalModel rel = pairs.getValue();
+				//only draw if the relationship type matches one for this loop 
+				if (rel.getRelationshipElement().getType() == relType) {
+					String relId = pairs.getKey();
+					String headId = rel.getRelationshipElement().getHeadId();
+					String tailId = rel.getRelationshipElement().getTailId();
+					IElementGraphicalModel head = lookupGraphicalModelById(headId);
+					IElementGraphicalModel tail = lookupGraphicalModelById(tailId);
+					
+					// add head and tail classes to layout graph
+					Object headVertex;
+					Object tailVertex;
+					if(vertexIdMap.containsKey(headId)){
+						headVertex = vertexIdMap.get(headId);
+					}
+					else{
+						headVertex = graph.insertVertex(defaultParent, null, headId,
+								head.getPosition().x, head.getPosition().y, 
+								head.getSize().width, head.getSize().height);
+						vertexIdMap.put(headId, headVertex);
+					}
+					
+					if(vertexIdMap.containsKey(tailId)){
+						tailVertex = vertexIdMap.get(tailId);
+					}
+					else{
+						tailVertex = graph.insertVertex(defaultParent, null, tailId,
+								tail.getPosition().x, tail.getPosition().y, 
+								tail.getSize().width, tail.getSize().height);
+						vertexIdMap.put(tailId, tailVertex);
+					}
+					Object edge = graph.insertEdge(defaultParent, null, relId, headVertex, tailVertex);
+					edgeIdMap.put(relId, edge);
+				}
+			}
+		}
+		
+		// add remaining classes to layout graph
+		Iterator<Entry<String,ClassElementGraphicalModel>> itClasses =
+				mClassIdMap.entrySet().iterator();
+		while (itClasses.hasNext()) {
+			Entry<String,ClassElementGraphicalModel> pairs =
+					(Entry<String,ClassElementGraphicalModel>)itClasses.next();
+			String id = pairs.getKey();
+			ClassElementGraphicalModel c = pairs.getValue();
+			if(!vertexIdMap.containsKey(id)){
+				Object v = graph.insertVertex(defaultParent, null, id,
+						c.getPosition().x, c.getPosition().y, 
+						c.getSize().width, c.getSize().height);
+				vertexIdMap.put(id, v);
+			}
+		}
+		
+		layout.execute(graph.getDefaultParent());
+	}
+	finally{
+		graph.getModel().endUpdate();
+	}
+	
+	// get new position of each class and find its children for each relationship
+	Iterator<Entry<String,Object>> itVertices = vertexIdMap.entrySet().iterator();
+	while (itVertices.hasNext()) {
+		Entry<String,Object> pairs = (Entry<String,Object>)itVertices.next();
+		IElementGraphicalModel gm = lookupGraphicalModelById(pairs.getKey());
+		mxGeometry geom = graph.getModel().getGeometry(pairs.getValue());
+		gm.setPosition(new Point((int)geom.getX(), (int)geom.getY()));
+		mElements.add(gm);
+	}
+}
+	
+
+	
+	/**
+	 *  Initializes the edges in the graphical model.
+	 */
 	private void initEdges(){
 		
 		// maps of each class to its children for joining relationship arcs with hypervertices
@@ -320,7 +477,12 @@ public class ClassDiagramGraphicalModel implements IEventListener, IEventRegistr
 		layoutEdges(generalizationChildren, RelationshipType.GENERALIZATION);
 	}
 	
-	// inserts hyperedges for classes with many children
+	/**
+	 *  Inserts hyperedges for classes with many children.
+	 *  
+	 * @param childrenIdMap		an array of all the children classes contained in the hyperelement
+	 * @param relType			the type of class relationship contained in the hyperelement
+	 */
 	private void layoutEdges(Map<String, ArrayList<String>> childrenIdMap, RelationshipType relType){
 		Iterator<Entry<String, ArrayList<String>>> itChildren = childrenIdMap.entrySet().iterator();
 		while (itChildren.hasNext()) {

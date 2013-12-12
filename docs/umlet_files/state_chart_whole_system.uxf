@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>430</x>
+      <y>80</y>
+      <w>40</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>bg=black
+fg=black
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>330</x>
+      <y>90</y>
+      <w>228</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+User double clicks *.cml file
+</panel_attributes>
+    <additional_attributes>120;80;120;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>380</x>
+      <y>240</y>
+      <w>350</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+user selects 
+Window-&gt;Preferences-&gt;OnionUmlVisualization
+
+</panel_attributes>
+    <additional_attributes>180;120;180;30</additional_attributes>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>430</x>
+      <y>360</y>
+      <w>391</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>*Displaying preference settings*
+--
+entry / get current settings from preference store and display
+exit / update or discard changes to preferences</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=3;
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	if(textline.equals("--")) {
+		y += 10;
+		drawLineHorizontal(y-2);
+	} else {
+		y += textHeight();
+		printLeft(textline,y);
+	}
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>280</x>
+      <y>170</y>
+      <w>411</w>
+      <h>101</h>
+    </coordinates>
+    <panel_attributes>*Displaying diagram and diagram control*
+--
+entry / update diagram view
+--
+diagram control view modified / update diagram view
+click and drag event in diagram view / update diagram view</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=3;
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	if(textline.equals("--")) {
+		y += 10;
+		drawLineHorizontal(y-2);
+	} else {
+		y += textHeight();
+		printLeft(textline,y);
+	}
+}</custom_code>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>660</x>
+      <y>170</y>
+      <w>202</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+user selects OK from 
+preferences window</panel_attributes>
+    <additional_attributes>110;190;110;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>10</x>
+      <y>360</y>
+      <w>361</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>*Displaying class search dialog*
+--
+entry / generate and display a list of all classes
+--
+search performed / filter classes based on search value</panel_attributes>
+    <additional_attributes/>
+    <custom_code>int y=3;
+
+drawRectangleRound(0,0,width,height,20,20);
+
+for(String textline : textlines) {
+	if(textline.equals("--")) {
+		y += 10;
+		drawLineHorizontal(y-2);
+	} else {
+		y += textHeight();
+		printLeft(textline,y);
+	}
+}</custom_code>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>240</x>
+      <y>240</y>
+      <w>130</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+CTRL-5 on 
+keyboard
+
+</panel_attributes>
+    <additional_attributes>70;120;70;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>80</x>
+      <y>160</y>
+      <w>220</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+user selects Close</panel_attributes>
+    <additional_attributes>90;200;90;50;200;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>370</x>
+      <y>520</y>
+      <w>20</w>
+      <h>20</h>
+    </coordinates>
+    <panel_attributes>bg=black
+fg=black
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.UseCase</type>
+    <coordinates>
+      <x>360</x>
+      <y>510</y>
+      <w>40</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>bg=white
+fg=black
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>260</x>
+      <y>240</y>
+      <w>230</w>
+      <h>290</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1= 
+m2= 
+r1=User closes diagram display view
+</panel_attributes>
+    <additional_attributes>120;270;120;30</additional_attributes>
+  </element>
+</diagram>

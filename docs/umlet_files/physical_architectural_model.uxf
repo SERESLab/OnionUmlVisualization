@@ -40,7 +40,7 @@
       <x>370</x>
       <y>160</y>
       <w>610</w>
-      <h>270</h>
+      <h>380</h>
     </coordinates>
     <panel_attributes>Eclipse
 bg=transparent</panel_attributes>
@@ -74,7 +74,7 @@ bg=transparent</panel_attributes>
       <x>660</x>
       <y>220</y>
       <w>290</w>
-      <h>170</h>
+      <h>290</h>
     </coordinates>
     <panel_attributes>OnionUmlVisualization Plugin
 bg=transparent</panel_attributes>
@@ -121,7 +121,53 @@ bg=transparent</panel_attributes>
       <w>270</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>View and Modify Layout</panel_attributes>
-    <additional_attributes>30;40;250;60</additional_attributes>
+    <panel_attributes>View and modify layout</panel_attributes>
+    <additional_attributes>30;30;250;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>750</x>
+      <y>380</y>
+      <w>170</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>PreferencePages</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>490</x>
+      <y>290</y>
+      <w>280</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Change colors, visibility 
+or default layout</panel_attributes>
+    <additional_attributes>30;30;260;100</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>740</x>
+      <y>450</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>SearchDialog</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>440</x>
+      <y>290</y>
+      <w>320</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Select classes
+to view</panel_attributes>
+    <additional_attributes>30;30;300;180</additional_attributes>
   </element>
 </diagram>

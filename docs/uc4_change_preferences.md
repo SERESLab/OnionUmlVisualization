@@ -1,8 +1,8 @@
-Example Use Case
+Changing Preferences
 ================
 
 **Use Case ID:** UC4  
-**Use Case Name:** Settings
+**Use Case Name:** Changing Preferences
 
 **Created By:** Samuel Addai
 **Date Created:** 30 October 2013
@@ -14,7 +14,11 @@ Example Use Case
 Eclipse User
 
 #### Description:
-The user can change the color of the classes,can show what to be visible. 
+User can select the color scheme of the diagram.
+
+User can change diagram layout.
+
+The user can choose whether to display or hide class stereotypes, fields, and methods.
 
 #### Trigger:
 Triggered when the eclipse user clicks on window, select Preferences, select OnionUmlVisualization. 
@@ -27,8 +31,10 @@ Triggered when the eclipse user clicks on window, select Preferences, select Oni
 2.  User scroll down and selects Preferences. 
 3.  User click on OnionUmlVisualization.
 
-#### Alternative Flows:
-1.  None
+#### Alternative Flows (Mac Operating System):
+1.  User enters preferences by clicking Eclipse menu.
+2.  User scroll down and selects Preferences. 
+3.  User click on OnionUmlVisualization.
 
 #### Exceptions:
 1. None.

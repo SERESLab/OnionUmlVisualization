@@ -109,6 +109,12 @@
             name="Colors"
             category="edu.ysu.onionuml.preferences.GeneralPreferencePage">
       </page>
+      <page
+            class="edu.ysu.onionuml.preferences.LayoutPreferencePage"
+            id="edu.ysu.onionuml.preferences.LayoutPreferencePage"
+            name="Layout"
+            category="edu.ysu.onionuml.preferences.GeneralPreferencePage">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

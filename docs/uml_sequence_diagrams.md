@@ -1,7 +1,19 @@
-## Opening and Closing The UML Model View - Sequence Diagram ##
+#Sequence Diagrams#
+---
+## Use Case 4 - Changing Preferences ##
+
+![Sequence diagram for Use Case 4](images/sd4_changing_preferences.png)
+
+**Notes**
+
+DiagramGraph.updateGraph() uses ClassElementGraphicalModel and RelationshipElementGraphicalModel to update all the elements for the class diagram.  This part is not shown because it makes the diagram too complicated.
+
+refreshVisuals() is run for every element in the diagram.
 
 
-![Class Model showing base class and ui interaction with Eclipse](images/sequence_diagram_open_model.png)
+## Use Case 6 - Opening and Closing The UML Model View ##
+
+![Sequence diagram for Use Case 6](images/sd6_open_uml_model_view.png)
 
 **Notes**
 

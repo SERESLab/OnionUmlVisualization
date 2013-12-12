@@ -1,7 +1,11 @@
-## OnionUmlVisualization Class Diagrams ##
+# OnionUmlVisualization Class Diagrams #
+---
+### Diagram 1: System Overview ###
+
+![Class diagram showing system overview](images/class_diagram_system_overview.png)
 
 
-### Diagram 1: Shows how the onionuml base class and ui package extend and implement Eclipse libraries ###
+### Diagram 2: Shows how the onionuml base class and ui package extend and implement Eclipse libraries ###
 
 ![Class Model showing base class and ui interaction with Eclipse](images/class_model_ui_extension_of_eclipse.png)
 
@@ -16,7 +20,7 @@
 - **ActionBarContributor** - Contributes actions to the workbench
 
 ***
-### Diagram 2: Shows how the onionuml.ui.graphics package extends and implements Eclipse libraries ###
+### Diagram 3: Shows how the onionuml.ui.graphics package extends and implements Eclipse libraries ###
 
 ![Class Model showing graphics interaction with Eclipse](images/class_model_graphics_extension_of_eclipse.png)
 
@@ -31,7 +35,7 @@
 - **Figure** - The base implementation for graphical figures
 
 ***
-### Diagram 3: Class model for onionuml core classes ###
+### Diagram 4: Class model for onionuml core classes ###
 
 ![Alt text](images/class_model_core.png)
 

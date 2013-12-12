@@ -29,6 +29,7 @@ public class ClassmlWriter {
 	
 	/**
 	 * Writes the specified class model to the specified filename.
+	 * 
 	 * @throws ParserConfigurationException from the document builder
 	 * @throws TransformerException from the document builder
 	 */
@@ -37,22 +38,26 @@ public class ClassmlWriter {
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		
 		Document doc = docBuilder.newDocument();
+		//Root element.
 		Element classmlElement = doc.createElement("classml");
 		doc.appendChild(classmlElement);
 		classmlElement.setAttribute("xmlns", XMLNS);
 		classmlElement.setAttribute("title", model.getName());
 		
+		//Fetch all packages and model and add them to the file.
 		Map<String,UmlPackageElement> packages = model.getPackages();
 		Iterator<Entry<String,UmlPackageElement>>  itPackages = packages.entrySet().iterator();
 		while (itPackages.hasNext()) {
 			Entry<String,UmlPackageElement> pkgPairs = (Entry<String,UmlPackageElement>)itPackages.next();
 			String pkgId = pkgPairs.getKey();
 			UmlPackageElement p = pkgPairs.getValue();
+			//Write package data to file.
 			Element pkgElement = doc.createElement("package");
 			classmlElement.appendChild(pkgElement);
 			pkgElement.setAttribute("id", pkgId);
 			pkgElement.setAttribute("label", p.getName());
 			
+			//Write package's classes to file if they exist.
 			if(p.getClasses().size() > 0){
 				Element classesElement = doc.createElement("classes");
 				pkgElement.appendChild(classesElement);
@@ -71,6 +76,7 @@ public class ClassmlWriter {
 					classElement.setAttribute("stereotype", c.getStereotype());
 					classElement.setAttribute("visibility", c.getVisibility().toString());
 					
+					//Write each class member attribute to file.
 					if(c.getAttributes().size() > 0){
 						Element attributesElement = doc.createElement("attributes");
 						classElement.appendChild(attributesElement);
@@ -83,6 +89,7 @@ public class ClassmlWriter {
 						}
 					}
 					
+					//Write each class method to file.
 					if(c.getOperations().size() > 0){
 						Element operationsElement = doc.createElement("operations");
 						classElement.appendChild(operationsElement);
@@ -106,6 +113,7 @@ public class ClassmlWriter {
 			}
 		}
 		
+		//Add relationships between classes to the file.
 		if(model.getRelationships().size() > 0){
 			Element relationshipsElement = doc.createElement("relationships");
 			classmlElement.appendChild(relationshipsElement);

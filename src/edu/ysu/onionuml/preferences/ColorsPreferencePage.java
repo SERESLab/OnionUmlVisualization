@@ -21,6 +21,9 @@ public class ColorsPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
+	/**
+	 * This builds the color preference page.
+	 */
 	public ColorsPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());

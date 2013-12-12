@@ -5,10 +5,10 @@
 **Date Created:** 21 October 2013
 
 **Last Updated By:** Brandi Stillman
-**Last Revision Date:** 21 October 2013
+**Last Revision Date:** 13 November 2013
 
 #### Actors:
-Eclipse User
+User
 
 #### Description:
 The user can zoom in to focus on a more precise position in the diagram, or zoom out to view a larger portion of the diagram from further away. 

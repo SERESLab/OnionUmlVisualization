@@ -104,13 +104,17 @@ public class UmlClassModel{
 	
 	/**
 	 * Gets the name of the class model.
+	 * 
+	 * @return the name of the class model.
 	 */
 	public String getName(){
 		return mName;
 	}
 	
 	/**
-	 * Returns a description of the class model.
+	 * Gets a description of the class model.
+	 * 
+	 * @return description of the class model.
 	 */
 	public String getDescription(){
 		return mDescription;
@@ -118,6 +122,8 @@ public class UmlClassModel{
 	
 	/**
 	 * Gets a reference to the map of packages in this model.
+	 * 
+	 * @return reference to the map of packages in this model.
 	 */
 	public Map<String,UmlPackageElement> getPackages(){
 		return mPackages;
@@ -125,14 +131,20 @@ public class UmlClassModel{
 	
 	/**
 	 * Gets a reference to the map of relationships in this model.
+	 * 
+	 * @return reference to the map of relationships in this model.
 	 */
 	public Map<String,UmlRelationshipElement> getRelationships(){
 		return mRelationships;
-	} 
+	}
 	
 	
 	// PRIVATE METHODS -----------------------------------
 	
+	/**
+	 * Construct current object from ClassML file.
+	 * @param filename Path to ClassML file.
+	 */
 	private void readFromFile(String filename){
 		
 		Schema schema = null;
@@ -187,10 +199,5 @@ public class UmlClassModel{
 	    mName = saxHandler.getTitle();
 	    mPackages = saxHandler.getPackages();
 	    mRelationships = saxHandler.getRelationships();
-	}
-
-	public Map<String, UmlClassElement> getClasses() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

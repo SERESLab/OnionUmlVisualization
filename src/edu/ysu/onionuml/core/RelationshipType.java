@@ -22,6 +22,7 @@ public enum RelationshipType {
 	
 	/**
 	 * Returns the RelationshipType represented by the specified string.
+	 * 
 	 */
 	public static RelationshipType parseRelationshipType(String s) {
         if(s.equalsIgnoreCase("aggregation")){
