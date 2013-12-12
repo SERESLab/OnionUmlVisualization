@@ -14,7 +14,7 @@ Changing Preferences
 Eclipse User
 
 #### Description:
-user can select the color scheme of the diagram.
+User can select the color scheme of the diagram.
 
 User can change diagram layout.
 
