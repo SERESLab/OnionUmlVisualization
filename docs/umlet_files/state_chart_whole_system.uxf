@@ -115,14 +115,16 @@ preferences window</panel_attributes>
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>60</x>
+      <x>10</x>
       <y>360</y>
-      <w>271</w>
-      <h>81</h>
+      <w>361</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>*Displaying class search dialog*
 --
-</panel_attributes>
+entry / generate and display a list of all classes
+--
+search performed / filter classes based on search value</panel_attributes>
     <additional_attributes/>
     <custom_code>int y=3;
 
