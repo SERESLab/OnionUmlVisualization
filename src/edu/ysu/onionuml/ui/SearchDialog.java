@@ -6,6 +6,10 @@ import java.util.Map.Entry;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -70,7 +74,7 @@ public class SearchDialog extends Window {
 		fixedSize.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		//Search input box.
-		Text searchBox = new Text(fixedSize, SWT.SEARCH);
+		final Text searchBox = new Text(fixedSize, SWT.SEARCH);
 
 		//Search button and close button.
 		Composite buttons_container = new Composite(fixedSize, 0);
@@ -78,9 +82,42 @@ public class SearchDialog extends Window {
 
 		Button search_button = new Button(buttons_container, SWT.PUSH);
 		search_button.setText(SEARCH_BUTTON_TEXT);
+		search_button.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseDoubleClick(MouseEvent event) {
+				//Do nothing.
+			}
+
+			@Override
+			public void mouseDown(MouseEvent event) {
+				//Do nothing.
+			}
+
+			@Override
+			public void mouseUp(MouseEvent event) {
+				populateClassTable(searchBox.getText());
+			}
+		});
 
 		Button close_button = new Button(buttons_container, SWT.PUSH);
 		close_button.setText(CLOSE_BUTTON_TEXT);
+		final SearchDialog self = this;
+		close_button.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseDoubleClick(MouseEvent event) {
+				//Do nothing.
+			}
+
+			@Override
+			public void mouseDown(MouseEvent event) {
+				//Do nothing.
+			}
+
+			@Override
+			public void mouseUp(MouseEvent event) {
+				self.close();
+			}
+		});
 
 		//Everything in this should have dynamic size.
 		Composite dynamicSize = new Composite(parent, SWT.PUSH);
@@ -131,7 +168,12 @@ public class SearchDialog extends Window {
 		return classControllerGroup;
 	}
 
-	private void populateClassTable(){		
+	private void populateClassTable() {
+		populateClassTable("");
+	}
+
+	private void populateClassTable(String searchTerm) {
+		searchTerm = searchTerm.toLowerCase();
 		mClassTable.removeAll();
 		
 		//Get all classes in all packages and add them to the class table using
@@ -147,9 +189,13 @@ public class SearchDialog extends Window {
 			while (classesIter.hasNext())
 			{
 				UmlClassElement curClass = classesIter.next().getValue();
+				String fullyQualifiedName = curPackage.getName() + '.' +
+					curClass.getName();
+				if (!fullyQualifiedName.toLowerCase().contains(searchTerm))
+					continue;
 
 				TableItem item = new TableItem(mClassTable, SWT.NONE);
-				item.setText(curPackage.getName() + '.' + curClass.getName());
+				item.setText(fullyQualifiedName);
 				item.setChecked(true);
 			}
 		}
