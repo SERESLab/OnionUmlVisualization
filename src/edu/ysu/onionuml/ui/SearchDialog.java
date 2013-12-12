@@ -151,10 +151,30 @@ public class SearchDialog extends Window {
 		Button selectAllButton = new Button(buttonGroup, SWT.PUSH);
 		selectAllButton.setText(TEXT_SELECT_ALL);
 		selectAllButton.setLayoutData(new RowData());
-		
+		selectAllButton.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {}
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				onViewAllPressed();
+			}
+		});
+    
 		Button selectNoneButton = new Button(buttonGroup, SWT.PUSH);
 		selectNoneButton.setText(TEXT_SELECT_NONE);
 		selectNoneButton.setLayoutData(new RowData());
+        selectNoneButton.addMouseListener(new MouseListener(){
+    			@Override
+    			public void mouseDoubleClick(MouseEvent e) {}
+    			@Override
+    			public void mouseDown(MouseEvent e) {}
+    			@Override
+    			public void mouseUp(MouseEvent e) {
+    				onViewNonePressed();
+    			}
+    		});
 		
 		mClassTable = new Table(classControllerGroup,
 				SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -197,6 +217,24 @@ public class SearchDialog extends Window {
 				TableItem item = new TableItem(mClassTable, SWT.NONE);
 				item.setText(fullyQualifiedName);
 				item.setChecked(true);
+			}
+		}
+	}
+	
+	private void onViewAllPressed(){
+		if(mClassTable != null){
+			for(TableItem item : mClassTable.getItems()){
+				item.setChecked(true);
+	
+			}
+		}
+	}
+	
+	private void onViewNonePressed(){
+		if(mClassTable != null){
+			for(TableItem item : mClassTable.getItems()){
+				item.setChecked(false);
+				
 			}
 		}
 	}

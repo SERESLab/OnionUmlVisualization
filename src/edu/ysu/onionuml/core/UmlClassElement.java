@@ -13,7 +13,9 @@ public class UmlClassElement {
 	private String mName;
 	private String mStereotype;
 	private boolean mIsAbstract = false;
+	private boolean mIsShownInDiagram = false;
 	private Visibility mVisibility = Visibility.PUBLIC;
+	private Visibility mShownInDiagram = Visibility.PUBLIC;
 	
 	private List<UmlAttribute> mAttributes = new ArrayList<UmlAttribute>();
 	private List<UmlOperation> mOperations = new ArrayList<UmlOperation>();
@@ -136,6 +138,28 @@ public class UmlClassElement {
 		return mOperations;
 	}
 	
+	/**
+	 * 
+	 * @param isShownInDiagram
+	 */
+	public void isShownInDiagram(boolean isShownInDiagram) {
+	}
+	
+	/**
+	 * 
+	 * @return mShownInDiagram
+	 */
+	public Visibility getShownInDiagram() {
+		return mShownInDiagram;
+	}
+	
+	/**
+	 * 
+	 * @param s
+	 */
+	public void setShownInDiagram(Visibility s) {
+		mShownInDiagram = s;
+	}
 	/**
 	 * Gets the visibility of the class.
 	 * 
