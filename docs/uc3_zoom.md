@@ -1,6 +1,3 @@
-Example Use Case
-================
-
 **Use Case ID:** UC3  
 **Use Case Name:** Zoom
 
