@@ -15,7 +15,10 @@ public class OpenSearchCommandHandler implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = new Shell(Display.getDefault(), SWT.ON_TOP ); 
-		//TODO: bug; the shell is on top of all application
+		/*TODO: bug; the shell is on top of all application
+		 * replace Shell(Display.getDefault(), SWT.ON_TOP ) by Shell(parent, SWT.ON_TOP )
+		 * My guess is "parent" display is probably in OpenClassModelCommandHandler 
+		 */
 		(new SearchDialog(shell)).open();
 
 		return null;
