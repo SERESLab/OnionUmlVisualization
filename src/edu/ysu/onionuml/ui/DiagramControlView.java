@@ -2,11 +2,13 @@ package edu.ysu.onionuml.ui;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
+import org.eclipse.gef.EditPart;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -34,6 +36,7 @@ import edu.ysu.onionuml.preferences.PreferenceConstants;
 import edu.ysu.onionuml.preferences.VisibilityPreferencePage;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassElementEditPart;
+import edu.ysu.onionuml.ui.graphics.figures.ClassFigure;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
@@ -426,6 +429,7 @@ public class DiagramControlView extends ViewPart {
 	 * Update graph after selecting/deselecting packages
 	 */
 	private void onUpdateDiagramPressed(){
+		
 		UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).getClassModel();
 		Map<String,UmlPackageElement> packages = model.getPackages();
 		Iterator<Entry<String,UmlPackageElement>>  itPackages = packages.entrySet().iterator();
@@ -433,17 +437,17 @@ public class DiagramControlView extends ViewPart {
 			Entry<String,UmlPackageElement> pkgPairs = (Entry<String,UmlPackageElement>)itPackages.next();
 			UmlPackageElement p = pkgPairs.getValue();
 			for(TableItem item : mPackageTable.getItems()){
-				if(item.getText() == p.getName() && item.getChecked() == false){
-					for(UmlClassElement c : p.getClasses().values()){
-						String s = c.getName();
-						JOptionPane.showMessageDialog( null, s,"title",JOptionPane.OK_CANCEL_OPTION); 
-					}
+				if(item.getText() == p.getName() && item.getChecked() == false){					
+					//make package (p) invisible here
+					
+				}else if(item.getText() == p.getName() && item.getChecked() == true){
+					//make package (p) visible here
+					
 				}
 			}
 		}
 		((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
-	}
-	
+	}	
 
 	
 	/*
@@ -477,26 +481,15 @@ public class DiagramControlView extends ViewPart {
 	 */
 	private void onCompactAllPressed(){
 
-		((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
+
 	}
 	
 	/*
 	 * Called when the expand all button is pressed.
 	 */
 	private void onExpandAllPressed(){
-	/*	for(){
-			//
-			//((ClassDiagramEditPart)c.getParent()).removeFromSelection(c); // c is class
-		}*/
+		
+		
 	}
 }
 
-
-/*   brandis notes
-		if(item.getText() == p.getName() && item.getChecked() == false){
-			for(UmlClassElement c : p.getClasses().values()){
-				String s = c.getName();
-				JOptionPane.showMessageDialog( null, s,"title",JOptionPane.OK_CANCEL_OPTION); 
-		
-	}
-}*/
