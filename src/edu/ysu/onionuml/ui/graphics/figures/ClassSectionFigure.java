@@ -14,12 +14,21 @@ import org.eclipse.draw2d.geometry.Insets;
 public class ClassSectionFigure extends Figure {
 	
 	private static final int SPACING = 3;
-	
+	private String className;
 	/**
 	 * Constructs a new ClassSectionFigure with a top border.
 	 * @param isHorizontal set true if the layout should be horizontal,
 	 * false otherwise
 	 */
+	
+	public void setClassName(String cName){
+		className = cName;
+	}
+	
+	public String getClassName(){
+		return className;
+	}
+	
 	public ClassSectionFigure(boolean isHorizontal) {
 		ToolbarLayout layout = new ToolbarLayout();
 		layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
@@ -27,6 +36,7 @@ public class ClassSectionFigure extends Figure {
 		layout.setSpacing(SPACING);
 		layout.setHorizontal(isHorizontal);
 		setLayoutManager(layout);
+		
 		
 		setBorder(new AbstractBorder(){
 
