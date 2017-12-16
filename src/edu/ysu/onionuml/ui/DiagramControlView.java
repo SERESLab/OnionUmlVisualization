@@ -1,13 +1,14 @@
 package edu.ysu.onionuml.ui;
 
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.prefs.Preferences;
 
-import javax.swing.JOptionPane;
 
+import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -18,10 +19,13 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -75,7 +79,7 @@ public class DiagramControlView extends ViewPart {
 	private Composite mCompactionControlView;
 	private Composite mParentComposite;
 	private Composite mVisibilityPreference;
-	private ClassDiagramEditPart mCurrentClassDiagram = null;
+	public static ClassDiagramEditPart mCurrentClassDiagram = null;
 	
 	// PUBLIC METHODS --------------------------------
 
@@ -385,7 +389,9 @@ public class DiagramControlView extends ViewPart {
 	 * Populates the package table with the packages in the current class diagram.
 	 */
 	private void populatePackageTable(){
+			if(mPackageTable.getItemCount() != 0) {
 				mPackageTable.removeAll();
+			}
 		UmlClassModel model = ((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel())
 				.getClassModel();
 		
@@ -453,7 +459,7 @@ public class DiagramControlView extends ViewPart {
 	/*
 	 * Called when the compact selected button is pressed.
 	 */
-	private void onCompactSelectedPressed(){
+	public static void onCompactSelectedPressed(){
 		
 		if(mCurrentClassDiagram != null){
 			for(ClassElementEditPart element : mCurrentClassDiagram.getSelectedClasses()){
@@ -480,16 +486,28 @@ public class DiagramControlView extends ViewPart {
 	 * Called when the compact all button is pressed.
 	 */
 	private void onCompactAllPressed(){
-
-
+		mCurrentClassDiagram.addAllToSelected();
+		if(mCurrentClassDiagram != null){
+			for(ClassElementEditPart element : mCurrentClassDiagram.getSelectedClasses()){
+				((ClassElementGraphicalModel)element.getModel()).setIsCompacted(true);
+			}
+			((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
+		}
 	}
 	
 	/*
 	 * Called when the expand all button is pressed.
 	 */
 	private void onExpandAllPressed(){
-		
+		mCurrentClassDiagram.addAllToSelected();
+		if(mCurrentClassDiagram != null){
+			for(ClassElementEditPart element : mCurrentClassDiagram.getSelectedClasses()){
+				((ClassElementGraphicalModel)element.getModel()).setIsCompacted(false);
+			}
+			((ClassDiagramGraphicalModel)mCurrentClassDiagram.getModel()).update();
+		}
 		
 	}
+
 }
 

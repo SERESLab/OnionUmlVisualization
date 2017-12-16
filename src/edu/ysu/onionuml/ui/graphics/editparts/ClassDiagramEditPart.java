@@ -18,8 +18,10 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.tools.MarqueeDragTracker;
 
+import edu.ysu.onionuml.ui.DiagramControlView;
 import edu.ysu.onionuml.ui.graphics.IEventListener;
 import edu.ysu.onionuml.ui.graphics.IEventRegistrar;
+import edu.ysu.onionuml.ui.graphics.figures.ClassFigure;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.IElementGraphicalModel;
 
@@ -153,5 +155,15 @@ public class ClassDiagramEditPart extends AbstractGraphicalEditPart
 	 */
 	public Set<ClassElementEditPart> getSelectedClasses(){
 		return mSelectedClasses;
+	}
+	
+	/**
+	 * Adds all parts to selected
+	 */
+	public void addAllToSelected() {
+		ClassDiagramEditPart parent = ((ClassDiagramEditPart)getParent());
+		parent.setSelected(EditPart.SELECTED);
+		mSelectedClasses = parent.getSelectedClasses();
+		//return parent.getSelectedClasses();
 	}
 }

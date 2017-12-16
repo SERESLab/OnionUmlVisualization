@@ -19,6 +19,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import edu.ysu.onionuml.core.UmlClassModel;
 import edu.ysu.onionuml.ui.graphics.EditPartFactory;
+import edu.ysu.onionuml.ui.graphics.editparts.AppContextMenuProvider;
 import edu.ysu.onionuml.ui.graphics.editparts.ClassDiagramEditPart;
 import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
 
@@ -133,7 +134,9 @@ public final class ModelViewer extends GraphicalEditor {
 						if(controlView != null){
 							ClassDiagramEditPart diagram = 
 									(ClassDiagramEditPart)viewer.getGraphicalViewer().getContents();
-							controlView.setCurrentClassDiagram(diagram);
+							
+								controlView.setCurrentClassDiagram(diagram);
+							
 						}
 					}
 				}
@@ -158,6 +161,7 @@ public final class ModelViewer extends GraphicalEditor {
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 		getGraphicalViewer().setEditPartFactory(new EditPartFactory());
+		getGraphicalViewer().setContextMenu(new AppContextMenuProvider(getGraphicalViewer(), getActionRegistry()));
 		
 		ScalableRootEditPart root = new ScalableRootEditPart();
 		getGraphicalViewer().setRootEditPart(root);

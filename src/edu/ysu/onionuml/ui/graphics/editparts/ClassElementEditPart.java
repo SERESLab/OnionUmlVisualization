@@ -2,6 +2,7 @@ package edu.ysu.onionuml.ui.graphics.editparts;
 
 import java.util.Set;
 
+import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.MouseEvent;
@@ -11,18 +12,27 @@ import org.eclipse.draw2d.UpdateManager;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
 import edu.ysu.onionuml.Activator;
 import edu.ysu.onionuml.core.RelationshipType;
@@ -35,7 +45,7 @@ import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassElementGraphicalModel;
 
 /**
  * Represents the view/controller of a uml class to be rendered with the Eclipse
- * Graphical Editing Framework (GEF).
+ * Graphical Editing Framework (GEF). These are what you are interacting with in the ClassML view.
  */
 public class ClassElementEditPart extends AbstractGraphicalEditPart 
 		implements MouseListener, MouseMotionListener{
@@ -245,9 +255,17 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 	@Override
 	public void mouseMoved(MouseEvent me) {}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void mousePressed(MouseEvent me) {
-		mDragLocation = me.getLocation();
+		if((me.getState() & MouseEvent.CONTROL) != 0) {
+			System.out.println("Control Click Works");
+		}
+		else {
+		
+			mDragLocation = me.getLocation();
+			
+		}
 		me.consume();
 	}
 
@@ -258,6 +276,7 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 			mDragLocation = null;
 		}
 	}
+	
 
 	@Override
 	public void mouseDoubleClicked(MouseEvent me) {}
@@ -293,6 +312,11 @@ public class ClassElementEditPart extends AbstractGraphicalEditPart
 		}
 		return new Color(null, classRGB);
 	}
-	
+//	private void onRightClick() {
+//		ContextMenuProvider provider = new AppContextMenuProvider(getViewer(), 
+//				AppContextMenuProvider.getActionRegistry());
+//				getViewer().setContextMenu(provider);
+//		
+//	}
 	
 }

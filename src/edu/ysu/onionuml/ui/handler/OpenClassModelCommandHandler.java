@@ -22,13 +22,13 @@ import edu.ysu.onionuml.ui.graphics.graphicalmodels.ClassDiagramGraphicalModel;
  * Command that prompts the user to open a class model and then loads
  * the selected model into the workspace.
  * 
- * @see org.eclipse.core.commands.IHandler
+ * @see org.eclipse.core.commands.IHandler\
  */
 public class OpenClassModelCommandHandler implements IHandler {
 	
 	private static final String OPEN_DIALOG_TITLE = "Open Class Model";
-	private static final String[] OPEN_FILTER_NAMES = {"ClassML files"};
-	private static final String[] OPEN_FILTER_EXT = {"*.xml"};
+	private static final String[] OPEN_FILTER_NAMES = {"ClassML files", "*.*"};
+	private static final String[] OPEN_FILTER_EXT = {"*.cml", "*.*"};
 	
 	
 	@Override
